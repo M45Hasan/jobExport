@@ -5,8 +5,8 @@ async function emailV(email, code, sub) {
     service: "gmail",
 
     auth: {
-      user: "mmhasan045@gmail.com", // generated ethereal user
-      pass: "wbjevrizghcecgrh", // generated ethereal password
+      user: process.env.EMAIL_USER, // generated ethereal user
+      pass: process.env.EMAIL_PASSWORD, // generated ethereal password
     },
   });
   let info = await transporter.sendMail({
