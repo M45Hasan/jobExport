@@ -17,16 +17,33 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
+import axios from "axios";
+import { useEffect } from "react";
 
 const defaultTheme = createTheme();
 
 export default function singup() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
+    const userData = {
+      name: data.get("name"),
+      email: data.get("email"),
+      pass: data.get("password"),
+    };
+    try {
+      let data = await axios.post(
+        "http://192.168.0.150/jobExpert/api/v1/regi",
+        userData
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
     console.log({
       email: data.get("email"),
-      password: data.get("password"),
+      pass: data.get("password"),
     });
   };
 
@@ -78,7 +95,7 @@ export default function singup() {
                   margin="normal"
                   required
                   fullWidth
-                  id="email"
+                  id="name"
                   label="নাম লিখুন"
                   name="name"
                   autoComplete="name"
@@ -132,7 +149,7 @@ export default function singup() {
                     fontSize: "16px",
                   }}
                 >
-                  <Link to="/verify">রেজিস্ট্রেশন করুন</Link>
+                  <Link>রেজিস্ট্রেশন করুন</Link>
                 </Button>
               </Box>
 

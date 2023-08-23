@@ -18,9 +18,20 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
 import { Link } from "react-router-dom";
+import { Modal } from "@mui/material";
 
 const defaultTheme = createTheme();
-
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 const login = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -29,6 +40,19 @@ const login = () => {
       email: data.get("email"),
       password: data.get("password"),
     });
+  };
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [hide, setHide] = React.useState(true);
+  const [otp, setOtp] = React.useState(false);
+  const [verifyotp, setVerifyotp] = React.useState(false);
+
+  let handelverifyotp = () => {
+    setOtp(false);
+    setHide(false);
+    setVerifyotp(true);
   };
 
   return (
@@ -121,7 +145,135 @@ const login = () => {
                     </Link>
                   </Grid>
                   <Grid item xs={4} textAlign="right">
-                    <Link variant="body2">Forgot password?</Link>
+                    <Link onClick={handleOpen} variant="body2">
+                      Forgot password?
+                    </Link>
+                    <div>
+                      <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                      >
+                        <Box sx={style}>
+                          {hide ? (
+                            <>
+                              <Typography
+                                id="modal-modal-title"
+                                variant="h6"
+                                component="h3"
+                              >
+                                enter your email
+                              </Typography>
+                              <Typography
+                                id="modal-modal-description"
+                                sx={{ mt: 2 }}
+                              >
+                                <TextField
+                                  fullWidth
+                                  label="Email"
+                                  id="fullWidth"
+                                />
+                              </Typography>
+                              <Button
+                                sx={{ marginTop: "20px" }}
+                                variant="contained"
+                                onClick={() => setOtp(true)}
+                              >
+                                Send OTP
+                              </Button>
+                            </>
+                          ) : (
+                            ""
+                          )}
+
+                          {otp ? (
+                            <form className="text-center ">
+                              <Typography
+                                id="modal-modal-title"
+                                variant="h6"
+                                component="h3"
+                              >
+                                Enter OTP
+                              </Typography>
+                              <div className="flex items-center justify-center ml-4">
+                                <input
+                                  type="text"
+                                  className="w-16 md:w-20 h-12 text-center text-xl border rounded-md mx-1 focus:outline-none"
+                                  maxLength={1}
+                                  pattern="[0-9]"
+                                  required
+                                />
+                                <input
+                                  type="text"
+                                  className="w-16 md:w-20 h-12 text-center text-xl border rounded-md mx-1 focus:outline-none"
+                                  maxLength={1}
+                                  pattern="[0-9]"
+                                  required
+                                />
+                                <input
+                                  type="text"
+                                  className="w-16 md:w-20 h-12 text-center text-xl border rounded-md mx-1 focus:outline-none"
+                                  maxLength={1}
+                                  pattern="[0-9]"
+                                  required
+                                />
+                                <input
+                                  key=""
+                                  type="text"
+                                  className="w-16 md:w-20 h-12 text-center text-xl border rounded-md mx-1 focus:outline-none"
+                                  maxLength={1}
+                                  pattern="[0-9]"
+                                  required
+                                />
+                              </div>
+                              <button
+                                onClick={handelverifyotp}
+                                type="submit"
+                                className="ml-4 px-24 md:px-28 py-2 bg-blue-500 text-white rounded bg-primary  focus:outline-none mt-10"
+                              >
+                                ভেরিফাই করুন
+                              </button>
+                            </form>
+                          ) : (
+                            ""
+                          )}
+
+                          {verifyotp ? (
+                            <div>
+                              <Typography
+                                id="modal-modal-title"
+                                variant="h6"
+                                component="h3"
+                              >
+                                Set your new password
+                              </Typography>
+                              <TextField
+                                id="filled-basic"
+                                label="New Password"
+                                variant="filled"
+                                fullWidth
+                              />
+                              <TextField
+                                id="filled-basic"
+                                label="Confrime Password"
+                                variant="filled"
+                                fullWidth
+                                sx={{ marginTop: "20px" }}
+                              />
+                              <Button
+                                sx={{ marginTop: "20px" }}
+                                variant="contained"
+                              >
+                                Submite
+                              </Button>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </Box>
+                      </Modal>
+                    </div>
                   </Grid>
                 </Grid>
               </Box>
