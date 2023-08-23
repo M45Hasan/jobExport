@@ -3,6 +3,7 @@ const app = express();
 const bcrypt = require("bcrypt");
 const User = require("../model/userModel");
 const ExamPackage = require("../model/examPackage");
+const calculateTimeDifference = require("../utils/timer");
 
 const packageCreateController = async (req, res) => {
   const {
@@ -112,7 +113,7 @@ const packageBuyer = async (req, res) => {
         { $push: { packageBuyer: searchUser[0]._id } }
       );
       await User.findOneAndUpdate(
-        { email:searchUser[0].email },
+        { email: searchUser[0].email },
         { $push: { myExam: search[0]._id } }
       );
       res.status(200).json({ message: "Purchase  success" });
@@ -124,10 +125,40 @@ const packageBuyer = async (req, res) => {
   }
 };
 
+const totalExaminee = async (req, res) => {
+  const { packageUid } = req.body;
+  console.log(packageUid);
+  try {
+    const search = await ExamPackage.find({ packageUid });
+    if (search.length != 0) {
+      res.status(200).json({ total: `${search[0].packageBuyer.length}` });
+    } else {
+      res.status(200).json({ total: "0" });
+    }
+  } catch (error) {
+    console.log(error.code);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+const packageTimeOut = async (req, res) => {
+  const { packageUid } = req.body;
+  try {
+    const search = await ExamPackage.find({ packageUid });
+
+    if (search.length != 0) {
+      res.send(calculateTimeDifference(search.examDate - Date.now()));
+    }
+  } catch (error) {
+    console.log(error.code);
+    res.status(5000).json({ error: "Error Occurs" });
+  }
+};
 module.exports = {
   packageCreateController,
   myPackage,
   allPackage,
   myExamList,
   packageBuyer,
+  totalExaminee,
+  packageTimeOut,
 };

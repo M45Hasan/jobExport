@@ -17,7 +17,9 @@ const {
   myPackage,
   allPackage,
   myExamList,
-  packageBuyer
+  packageBuyer,
+  totalExaminee,
+  packageTimeOut
 } = require("../../controller/examPackageController");
 
 _.post("/regi", regiController);
@@ -32,5 +34,7 @@ _.post("/exampurchase", packageBuyer);
 
 _.get("/packagelist", allPackage);
 _.post("/myexamlist", myExamList);
+_.post("/totalexaminee",  totalExaminee);
+_.post("/timer",  packageTimeOut);
 
 module.exports = _;

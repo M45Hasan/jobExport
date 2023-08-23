@@ -26,7 +26,7 @@ const packageSchema = new Schema({
   ],
   timestamps: {
     type: Date,
-    default: Date.now(),
+    default: Date.now(), 
   },
 
   examDate: { type: String ,require:true},
