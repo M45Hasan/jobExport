@@ -29,15 +29,18 @@ const verifyEmailController = async (req, res) => {
   const { email, otpmatch } = req.body;
 
   try {
-    const search = await User.find({ email: email, otpmatch: otpmatch });
+    const search = await User.find({ email: email, otpmatch: otpmatch,hasEmailVerified:false });
     if (search.length > 0) {
       await User.findOneAndUpdate(
         { email: email },
         { $set: { hasEmailVerified: true, otpmatch: "" } },
         { new: true }
       );
+      res.status(200).json({message:"Verified"});
+    }else{
+      res.status(400).json({error:"Invalid Entry"});
     }
-    res.status(200).json(search);
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred" });
