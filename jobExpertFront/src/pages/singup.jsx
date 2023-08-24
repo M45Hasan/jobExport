@@ -9,42 +9,43 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import { Link } from "react-router-dom";
-
 import Box from "@mui/material/Box";
-
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
-import axios from "axios";
-import { useEffect } from "react";
+import axios from "../components/Axios/axios";
+import { useState } from "react";
 
 const defaultTheme = createTheme();
 
 export default function singup() {
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    pass: "",
+  });
+  const [infoData, setInfoData] = useState({
+    name: "",
+    email: "",
+    pass: "",
+  });
+  const handelInput = (e) => {
+    let { name, value } = e.target;
+    setInfoData({ ...infoData, [name]: value });
+    setErrors({ ...errors, [name]: "" });
+    console.log(infoData);
+  };
 
-    const data = new FormData(event.currentTarget);
-    const userData = {
-      name: data.get("name"),
-      email: data.get("email"),
-      pass: data.get("password"),
-    };
+  const handleSubmit = async () => {
     try {
-      let data = await axios.post(
-        "http://192.168.0.150/jobExpert/api/v1/regi",
-        userData
-      );
-      console.log(data);
+      let data = await axios.post("/jobExpert/api/v1/regi", infoData);
+
+      console.log("data", data);
     } catch (error) {
       console.log(error);
     }
-    console.log({
-      email: data.get("email"),
-      pass: data.get("password"),
-    });
   };
 
   return (
@@ -82,60 +83,56 @@ export default function singup() {
               <Box sx={{ width: "200px", mb: 3 }}>
                 <img src={logo} alt="" />
               </Box>
+
               <Typography component="h1" variant="h5" sx={{ fontSize: "16px" }}>
                 ই-মেইল অথবা ফোন নাম্বার দিয়ে রেজিস্ট্রেশন করুন
               </Typography>
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
-                sx={{ mt: 1 }}
-              >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="name"
-                  label="নাম লিখুন"
-                  name="name"
-                  autoComplete="name"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="ই-মেইল অথবা ফোন নাম্বার লিখুন"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="পাসওয়ার্ড লিখুন"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
 
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="পূনরায় পাসওয়ার্ড লিখুন"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-
-                {/* submit button */}
+              <TextField
+                margin="normal"
+                fullWidth
+                id="name"
+                label="নাম লিখুন"
+                name="name"
+                autoComplete="name"
+                onChange={handelInput}
+                autoFocus
+              />
+              {errors.name && <p>Name is required</p>}
+              <TextField
+                margin="normal"
+                fullWidth
+                id="email"
+                label="ই-মেইল অথবা ফোন নাম্বার লিখুন"
+                name="email"
+                autoComplete="email"
+                onChange={handelInput}
+                autoFocus
+              />
+              {errors.email && <p>Email/phone is required</p>}
+              <TextField
+                margin="normal"
+                fullWidth
+                name="pass"
+                label="পাসওয়ার্ড লিখুন"
+                type="password"
+                onChange={handelInput}
+                id="password"
+                autoComplete="current-password"
+              />
+              {errors.password && <p>Password is required</p>}
+              <TextField
+                margin="normal"
+                fullWidth
+                name="pass"
+                label="পূনরায় পাসওয়ার্ড লিখুন"
+                type="password"
+                onChange={handelInput}
+                id="password"
+                autoComplete="current-password"
+              />
+              <div onClick={handleSubmit}>
                 <Button
-                  type="submit"
                   fullWidth
                   variant="contained"
                   sx={{
@@ -151,7 +148,7 @@ export default function singup() {
                 >
                   <Link>রেজিস্ট্রেশন করুন</Link>
                 </Button>
-              </Box>
+              </div>
 
               <Box
                 sx={{
