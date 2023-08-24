@@ -19,9 +19,12 @@ import axios from "../components/Axios/axios";
 import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
+import { useDispatch } from "react-redux";
+import { activeUser } from "../userSlice/userSlice";
 
 const defaultTheme = createTheme();
 export default function singup() {
+  let dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [errors, setErrors] = useState({
@@ -52,6 +55,7 @@ export default function singup() {
       try {
         setLoading(true);
         let data = await axios.post("/jobExpert/api/v1/regi", infoData);
+        dispatch(activeUser(data.data));
         setTimeout(() => {
           navigate("/verify");
         }, 2000);
