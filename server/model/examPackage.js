@@ -1,4 +1,4 @@
-express = require("express");
+const express = require("express");
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
@@ -10,6 +10,7 @@ const packageSchema = new Schema({
   packageCreaterEmail: { type: String },
   packageFee: { type: String },
   premium: { type: Boolean, default: false },
+  packageActive: { type: Boolean, default: true },
   examCategory: { type: String },
   examSubCategory: { type: String },
   examQuestionList: [
@@ -26,7 +27,7 @@ const packageSchema = new Schema({
   ],
   timestamps: {
     type: Date,
-    default: Date.now(),
+    default: Date.now(), 
   },
 
   examDate: { type: String ,require:true},
