@@ -8,7 +8,7 @@ import googlestore from "../assets/brandLogo/appstore (2).png";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -17,10 +17,13 @@ import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
 import axios from "../components/Axios/axios";
 import { useState } from "react";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SaveIcon from "@mui/icons-material/Save";
 
 const defaultTheme = createTheme();
-
 export default function singup() {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({
     name: "",
     email: "",
@@ -34,17 +37,29 @@ export default function singup() {
   const handelInput = (e) => {
     let { name, value } = e.target;
     setInfoData({ ...infoData, [name]: value });
-    setErrors({ ...errors, [name]: "" });
+    setErrors({ ...errors, [name]: value ? "" : `${name} is required` });
     console.log(infoData);
   };
 
   const handleSubmit = async () => {
-    try {
-      let data = await axios.post("/jobExpert/api/v1/regi", infoData);
-
-      console.log("data", data);
-    } catch (error) {
-      console.log(error);
+    if (!infoData.name) {
+      setErrors({ ...errors, name: "name Must be usees" });
+    } else if (!infoData.email) {
+      setErrors({ ...errors, email: "email must be uses" });
+    } else if (!infoData.pass) {
+      setErrors({ ...errors, pass: "password must be usees" });
+    } else {
+      try {
+        setLoading(true);
+        let data = await axios.post("/jobExpert/api/v1/regi", infoData);
+        setTimeout(() => {
+          navigate("/verify");
+        }, 2000);
+        console.log("data", data);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
     }
   };
 
@@ -98,7 +113,9 @@ export default function singup() {
                 onChange={handelInput}
                 autoFocus
               />
-              {errors.name && <p>Name is required</p>}
+              {errors.name && (
+                <p className="text-red-500 text-lg">name must be use</p>
+              )}
               <TextField
                 margin="normal"
                 fullWidth
@@ -109,7 +126,9 @@ export default function singup() {
                 onChange={handelInput}
                 autoFocus
               />
-              {errors.email && <p>Email/phone is required</p>}
+              {errors.email && (
+                <p className="text-red-500 text-lg">Email/phone is required</p>
+              )}
               <TextField
                 margin="normal"
                 fullWidth
@@ -120,7 +139,9 @@ export default function singup() {
                 id="password"
                 autoComplete="current-password"
               />
-              {errors.password && <p>Password is required</p>}
+              {errors.pass && (
+                <p className="text-red-500 text-lg">Password is required</p>
+              )}
               <TextField
                 margin="normal"
                 fullWidth
@@ -132,22 +153,39 @@ export default function singup() {
                 autoComplete="current-password"
               />
               <div onClick={handleSubmit}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  sx={{
-                    mt: 3,
-                    mb: 2,
-                    pt: 1.5,
-                    backgroundColor: "#26A4DE",
-                    "&:hover": {
+                {loading ? (
+                  <LoadingButton
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      pt: 1.5,
+                      fontSize: "16px",
+                    }}
+                    loading
+                    loadingPosition="start"
+                    startIcon={<SaveIcon />}
+                    variant="outlined"
+                  >
+                    রেজিস্ট্রেশন করুন
+                  </LoadingButton>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      pt: 1.5,
                       backgroundColor: "#26A4DE",
-                    },
-                    fontSize: "16px",
-                  }}
-                >
-                  <Link>রেজিস্ট্রেশন করুন</Link>
-                </Button>
+                      "&:hover": {
+                        backgroundColor: "#26A4DE",
+                      },
+                      fontSize: "16px",
+                    }}
+                  >
+                    <Link>রেজিস্ট্রেশন করুন</Link>
+                  </Button>
+                )}
               </div>
 
               <Box
