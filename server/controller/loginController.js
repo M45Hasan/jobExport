@@ -56,7 +56,7 @@ const resetOtpSendController = async (req, res) => {
 const resetOtpMatchController = async (req, res) => {
   const { email, pass, otpmatch } = req.body;
   try {
-    const search = await User.find({ email: email });
+    const search = await User.find({ email: email, otpmatch: otpmatch });
     if (search.length != 0) {
       bcrypt.hash(pass, 5, async function (err, hash) {
         await User.findOneAndUpdate(
