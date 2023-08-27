@@ -13,7 +13,7 @@ const packageSchema = new Schema({
   packageActive: { type: Boolean, default: true },
   examCategory: { type: String },
   examSubCategory: { type: String },
-  examQuestionList: [
+  examList: [
     {
       type: Schema.Types.ObjectId,
       ref: "Exam",
