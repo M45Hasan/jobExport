@@ -59,9 +59,41 @@ const createQuestion = async (req, res) => {
 const deleteQuestion = async (req, res) => {
   const { id } = req.body;
 
+  console.log(id);
   try {
-    await Question.findOneAndDelete({ _id: id });
+    const mx = await Question.find({ _id: id });
+    console.log(mx[0].examTrack);
+
+    await Exam.findOneAndUpdate(
+      { examSerial: mx[0].examTrack },
+      { $pull: { qestionList: { $in: mx[0]._id } } },
+      { new: true }
+    );
+    await Question.findOneAndDelete({ _id: mx[0]._id });
     res.status(202).json({ message: "Delete Success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+const deleteExam = async (req, res) => {
+  const { nid } = req.body;
+
+  try {
+    
+    const search = await Exam.findOne({ nid: nid });
+  
+    if (search) {
+      
+      const deleteResult = await Exam.deleteMany({
+        _id: { $in: objectIdArray }
+      });
+  
+      res.status(200).json(deleteResult);
+    } else {
+      res.status(404).json({ message: "Package not found" });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred" });
