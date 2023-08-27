@@ -8,6 +8,9 @@ import googlestore from "../assets/brandLogo/appstore (2).png";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -17,10 +20,16 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Modal } from "@mui/material";
+import axios from "../components/Axios/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { activeUser } from "../userSlice/userSlice";
 
 const defaultTheme = createTheme();
+
+// const userData = useSelector((state) => state);
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -33,15 +42,91 @@ const style = {
   p: 4,
 };
 const login = () => {
-  const handleSubmit = (event) => {
+  const dispathc = useDispatch();
+  const navigate = useNavigate();
+
+  const mydata = useSelector((state) => state);
+
+  const [info, setInfo] = React.useState({
+    email: "",
+    pass: "",
+  });
+  const [error, setError] = React.useState({
+    email: "",
+    pass: "",
+  });
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    if (!info.email) {
+      return setError({ email: "please input your email" });
+    } else if (!info.pass) {
+      return setError({ pass: "please input your password" });
+    } else {
+      try {
+        let res = await axios.post("/jobExpert/api/v1/login", info);
+        if (res.data.verify == false) {
+          return toast.warn("Please verify your email", {
+            position: "bottom-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        } else if (res.data.verify == true) {
+          dispathc(activeUser(res.data));
+          localStorage.setItem("userInfo", JSON.stringify(res.data));
+          if (res.data.message) {
+            setTimeout(() => {
+              navigate("/jobexpart");
+            }, 2000);
+            return toast.success(res.data.message, {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+        }
+        if (res.data.message == "authicitaion error") {
+          toast.error("Authication Error", {
+            position: "bottom-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      } catch (error) {
+        toast.error("Authication Error", {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    }
   };
 
+  const handelChange = (e) => {
+    const { name, value } = e.target;
+    setInfo({ ...info, [name]: value });
+    setError({ ...error, [name]: value ? "" : `${name} is requried` });
+  };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -54,7 +139,65 @@ const login = () => {
     setHide(false);
     setVerifyotp(true);
   };
+  React.useEffect(() => {
+    if (mydata.userData.userInfo) {
+      navigate("/jobexpart");
+    }
+  }, []);
 
+  const handelOtpSend = async () => {
+    setOtp(true);
+    try {
+      let data = await axios.post("/jobExpert/api/v1/resetsent", info);
+      console.log(data);
+      setInfo({ email: "" });
+      setHide(false);
+      if (data.data.message) {
+        return toast.success(data.data.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      console.log("kire", error);
+      toast.error("Invalid email", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setInfo({ email: "" });
+    }
+  };
+
+  const [forgetOtp, setForgetOtp] = React.useState(["", "", "", ""]);
+  const forgetotpChange = (e, index) => {
+    const { value } = e.target;
+    const newOtp = [...forgetOtp];
+    newOtp[index] = value;
+    setForgetOtp(newOtp);
+  };
+  console.log(forgetOtp);
+
+  const handelforgetOtpSubmit = async (e) => {
+    e.preventDefault();
+    const enteredOtp = forgetOtp.join("");
+
+    let userverify = {
+      email: user.userData.userInfo.email,
+      otpmatch: enteredOtp,
+    };
+  };
   return (
     <>
       <Navbar />
@@ -78,7 +221,18 @@ const login = () => {
           </Box>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
-
+            <ToastContainer
+              position="top-center"
+              autoClose={2000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
             <Box
               sx={{
                 marginTop: 8,
@@ -99,6 +253,8 @@ const login = () => {
                 noValidate
                 sx={{ mt: 1 }}
               >
+                {error && <p className="text-red-600">{error.email}</p>}
+
                 <TextField
                   margin="normal"
                   required
@@ -108,19 +264,22 @@ const login = () => {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  onChange={handelChange}
                 />
+
                 <TextField
                   margin="normal"
                   required
                   fullWidth
-                  name="password"
+                  name="pass"
                   label="পাসওয়ার্ড"
                   type="password"
                   id="password"
+                  onChange={handelChange}
                   autoComplete="current-password"
                 />
+                {error && <p className="text-red-600">{error.pass}</p>}
 
-                {/* submit button */}
                 <Button
                   type="submit"
                   fullWidth
@@ -138,6 +297,9 @@ const login = () => {
                 >
                   লগ-ইন করুন
                 </Button>
+              </Box>
+
+              <Box>
                 <Grid container>
                   <Grid item xs={8} textAlign="left">
                     <Link to="/singup" variant="body2">
@@ -171,14 +333,17 @@ const login = () => {
                               >
                                 <TextField
                                   fullWidth
+                                  onChange={handelChange}
                                   label="Email"
+                                  name="email"
                                   id="fullWidth"
+                                  value={info.email}
                                 />
                               </Typography>
                               <Button
                                 sx={{ marginTop: "20px" }}
                                 variant="contained"
-                                onClick={() => setOtp(true)}
+                                onClick={handelOtpSend}
                               >
                                 Send OTP
                               </Button>
@@ -197,35 +362,20 @@ const login = () => {
                                 Enter OTP
                               </Typography>
                               <div className="flex items-center justify-center ml-4">
-                                <input
-                                  type="text"
-                                  className="w-16 md:w-20 h-12 text-center text-xl border rounded-md mx-1 focus:outline-none"
-                                  maxLength={1}
-                                  pattern="[0-9]"
-                                  required
-                                />
-                                <input
-                                  type="text"
-                                  className="w-16 md:w-20 h-12 text-center text-xl border rounded-md mx-1 focus:outline-none"
-                                  maxLength={1}
-                                  pattern="[0-9]"
-                                  required
-                                />
-                                <input
-                                  type="text"
-                                  className="w-16 md:w-20 h-12 text-center text-xl border rounded-md mx-1 focus:outline-none"
-                                  maxLength={1}
-                                  pattern="[0-9]"
-                                  required
-                                />
-                                <input
-                                  key=""
-                                  type="text"
-                                  className="w-16 md:w-20 h-12 text-center text-xl border rounded-md mx-1 focus:outline-none"
-                                  maxLength={1}
-                                  pattern="[0-9]"
-                                  required
-                                />
+                                {forgetOtp.map((digit, index) => (
+                                  <input
+                                    key={index}
+                                    type="text"
+                                    className="w-16 md:w-20 h-12 text-center text-xl border rounded-md mx-1 focus:outline-none"
+                                    maxLength={1}
+                                    pattern="[0-9]"
+                                    name={`otp-${index}`}
+                                    required
+                                    value={digit}
+                                    onChange={(e) => forgetotpChange(e, index)}
+                                    onClick={handelforgetOtpSubmit}
+                                  />
+                                ))}
                               </div>
                               <button
                                 onClick={handelverifyotp}

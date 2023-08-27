@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const packageSchema = new Schema({
   packageUid:{type:String},
+  nid:{type:String},
   packageName: { type: String, require: true },
   packageDetail: { type: String },
   packageCreater: { type: Schema.Types.ObjectId, ref: "User" },

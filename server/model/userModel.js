@@ -12,6 +12,9 @@ const userSchema = new Schema({
     require: true,
     unique: true,
   },
+  nid: {
+    type: String,
+  },
   pass: {
     type: String,
     require: true,

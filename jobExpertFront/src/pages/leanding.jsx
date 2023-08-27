@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Home_section_two from "../components/jobexpartHome/homeSectionTwo";
 import Home_section_three from "../components/jobexpartHome/homeSectionThree";
@@ -7,13 +7,17 @@ import Home_section_five from "../components/jobexpartHome/homeSectionFive";
 import Slider from "../components/Slider/Slider";
 import JobExpart from "../components/JobExpart/JobExpart";
 import Banner from "../components/Banner/Banner";
+import { useSelector } from "react-redux";
 
 const leading = () => {
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
+  const userData = useSelector((state) => state);
+
   useEffect(() => {
-    fetch("home_two_section_one.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
+    if (!userData.userData.userInfo) {
+      navigate("/login");
+    }
   }, []);
 
   return (

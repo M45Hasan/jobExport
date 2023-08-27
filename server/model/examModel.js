@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const userExam = new Schema({
   packageUid: { type: String },
+  nid: { type: String },
   packageId: { type: Schema.Types.ObjectId, ref: "ExamPackage" },
   examSerial: { type: String, require: true },
   examTitle: { type: String, require: true },

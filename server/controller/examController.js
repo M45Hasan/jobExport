@@ -4,17 +4,27 @@ const Exam = require("../model/examModel");
 const ExamPackage = require("../model/examPackage");
 
 const examHeader = async (req, res) => {
-  const { packageUid, examTitle, examTime, examSerial, examInfo, examMark } =
-    req.body;
+  const {
+    packageUid,
+    examTitle,
+    examTime,
+    examSerial,
+    examInfo,
+    examMark,
+    nid,
+  } = req.body;
 
   try {
     const sea = await Exam.find({
       examSerial: examSerial,
       packageUid: `PK-${packageUid}`,
     });
+    const seah = await ExamPackage.find({
+      nid: nid,
+    });
 
     console.log(sea.length);
-    if (sea.length == 0) {
+    if (sea.length == 0 && seah.length != 0) {
       const search = await ExamPackage.find({
         packageUid: packageUid,
       });
@@ -26,6 +36,7 @@ const examHeader = async (req, res) => {
         examTime,
         examInfo,
         examMark,
+        nid: seah[0].nid,
       });
 
       examNew.save();

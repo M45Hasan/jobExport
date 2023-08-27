@@ -3,13 +3,7 @@ import CountUp from "react-countup";
 
 const homeSectionFour = () => {
   const [data, setData] = useState([]);
-  useEffect(() => {
-    fetch("home_two_section_four.json")
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-      });
-  }, []);
+
   return (
     <>
       <h3 className="text-2xl text-center font-bold mb-10 mt-20">
