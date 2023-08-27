@@ -28,6 +28,7 @@ const {
 } = require("../../controller/examPackageController");
 
 const {examHeader}=require("../../controller/examController")
+const {createQuestion,deleteQuestion}=require("../../controller/questionController")
 //regi api
 _.post("/regi", regiController);
 _.post("/emailverification", verifyEmailController);
@@ -52,9 +53,11 @@ _.post("/packagestatus",  packageStatus);
 _.post("/packagerepost",  packageRepost);
 _.post("/packagedelete",  packageDelete);
 
-//examHeader api
+//exam question Header api
 _.post("/examheader",examHeader);
 
-
+//exam question Body api
+_.post("/questioncreate",createQuestion)
+_.post("/deletequestion",deleteQuestion)
 
 module.exports = _;

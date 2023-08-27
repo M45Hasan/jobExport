@@ -16,11 +16,13 @@ const packageCreateController = async (req, res) => {
     examSubCategory,
     examDate,
     examTime,
+    nid,
   } = req.body;
   try {
     let search = await User.find({
       email: packageCreaterEmail,
       role: "Teacher",
+      nid: nid,
     });
     console.log(search);
     if (search.length != 0) {
@@ -36,6 +38,7 @@ const packageCreateController = async (req, res) => {
         examSubCategory,
         examDate,
         examTime,
+        nid: search[0].nid,
       });
       createPackage.save();
 
@@ -222,15 +225,15 @@ const packageRepost = async (req, res) => {
   }
 };
 
-const packageDelete = async (req,res)=>{
-  const {packageUid}=req.body
-  try{
-    await ExamPackage.findOneAndDelete({packageUid})
-    res.status(200).json({message:"Delete Success"})
-  }catch(error){
-    res.status(500).json({error:"Error Occurs"})
+const packageDelete = async (req, res) => {
+  const { packageUid } = req.body;
+  try {
+    await ExamPackage.findOneAndDelete({ packageUid });
+    res.status(200).json({ message: "Delete Success" });
+  } catch (error) {
+    res.status(500).json({ error: "Error Occurs" });
   }
-}
+};
 module.exports = {
   packageCreateController,
   myPackage,
