@@ -69,10 +69,12 @@ const resetOtpMatchController = async (req, res) => {
           { new: true }
         );
       });
+      res.status(200).json({ message: "Success " });
+    } else {
+      res.status(404).json({ error: "Invalid OTP " });
     }
-    res.status(200).json({ message: "Success " });
   } catch (error) {
-    res.status(500).json({ error: "Error occur" });
+    res.status(500).json({ error: "Error Occurs" });
   }
 };
 module.exports = {
