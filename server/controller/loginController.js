@@ -20,8 +20,8 @@ const logController = async (req, res) => {
             role: search[0].role,
             userImg: search[0].avatar ? search[0].avatar : null,
           });
-        }else{
-          res.status(400).json({error:"Invalid Entry"})
+        } else {
+          res.status(400).json({ error: "Invalid Entry" });
         }
       });
     }
@@ -33,37 +33,46 @@ const logController = async (req, res) => {
 
 const resetOtpSendController = async (req, res) => {
   const { email } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   try {
     const search = await User.find({ email });
-    const otp=generateAndCopyOTP()
-    if(search.length !=0){
-      emailV(email,otp,"Email verify")
-      await User.findOneAndUpdate({email:email},{$set:{otpmatch:otp}},{new:true})
-      res.status(200).json({message:"OTP Sent"})
-    }else{
-      res.status(400).json({error:"Invalid email"})
+    const otp = generateAndCopyOTP();
+    if (search.length != 0) {
+      emailV(email, otp, "Email verify");
+      await User.findOneAndUpdate(
+        { email: email },
+        { $set: { otpmatch: otp } },
+        { new: true }
+      );
+      res.status(200).json({ message: "OTP Sent", email: email });
+    } else {
+      res.status(400).json({ error: "Invalid email" });
     }
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(500).json({ error: "Error occur" });
   }
 };
-const resetOtpMatchController=async(req,res)=>{
-  const {email,pass ,otpmatch}=req.body
-  try{
-    const search = await User.find({ email:email  });
-    if(search.length !=0){
+const resetOtpMatchController = async (req, res) => {
+  const { email, pass, otpmatch } = req.body;
+  try {
+    const search = await User.find({ email: email });
+    if (search.length != 0) {
       bcrypt.hash(pass, 5, async function (err, hash) {
-      await User.findOneAndUpdate({email:email},{$set:{pass:hash,otpmatch:""}},{new:true})})
+        await User.findOneAndUpdate(
+          { email: email },
+          { $set: { pass: hash, otpmatch: "" } },
+          { new: true }
+        );
+      });
     }
-    res.status(200).json({message:"Success "})
-  }catch (error) {
+    res.status(200).json({ message: "Success " });
+  } catch (error) {
     res.status(500).json({ error: "Error occur" });
   }
-}
+};
 module.exports = {
   logController,
   resetOtpSendController,
-  resetOtpMatchController
+  resetOtpMatchController,
 };

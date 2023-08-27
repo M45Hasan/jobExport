@@ -4,37 +4,50 @@ const Exam = require("../model/examModel");
 const ExamPackage = require("../model/examPackage");
 
 const examHeader = async (req, res) => {
-  const { packageUid, examSerial, examTitle, examTime, examInfo, examMark } =
+  const { packageUid, examTitle, examTime, examSerial, examInfo, examMark } =
     req.body;
 
   try {
-    const search = await ExamPackage.find({ packageUid });
-    console.log("ami1");
-    const examNew = new Exam({
-      packageUid,
-      examSerial,
-      examTitle,
-      examTime,
-      examInfo,
-      examMark,
+    const sea = await Exam.find({
+      examSerial: examSerial,
+      packageUid: `PK-${packageUid}`,
     });
 
-    examNew.save();
-    //const searchx = await Question.find({ examSerial });
-    //examQuestionList: searchx[0]._id;
-    console.log(examNew._id, search[0]._id);
-    const shr = await Exam.findOneAndUpdate(
-      { _id: examNew._id },
-      { $push: { packageId: search[0]._id } },
-      { new: true }
-    );
+    console.log(sea.length);
+    if (sea.length == 0) {
+      const search = await ExamPackage.find({
+        packageUid: packageUid,
+      });
 
-    // await ExamPackage.findOneAndUpdate(
-    //   { packageUid: shr[0].packageUid },
-    //   { $push: { examQuestionList: shr[0]._id } },
-    //   { new: true }
-    // );
-    res.status(200).json(shr);
+      const examNew = new Exam({
+        packageUid: `PK-${packageUid}`,
+        examSerial,
+        examTitle,
+        examTime,
+        examInfo,
+        examMark,
+      });
+
+      examNew.save();
+
+      console.log(examNew._id, search[0]._id);
+
+      const shrx = await Exam.findOneAndUpdate(
+        { _id: examNew._id },
+        { $push: { packageId: search[0]._id } },
+        { new: true }
+      );
+
+      await ExamPackage.findOneAndUpdate(
+        { _id: search[0]._id },
+        { $push: { examList: examNew._id } },
+        { new: true }
+      );
+
+      res.status(200).json(shrx);
+    } else {
+      res.status(402).json({ error: "Exam Name already Existed " });
+    }
   } catch (error) {
     console.log(error.code);
     res.status(500).json({ error: "Error Occurs" });
