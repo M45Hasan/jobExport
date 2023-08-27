@@ -26,6 +26,8 @@ const {
   packageRepost,
   packageDelete
 } = require("../../controller/examPackageController");
+
+const {examHeader}=require("../../controller/examController")
 //regi api
 _.post("/regi", regiController);
 _.post("/emailverification", verifyEmailController);
@@ -50,7 +52,8 @@ _.post("/packagestatus",  packageStatus);
 _.post("/packagerepost",  packageRepost);
 _.post("/packagedelete",  packageDelete);
 
-//question api
+//examHeader api
+_.post("/examheader",examHeader);
 
 
 

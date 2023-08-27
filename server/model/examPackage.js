@@ -16,7 +16,7 @@ const packageSchema = new Schema({
   examQuestionList: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Question",
+      ref: "Exam",
     },
   ],
   packageBuyer: [
