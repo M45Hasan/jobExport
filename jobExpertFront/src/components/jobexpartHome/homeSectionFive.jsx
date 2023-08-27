@@ -7,11 +7,6 @@ import "swiper/css";
 
 const homeSectionFive = () => {
   const [data, setData] = useState([]);
-  useEffect(() => {
-    fetch("home_two_section_five.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
 
   return (
     <>

@@ -17,10 +17,11 @@ const createQuestion = async (req, res) => {
     rightMark,
     wrongMark,
     examSerial,
+    nid,
   } = req.body;
 
   try {
-    const saerch = await Exam.find({ examSerial });
+    const saerch = await Exam.find({ examSerial, nid });
     if (saerch.length != 0) {
       const newQuestion = new Question({
         examTrack: examSerial,
@@ -41,11 +42,11 @@ const createQuestion = async (req, res) => {
         { $push: { qestionList: newQuestion._id } },
         { new: true }
       );
-      await Question.findOneAndUpdate(
+      const crtQ = await Question.findOneAndUpdate(
         { _id: newQuestion._id },
         { $push: { examId: saerch[0]._id } }
       );
-      res.status(201).json(newQuestion);
+      res.status(201).json(crtQ);
     } else {
       res.status(401).json({ error: "Already" });
     }
@@ -55,6 +56,18 @@ const createQuestion = async (req, res) => {
   }
 };
 
+const deleteQuestion = async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    await Question.findOneAndDelete({ _id: id });
+    res.status(202).json({ message: "Delete Success" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
 module.exports = {
   createQuestion,
+  deleteQuestion,
 };
