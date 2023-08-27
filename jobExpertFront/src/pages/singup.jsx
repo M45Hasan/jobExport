@@ -19,11 +19,12 @@ import axios from "../components/Axios/axios";
 import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../userSlice/userSlice";
 
 const defaultTheme = createTheme();
 export default function singup() {
+  const userData = useSelector((state) => state);
   let dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -66,6 +67,12 @@ export default function singup() {
       }
     }
   };
+
+  React.useEffect(() => {
+    if (userData.userData.userInfo) {
+      navigate("/jobexpart");
+    }
+  }, []);
 
   return (
     <>

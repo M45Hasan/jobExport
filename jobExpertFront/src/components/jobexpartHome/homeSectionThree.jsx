@@ -4,12 +4,6 @@ import { useEffect, useState } from "react";
 const homeSectionThree = () => {
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    fetch("home_two_section_three.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
-
   return (
     <>
       <h3 className="text-2xl text-center font-bold mb-10 mt-20">

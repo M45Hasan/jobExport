@@ -18,12 +18,16 @@ const logController = async (req, res) => {
             name: search[0].name,
             email: search[0].email,
             role: search[0].role,
+            verify: search[0].hasEmailVerified,
             userImg: search[0].avatar ? search[0].avatar : null,
           });
         }else{
           res.status(400).json({error:"Invalid Entry"})
         }
       });
+    }
+    else{
+      return res.json({message: "authicitaion error"})
     }
   } catch (error) {
     console.error(error);

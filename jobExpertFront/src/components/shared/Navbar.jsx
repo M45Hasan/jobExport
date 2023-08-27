@@ -14,17 +14,32 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import logo from "../../assets/brandLogo/navloogo.png";
 import CallIcon from "@mui/icons-material/Call";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { activeUser } from "../../userSlice/userSlice";
 
+const settings = ["Profile", "Logout"];
+const Loginpages = ["হোম", "সাকসেস স্টোরি", "এক্সাম", "আমার কোর্স"];
 const pages = [
   "চাকরি প্রস্তুতি",
   "ভর্তি পরিক্ষা",
   "আমাদের সম্পর্কে",
   "যোগাযোগ",
 ];
-const settings = ["Profile", "Logout"];
-
 function Navbar() {
+  const [show, setShow] = React.useState(true);
+  const dipatch = useDispatch();
+  const userData = useSelector((state) => state);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (userData.userData.userInfo) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+  }, [userData.userData.userInfo]);
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -41,6 +56,12 @@ function Navbar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("userInfo");
+    dipatch(activeUser(null));
+    navigate("/");
   };
 
   return (
@@ -99,11 +120,17 @@ function Navbar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {show
+                ? Loginpages.map((page) => (
+                    <MenuItem key={page} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  ))
+                : pages.map((pagees) => (
+                    <MenuItem key={pagees} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{pagees}</Typography>
+                    </MenuItem>
+                  ))}
             </Menu>
           </Box>
           <Typography
@@ -131,15 +158,31 @@ function Navbar() {
               display: { xs: "none", md: "flex" },
             }}
           >
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "black", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {show ? (
+              <>
+                {Loginpages.map((page) => (
+                  <Button
+                    key={page}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "black", display: "block" }}
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </>
+            ) : (
+              <>
+                {pages.map((page) => (
+                  <Button
+                    key={page}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "black", display: "block" }}
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </>
+            )}
           </Box>
 
           <Box
@@ -150,13 +193,51 @@ function Navbar() {
               alignItems: "center",
             }}
           >
-            <h1 className="text-black hidden md:block">
-              <CallIcon />
-              +880 1700-000000
-            </h1>
-            <Link to="/login">
-              <Button variant="contained">লগ-ইন করুন</Button>
-            </Link>
+            {show ? (
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src={userData?.userData?.userInfo?.userImg}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem>
+                    <Typography textAlign="center">Profile</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
+            ) : (
+              <>
+                <h1 className="text-black hidden md:block">
+                  <CallIcon />
+                  +880 1700-000000
+                </h1>
+                <Link to="/login">
+                  <Button variant="contained">লগ-ইন করুন</Button>
+                </Link>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>
