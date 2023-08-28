@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const Exam = require("../model/examModel");
 const ExamPackage = require("../model/examPackage");
+const Question = require("../model/questionModel");
 
 const examCreate = async (req, res) => {
   const {
@@ -66,29 +67,52 @@ const examCreate = async (req, res) => {
 };
 
 const deleteExam = async (req, res) => {
-  const { nid } = req.body;
+  const { nid, examSerial } = req.body;
 
   try {
-    
-    const search = await Exam.findOne({ nid: nid });
-  
-    if (search) {
-      
-      const deleteResult = await Question.deleteMany({
-        examId: { $in: search._id }
+    const sear = await Exam.find({ examSerial: examSerial, nid: nid });
+    if (sear.length != 0) {
+      const search = await Exam.findOne({ examSerial: examSerial });
+
+      const how = search.packageUid.split("PK-");
+      const nextPackage = await ExamPackage.findOne({
+        packageUid: how[1].toString(),
       });
-  
-      
-      res.status(200).json(deleteResult);
+
+      if (search) {
+        const deleteResult = await Question.deleteMany({
+          examId: { $in: search._id },
+        });
+
+        await ExamPackage.findByIdAndUpdate(
+          { _id: nextPackage._id },
+          { $pull: { examList: { $in: search._id } } },
+          { new: true }
+        );
+        await Exam.findOneAndDelete({ _id: search._id });
+        res.status(200).json(deleteResult);
+      } else {
+        res.status(404).json({ message: "Package not found" });
+      }
     } else {
-      res.status(404).json({ message: "Package not found" });
+      res.status(404).json({ error: "Invalid Entry" });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred" });
   }
 };
+const todayExam = async(req,res)=>{
+  
+  const search = await ExamPackage.find();
+
+  search.forEach(async(id,j)=>{
+    await todyExamm(id._id)
+  })
+
+}
 module.exports = {
   examCreate,
   deleteExam,
+  todayExam
 };
