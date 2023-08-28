@@ -12,6 +12,9 @@ import Rootlayout from "./components/Layout/Rootlayout";
 import Leanding from "./pages/leanding";
 import Studentprofile from "./pages/studentprofile";
 import Verify from "./pages/verify";
+import ExamZone from "./pages/examZone";
+import LiveExpert from "./pages/LiveExpert";
+import TeacherPanel from "./pages/teacherPanel";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +26,9 @@ const router = createBrowserRouter(
       <Route path="/jobexpart" element={<Rootlayout />}>
         <Route index element={<Leanding />}></Route>
         <Route path="studentprofile" element={<Studentprofile />}></Route>
+        <Route path="examZone" element={<ExamZone />}></Route>
+        <Route path="live-expert" element={<LiveExpert />}></Route>
+        <Route path="teacherPanel" element={<TeacherPanel />}></Route>
       </Route>
     </>
   )

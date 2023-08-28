@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.react-tabs__tab--selected {
+    color: #ffffff !important;
+    overflow: hidden !important;
+    background: #26a4de !important;
+  }
+  
