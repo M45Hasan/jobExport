@@ -3,6 +3,8 @@ const app = express();
 const bcrypt = require("bcrypt");
 const User = require("../model/userModel");
 const ExamPackage = require("../model/examPackage");
+const Exam = require("../model/examModel");
+const Question = require("../model/questionModel");
 const { calculateTimeDifference } = require("../utils/timer");
 
 const packageCreateController = async (req, res) => {
@@ -226,14 +228,51 @@ const packageRepost = async (req, res) => {
 };
 
 const packageDelete = async (req, res) => {
-  const { packageUid } = req.body;
+  const { packageUid, nid } = req.body;
   try {
-    await ExamPackage.findOneAndDelete({ packageUid });
-    res.status(200).json({ message: "Delete Success" });
+    const packSearch = await ExamPackage.findOne({ packageUid, nid });
+    if (packSearch) {
+      const how = `PK-${packageUid}`;
+
+      const examSearch = await Exam.find({ packageUid: how });
+
+      examSearch.forEach(async (i, j) => {
+        await deleteQuestion(i._id);
+        await deleteExam(i._id);
+      });
+
+      async function deleteQuestion(examId) {
+        try {
+          const deleteResult = await Question.deleteMany({
+            examId: { $in: examId },
+          });
+          console.log(`Deleted questions for exam ${examId}`);
+        } catch (error) {
+          console.error(
+            `Error deleting questions for exam ${examId}: ${error}`
+          );
+        }
+      }
+
+      async function deleteExam(id) {
+        try {
+          const delExam = await Exam.deleteMany({ _id: id });
+          console.log(`Deleted  exam ${id}`);
+        } catch (error) {
+          console.error(`Error  exam ${id}: ${error}`);
+        }
+      }
+      await ExamPackage.deleteOne({ _id: packSearch._id });
+
+      res.status(200).send(examSearch);
+    } else {
+      res.status(404).json({ error: "Invalid Entry" });
+    }
   } catch (error) {
     res.status(500).json({ error: "Error Occurs" });
   }
 };
+
 module.exports = {
   packageCreateController,
   myPackage,

@@ -25,13 +25,13 @@ const {
   packageStatus,
   packageRepost,
   packageDelete,
+  
 } = require("../../controller/examPackageController");
 
-const { examCreate,deleteExam } = require("../../controller/examController");
+const { examCreate, deleteExam ,todayExam,} = require("../../controller/examController");
 const {
   createQuestion,
   deleteQuestion,
-  
 } = require("../../controller/questionController");
 //regi api
 _.post("/regi", regiController);
@@ -57,9 +57,11 @@ _.post("/packagestatus", packageStatus);
 _.post("/packagerepost", packageRepost);
 _.post("/packagedelete", packageDelete);
 
+
 //exam question Header api
 _.post("/examheader", examCreate);
 _.post("/deleteexam", deleteExam);
+_.get("/todyexam", todayExam);
 
 //exam question Body api
 _.post("/questioncreate", createQuestion);
