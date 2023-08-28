@@ -77,29 +77,9 @@ const deleteQuestion = async (req, res) => {
   }
 };
 
-const deleteExam = async (req, res) => {
-  const { nid } = req.body;
 
-  try {
-    
-    const search = await Exam.findOne({ nid: nid });
-  
-    if (search) {
-      
-      const deleteResult = await Exam.deleteMany({
-        _id: { $in: objectIdArray }
-      });
-  
-      res.status(200).json(deleteResult);
-    } else {
-      res.status(404).json({ message: "Package not found" });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "An error occurred" });
-  }
-};
 module.exports = {
   createQuestion,
   deleteQuestion,
+  
 };

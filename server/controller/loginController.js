@@ -61,7 +61,7 @@ const resetOtpMatchController = async (req, res) => {
       bcrypt.hash(pass, 5, async function (err, hash) {
         await User.findOneAndUpdate(
           { email: email },
-          { $set: { pass: hash, otpmatch: "" } },
+          { $set: { pass: hash } },
           { new: true }
         );
       });
@@ -73,6 +73,18 @@ const resetOtpMatchController = async (req, res) => {
     res.status(500).json({ error: "Error Occurs" });
   }
 };
+const updatePassword = async(req,res)=>{
+  const {pass ,email}=req.body
+
+  try{
+
+  }catch(error){
+    res.status(404).json({error:"Error Occurs"})
+  }
+
+
+}
+
 module.exports = {
   logController,
   resetOtpSendController,
