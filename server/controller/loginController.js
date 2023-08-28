@@ -24,6 +24,12 @@ const logController = async (req, res) => {
           res.status(400).json({ error: "Invalid Entry" });
         }
       });
+      
+      await User.findOneAndUpdate(
+        { email: email },
+        { $set: { otpmatch: "" } },
+        { new: true }
+      );
     }
   } catch (error) {
     console.error(error);
@@ -73,17 +79,14 @@ const resetOtpMatchController = async (req, res) => {
     res.status(500).json({ error: "Error Occurs" });
   }
 };
-const updatePassword = async(req,res)=>{
-  const {pass ,email}=req.body
+const updatePassword = async (req, res) => {
+  const { pass, email } = req.body;
 
-  try{
-
-  }catch(error){
-    res.status(404).json({error:"Error Occurs"})
+  try {
+  } catch (error) {
+    res.status(404).json({ error: "Error Occurs" });
   }
-
-
-}
+};
 
 module.exports = {
   logController,
