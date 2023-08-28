@@ -7,7 +7,7 @@ const {
   regiController,
   verifyEmailController,
   userDelete,
-  allUser
+  allUser,
 } = require("../../controller/regsitrationController");
 const {
   logController,
@@ -24,11 +24,15 @@ const {
   packageTimer,
   packageStatus,
   packageRepost,
-  packageDelete
+  packageDelete,
 } = require("../../controller/examPackageController");
 
-const {examHeader}=require("../../controller/examController")
-const {createQuestion,deleteQuestion}=require("../../controller/questionController")
+const { examCreate,deleteExam } = require("../../controller/examController");
+const {
+  createQuestion,
+  deleteQuestion,
+  
+} = require("../../controller/questionController");
 //regi api
 _.post("/regi", regiController);
 _.post("/emailverification", verifyEmailController);
@@ -47,17 +51,18 @@ _.post("/mypackage", myPackage);
 _.post("/exampurchase", packageBuyer);
 _.get("/packagelist", allPackage);
 _.post("/myexamlist", myExamList);
-_.post("/totalexaminee",  totalExaminee);
-_.post("/timer",  packageTimer);
-_.post("/packagestatus",  packageStatus);
-_.post("/packagerepost",  packageRepost);
-_.post("/packagedelete",  packageDelete);
+_.post("/totalexaminee", totalExaminee);
+_.post("/timer", packageTimer);
+_.post("/packagestatus", packageStatus);
+_.post("/packagerepost", packageRepost);
+_.post("/packagedelete", packageDelete);
 
 //exam question Header api
-_.post("/examheader",examHeader);
+_.post("/examheader", examCreate);
+_.post("/deleteexam", deleteExam);
 
 //exam question Body api
-_.post("/questioncreate",createQuestion)
-_.post("/deletequestion",deleteQuestion)
+_.post("/questioncreate", createQuestion);
+_.post("/deletequestion", deleteQuestion);
 
 module.exports = _;

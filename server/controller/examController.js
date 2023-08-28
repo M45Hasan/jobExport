@@ -3,7 +3,7 @@ const app = express();
 const Exam = require("../model/examModel");
 const ExamPackage = require("../model/examPackage");
 
-const examHeader = async (req, res) => {
+const examCreate = async (req, res) => {
   const {
     packageUid,
     examTitle,
@@ -65,6 +65,30 @@ const examHeader = async (req, res) => {
   }
 };
 
+const deleteExam = async (req, res) => {
+  const { nid } = req.body;
+
+  try {
+    
+    const search = await Exam.findOne({ nid: nid });
+  
+    if (search) {
+      
+      const deleteResult = await Question.deleteMany({
+        examId: { $in: search._id }
+      });
+  
+      
+      res.status(200).json(deleteResult);
+    } else {
+      res.status(404).json({ message: "Package not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
 module.exports = {
-  examHeader,
+  examCreate,
+  deleteExam,
 };
