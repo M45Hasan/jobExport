@@ -25,6 +25,7 @@ const {
   packageStatus,
   packageRepost,
   packageDelete,
+  categoryWise
   
 } = require("../../controller/examPackageController");
 
@@ -56,6 +57,7 @@ _.post("/timer", packageTimer);
 _.post("/packagestatus", packageStatus);
 _.post("/packagerepost", packageRepost);
 _.post("/packagedelete", packageDelete);
+_.post("/categorywise", categoryWise);
 
 
 //exam question Header api
