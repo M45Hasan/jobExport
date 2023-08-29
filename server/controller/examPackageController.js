@@ -272,7 +272,28 @@ const packageDelete = async (req, res) => {
     res.status(500).json({ error: "Error Occurs" });
   }
 };
+const categoryWise = async (req, res) => {
+  const { examCategory } = req.body;
+  const today = new Date();
+  const formattedToday = today.toISOString().split("T")[0];
+  console.log(formattedToday);
 
+  try {
+    const matchingExams = await ExamPackage.find({
+      examDate: formattedToday,
+      examCategory: examCategory,
+    });
+
+    if (matchingExams.length > 0) {
+      res.status(200).json(matchingExams);
+    } else {
+      res.status(404).json({ message: "No matching exams found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
 module.exports = {
   packageCreateController,
   myPackage,
@@ -284,4 +305,5 @@ module.exports = {
   packageStatus,
   packageRepost,
   packageDelete,
+  categoryWise,
 };
