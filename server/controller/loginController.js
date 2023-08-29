@@ -5,7 +5,8 @@ const User = require("../model/userModel");
 const emailV = require("../utils/emailVerfy");
 const { generateAndCopyOTP } = require("../utils/otpGenerate");
 
-const logController = async (req, res) => {
+const logController = async (req, res) => { 
+  
   const { pass, email } = req.body;
   console.log(req.body);
   try {

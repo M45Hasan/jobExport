@@ -102,17 +102,9 @@ const deleteExam = async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 };
-const todayExam = async(req,res)=>{
-  
-  const search = await ExamPackage.find();
 
-  search.forEach(async(id,j)=>{
-    await todyExamm(id._id)
-  })
-
-}
 module.exports = {
   examCreate,
   deleteExam,
-  todayExam
+  
 };
