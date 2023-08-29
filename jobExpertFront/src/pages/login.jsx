@@ -134,13 +134,8 @@ const login = () => {
   const [otp, setOtp] = React.useState(false);
   const [verifyotp, setVerifyotp] = React.useState(false);
 
-  let handelverifyotp = () => {
-    setOtp(false);
-    setHide(false);
-    setVerifyotp(true);
-  };
   React.useEffect(() => {
-    if (mydata.userData.userInfo) {
+    if (mydata?.userData?.userInfo?.verify == true) {
       navigate("/jobexpart");
     }
   }, []);
@@ -153,6 +148,7 @@ const login = () => {
       setInfo({ email: "" });
       setHide(false);
       if (data.data.message) {
+        dispathc(activeUser(info));
         return toast.success(data.data.message, {
           position: "top-right",
           autoClose: 2000,
@@ -187,16 +183,67 @@ const login = () => {
     newOtp[index] = value;
     setForgetOtp(newOtp);
   };
-  console.log(forgetOtp);
-
+  let updatepass = {
+    ...mydata.userData.userInfo,
+    pass: info.pass,
+  };
   const handelforgetOtpSubmit = async (e) => {
+    setOtp(false);
+    setHide(false);
+    setVerifyotp(true);
     e.preventDefault();
     const enteredOtp = forgetOtp.join("");
 
     let userverify = {
-      email: user.userData.userInfo.email,
+      ...mydata.userData.userInfo,
+      email: mydata.userData.userInfo.email,
       otpmatch: enteredOtp,
     };
+
+    dispathc(activeUser(userverify));
+    try {
+      let data = await axios.post("/jobExpert/api/v1/resetmatch", userverify);
+      console.log(data);
+    } catch (error) {
+      setVerifyotp(false);
+      setOtp(true);
+      toast.error("Invalid OTP", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const handelsetPass = async () => {
+    if (!info.pass) {
+      return setError({ pass: "please input your password" });
+    } else {
+      try {
+        let data = await axios.post("/jobExpert/api/v1/resetmatch", updatepass);
+        toast.success("update your password successfully", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          window.location.reload();
+          navigate("/login");
+        }, 2000);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
   return (
     <>
@@ -373,12 +420,11 @@ const login = () => {
                                     required
                                     value={digit}
                                     onChange={(e) => forgetotpChange(e, index)}
-                                    onClick={handelforgetOtpSubmit}
                                   />
                                 ))}
                               </div>
                               <button
-                                onClick={handelverifyotp}
+                                onClick={handelforgetOtpSubmit}
                                 type="submit"
                                 className="ml-4 px-24 md:px-28 py-2 bg-blue-500 text-white rounded bg-primary  focus:outline-none mt-10"
                               >
@@ -398,20 +444,30 @@ const login = () => {
                               >
                                 Set your new password
                               </Typography>
+
                               <TextField
                                 id="filled-basic"
                                 label="New Password"
                                 variant="filled"
+                                name="pass"
                                 fullWidth
+                                onChange={handelChange}
                               />
                               <TextField
                                 id="filled-basic"
                                 label="Confrime Password"
                                 variant="filled"
+                                name="pass"
                                 fullWidth
                                 sx={{ marginTop: "20px" }}
+                                onChange={handelChange}
                               />
+                              {error && (
+                                <p className="text-red-600">{error.pass}</p>
+                              )}
+
                               <Button
+                                onClick={handelsetPass}
                                 sx={{ marginTop: "20px" }}
                                 variant="contained"
                               >

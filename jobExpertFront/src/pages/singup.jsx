@@ -69,7 +69,7 @@ export default function singup() {
   };
 
   React.useEffect(() => {
-    if (userData.userData.userInfo) {
+    if (userData?.userData?.userInfo?.verify == true) {
       navigate("/jobexpart");
     }
   }, []);

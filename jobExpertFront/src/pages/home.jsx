@@ -2,15 +2,24 @@ import logo from "../assets/brandLogo/logo.png";
 
 import appstore from "../assets/brandLogo/appstore (1).png";
 import googlestore from "../assets/brandLogo/appstore (2).png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Slider from "../components/Slider/Slider";
 import Banner from "../components/Banner/Banner";
 import Button from "@mui/material/Button";
 import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
 import singup from "./singup";
+import { useEffect } from "react";
 
+import { useSelector } from "react-redux";
 const home = () => {
+  let navigate = useNavigate();
+  const userData = useSelector((state) => state);
+  useEffect(() => {
+    if (userData?.userData?.userInfo?.verify == true) {
+      navigate("jobexpart");
+    }
+  }, []);
   return (
     <div className="">
       <Navbar />
