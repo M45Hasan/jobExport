@@ -296,13 +296,20 @@ const categoryWiseTodayExam = async (req, res) => {
 };
 const selectExamByUser = async (req, res) => {
   const idx = req.params.id;
-
+  console.log(idx);
   try {
-    const search = await ExamPackage.findOne({ _id: idx });
+    const search = await ExamPackage.findById({ _id: idx }).populate({
+      path: "examList",
+      populate: {
+        path: "qestionList",
+        model: "Question",
+      },
+    });
+
     if (search) {
       res.status(200).send(search);
     } else {
-      res.status(400).json({error:"Ivalid Input"});
+      res.status(400).json({ error: "Ivalid Input" });
     }
   } catch (error) {
     res.status(500).json({ error: "Server Error" });
@@ -320,5 +327,5 @@ module.exports = {
   packageRepost,
   packageDelete,
   categoryWiseTodayExam,
-  selectExamByUser
+  selectExamByUser,
 };
