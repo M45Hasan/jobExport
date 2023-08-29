@@ -272,7 +272,7 @@ const packageDelete = async (req, res) => {
     res.status(500).json({ error: "Error Occurs" });
   }
 };
-const categoryWise = async (req, res) => {
+const categoryWiseTodayExam = async (req, res) => {
   const { examCategory } = req.body;
   const today = new Date();
   const formattedToday = today.toISOString().split("T")[0];
@@ -285,13 +285,27 @@ const categoryWise = async (req, res) => {
     });
 
     if (matchingExams.length > 0) {
-      res.status(200).json(matchingExams);
+      res.status(200).send(matchingExams);
     } else {
-      res.status(404).json({ message: "No matching exams found" });
+      res.status(400).json({ message: "No matching exams found" });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred" });
+  }
+};
+const selectExamByUser = async (req, res) => {
+  const idx = req.params.id;
+
+  try {
+    const search = await ExamPackage.findOne({ _id: idx });
+    if (search) {
+      res.status(200).send(search);
+    } else {
+      res.status(400).json({error:"Ivalid Input"});
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
   }
 };
 module.exports = {
@@ -305,5 +319,6 @@ module.exports = {
   packageStatus,
   packageRepost,
   packageDelete,
-  categoryWise,
+  categoryWiseTodayExam,
+  selectExamByUser
 };

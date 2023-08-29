@@ -25,11 +25,12 @@ const {
   packageStatus,
   packageRepost,
   packageDelete,
-  categoryWise
+  categoryWiseTodayExam,
+  selectExamByUser
   
 } = require("../../controller/examPackageController");
 
-const { examCreate, deleteExam ,todayExam,} = require("../../controller/examController");
+const { examCreate, deleteExam } = require("../../controller/examController");
 const {
   createQuestion,
   deleteQuestion,
@@ -57,13 +58,14 @@ _.post("/timer", packageTimer);
 _.post("/packagestatus", packageStatus);
 _.post("/packagerepost", packageRepost);
 _.post("/packagedelete", packageDelete);
-_.post("/categorywise", categoryWise);
+_.post("/categorywise", categoryWiseTodayExam);
+_.post("/examtopaper/:id", selectExamByUser);
 
 
 //exam question Header api
 _.post("/examheader", examCreate);
 _.post("/deleteexam", deleteExam);
-_.get("/todyexam", todayExam);
+ 
 
 //exam question Body api
 _.post("/questioncreate", createQuestion);
