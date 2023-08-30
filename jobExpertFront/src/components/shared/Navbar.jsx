@@ -225,7 +225,9 @@ function Navbar() {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem>
-                    <Typography textAlign="center">Profile</Typography>
+                    <Link to={"/jobexpart/studentprofile"}>
+                      <Typography textAlign="center">Profile</Typography>
+                    </Link>
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Logout</Typography>

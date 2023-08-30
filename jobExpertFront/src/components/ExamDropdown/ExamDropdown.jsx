@@ -4,29 +4,35 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../Axios/axios";
 
-const ExamDropdown = ({ dataFromeChild }) => {
-  const [selectedOption, setSelectedOption] = useState("option1");
+const ExamDropdown = ({ dataFromeChild, titel }) => {
+  const [selectedOption, setSelectedOption] = useState("ফ্রী মডেল টেস্ট");
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
+
     console.log(selectedOption);
   };
 
   useEffect(() => {
-    async function data() {
-      let data = await axios.post(
-        "/jobExpert/api/v1/categorywise",
-        selectedOption
-      );
-      if (data.data.length > 0) {
-        console.log(data);
-        dataFromeChild(data.data);
-      } else {
-        dataFromeChild(null);
+    const fetchData = async () => {
+      try {
+        let response = await axios.post("/jobExpert/api/v1/categorywise", {
+          examCategory: selectedOption,
+        });
+        console.log("response", response);
+        if (response.data.length > 0) {
+          dataFromeChild(response.data);
+        } else {
+          dataFromeChild(null);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        dataFromeChild("");
+        // Handle the error (e.g., show an error message to the user)
       }
-    }
-    data();
-  }, []);
+    };
+    fetchData();
+  }, [selectedOption]);
 
   const [datax, setData] = useState([]);
   const userData = useSelector((state) => state);
@@ -51,12 +57,12 @@ const ExamDropdown = ({ dataFromeChild }) => {
   }, []);
 
   return (
-    <div className=" flex items-center mt-16 mb-[64px]">
+    <div className=" flex items-center ">
       <label
         className="block text-gray-700 text-sm font-bold mb-2 border-2 border-primary py-2.5 px-3 mt-2"
         htmlFor="options"
       >
-        পরিক্ষাঃ
+        {titel}
       </label>
       <div className="w-52 relative ml-2">
         <select
@@ -65,10 +71,10 @@ const ExamDropdown = ({ dataFromeChild }) => {
           onChange={handleChange}
           className="block appearance-none w-full bg-white border border-gray-300 text-gray-900 py-3 px-4 pr-8 shadow leading-tight focus:outline-none focus:shadow-outline bg-primary text-[#FFFFFF] cursor-pointer"
         >
-          <option value=" ফ্রী মডেল টেস্ট" name="ফ্রী" selected>
+          <option value="ফ্রী মডেল টেস্ট" name="Bangla" selected>
             ফ্রী মডেল টেস্ট
           </option>
-          <option value="বিসিএস প্রস্তুতি" name="বিসিএস">
+          <option value="বিসিএস প্রস্তুতি" name="বিসিএস প্রস্তুতি">
             বিসিএস প্রস্তুতি
           </option>
           <option value="প্রাথমিক শিক্ষক প্রস্তুতি" name="প্রাথমিক">
