@@ -18,5 +18,5 @@ const userExam = new Schema({
     },
   ],
 });
-
-module.exports = mongoose.model("Exam", userExam);
+ 
+// module.exports = mongoose.model("Exam", userExam);

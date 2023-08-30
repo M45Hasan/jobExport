@@ -21,7 +21,7 @@ const createQuestion = async (req, res) => {
   } = req.body;
 
   try {
-    const saerch = await Exam.find({ examSerial, nid });
+    const saerch = await ExamPackage.find({ examSerial, nid });
     if (saerch.length != 0) {
       const newQuestion = new Question({
         examTrack: examSerial,
@@ -37,7 +37,7 @@ const createQuestion = async (req, res) => {
         wrongMark,
       });
       newQuestion.save();
-      await Exam.findByIdAndUpdate(
+      await ExamPackage.findByIdAndUpdate(
         { _id: saerch[0]._id },
         { $push: { qestionList: newQuestion._id } },
         { new: true }
@@ -48,7 +48,7 @@ const createQuestion = async (req, res) => {
       );
       res.status(201).json(crtQ);
     } else {
-      res.status(401).json({ error: "Already" });
+      res.status(401).json({ error: "Already ExamSerial Name exist" });
     }
   } catch (error) {
     console.error(error);
@@ -61,25 +61,26 @@ const deleteQuestion = async (req, res) => {
 
   console.log(id);
   try {
-    const mx = await Question.find({ _id: id });
-    console.log(mx[0].examTrack);
+    const mx = await Question.findOne({ _id: id });
 
-    await Exam.findOneAndUpdate(
-      { examSerial: mx[0].examTrack },
-      { $pull: { qestionList: { $in: mx[0]._id } } },
-      { new: true }
-    );
-    await Question.findOneAndDelete({ _id: mx[0]._id });
-    res.status(202).json({ message: "Delete Success" });
+    if (mx) {
+      await ExamPackage.findOneAndUpdate(
+        { examSerial: mx.examTrack },
+        { $pull: { qestionList: { $in: mx._id } } },
+        { new: true }
+      );
+      await Question.findOneAndDelete({ _id: mx._id });
+      res.status(202).json({ message: "Delete Success" });
+    } else {
+      res.status(400).json({ error: "Invalid Entry" });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred" });
   }
 };
 
-
 module.exports = {
   createQuestion,
   deleteQuestion,
-  
 };

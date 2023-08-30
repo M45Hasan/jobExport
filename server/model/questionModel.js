@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 
 const newQuestion = new Schema({
   examTrack: { type: String },
-  examId: { type: Schema.Types.ObjectId, ref: "Exam" },
+  examId: { type: Schema.Types.ObjectId, ref: "ExamPackage" },
   whatIsTheQuestion: { type: String },
   optionA: { type: String },
   optionB: { type: String }, 

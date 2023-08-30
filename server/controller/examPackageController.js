@@ -19,6 +19,11 @@ const packageCreateController = async (req, res) => {
     examDate,
     examTime,
     nid,
+    examSerial,
+    examTitle,
+    examDuration,
+    examInfo,
+    examMark,
   } = req.body;
   try {
     let search = await User.find({
@@ -41,19 +46,28 @@ const packageCreateController = async (req, res) => {
         examDate,
         examTime,
         nid: search[0].nid,
+        examSerial,
+        examTitle,
+        examDuration,
+        examInfo,
+        examMark,
       });
       createPackage.save();
 
       await User.findOneAndUpdate(
         { email: packageCreaterEmail },
-        { $push: { examPackageId: createPackage._id } }
+        { $push: { examPackageId: createPackage._id } },
+        { new: true }
       );
       await ExamPackage.findOneAndUpdate(
         { packageCreaterEmail },
-        { $push: { packageCreater: search._id } }
+        { $push: { packageCreater: search._id } },
+        { new: true }
       );
 
       res.status(200).send(createPackage);
+    } else {
+      res.status(400).json({ error: "Invalid Entry" });
     }
   } catch (error) {
     console.log(error.code);
@@ -213,8 +227,12 @@ const packageRepost = async (req, res) => {
       packageActive: true,
       examCategory: search[0].examCategory,
       examSubCategory: search[0].examSubCategory,
-      examQuestionList: search[0].examQuestionList,
-
+      qestionList: search[0].qestionList,
+      examMark: search[0].examMark,
+      examInfo: search[0].examInfo,
+      examDuration: search[0].examDuration,
+      examTitle: search[0].examTitle,
+      examSerial: search[0].examSerial,
       examDate: examDate,
       examTime: examTime,
     });
@@ -232,39 +250,19 @@ const packageDelete = async (req, res) => {
   try {
     const packSearch = await ExamPackage.findOne({ packageUid, nid });
     if (packSearch) {
-      const how = `PK-${packageUid}`;
+      try {
+        const deleteResult = await Question.deleteMany({
+          examId: { $in: packSearch.examId },
+        });
+        console.log(`Deleted questions for exam ${packSearch.examId}`);
 
-      const examSearch = await Exam.find({ packageUid: how });
-
-      examSearch.forEach(async (i, j) => {
-        await deleteQuestion(i._id);
-        await deleteExam(i._id);
-      });
-
-      async function deleteQuestion(examId) {
-        try {
-          const deleteResult = await Question.deleteMany({
-            examId: { $in: examId },
-          });
-          console.log(`Deleted questions for exam ${examId}`);
-        } catch (error) {
-          console.error(
-            `Error deleting questions for exam ${examId}: ${error}`
-          );
-        }
+        await ExamPackage.deleteOne({ _id: packSearch._id });
+        res.status(200).send(deleteResult);
+      } catch (error) {
+        console.error(
+          `Error deleting questions for exam ${packSearch.examId}: ${error}`
+        );
       }
-
-      async function deleteExam(id) {
-        try {
-          const delExam = await Exam.deleteMany({ _id: id });
-          console.log(`Deleted  exam ${id}`);
-        } catch (error) {
-          console.error(`Error  exam ${id}: ${error}`);
-        }
-      }
-      await ExamPackage.deleteOne({ _id: packSearch._id });
-
-      res.status(200).send(examSearch);
     } else {
       res.status(404).json({ error: "Invalid Entry" });
     }

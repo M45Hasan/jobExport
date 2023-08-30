@@ -104,7 +104,6 @@ const deleteExam = async (req, res) => {
 };
 
 module.exports = {
-  examCreate,
-  deleteExam,
+  
   
 };

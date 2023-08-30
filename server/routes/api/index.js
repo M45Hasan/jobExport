@@ -30,7 +30,7 @@ const {
   
 } = require("../../controller/examPackageController");
 
-const { examCreate, deleteExam } = require("../../controller/examController");
+// const { examCreate, deleteExam } = require("../../controller/examController");
 const {
   createQuestion,
   deleteQuestion,
@@ -63,8 +63,8 @@ _.post("/examtopaper/:id", selectExamByUser);
 
 
 //exam question Header api
-_.post("/examheader", examCreate);
-_.post("/deleteexam", deleteExam);
+// _.post("/examheader", examCreate);
+// _.post("/deleteexam", deleteExam);
  
 
 //exam question Body api
