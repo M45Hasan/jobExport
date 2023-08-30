@@ -18,8 +18,12 @@ const logController = async (req, res) => {
             name: search[0].name,
             email: search[0].email,
             role: search[0].role,
+
             nid: search[0].nid,
             phone: search[0].phone,
+
+            verify: search[0].hasEmailVerified,
+
             userImg: search[0].avatar ? search[0].avatar : null,
           });
         } else {
@@ -32,6 +36,9 @@ const logController = async (req, res) => {
         { $set: { otpmatch: "" } },
         { new: true }
       );
+    }
+    else{
+      return res.json({message: "authicitaion error"})
     }
   } catch (error) {
     console.error(error);

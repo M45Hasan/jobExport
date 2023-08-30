@@ -9,7 +9,7 @@ const homeSectionFour = () => {
       <h3 className="text-2xl text-center font-bold mb-10 mt-20">
         আমাদের সফলতা
       </h3>
-      <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 justify-items-center items-center gap-5 md:gap-0 mx-5">
+      <section className="grid  grid-cols-1 md:grid-cols-3 lg:grid-cols-5 justify-items-center items-center gap-5 md:gap-0 mx-5">
         {data.map((item, index) => (
           <div
             key={index}

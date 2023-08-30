@@ -33,7 +33,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (userData.userData.userInfo) {
+    if (userData?.userData?.userInfo?.verify == true) {
       setShow(true);
     } else {
       setShow(false);
@@ -194,7 +194,12 @@ function Navbar() {
             }}
           >
             {show ? (
-              <Box sx={{ flexGrow: 0 }}>
+              <Box sx={{ flexGrow: 2 }}>
+                <Link to={"/jobexpart/teacherPanel"}>
+                  <Button sx={{ marginRight: "20px" }} variant="contained">
+                    Teacher Panel
+                  </Button>
+                </Link>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
