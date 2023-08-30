@@ -1,10 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+.swiper-button-prev,
+.swiper-button-next {
+  color: #fff !important;
+  padding: 30px !important;
+}
 .react-tabs__tab--selected {
     color: #ffffff !important;
     overflow: hidden !important;
     background: #26a4de !important;
   }
   
+ol{
+  list-style-type: decimal; 
+  
+}
+
+li::marker{
+  font-size: 24px !important;
+  font-weight: 500 !important;
+}
