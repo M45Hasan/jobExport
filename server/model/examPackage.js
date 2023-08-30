@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const packageSchema = new Schema({
-  packageUid:{type:String},
-  nid:{type:String},
+  packageUid: { type: String },
+  nid: { type: String },
   packageName: { type: String, require: true },
   packageDetail: { type: String },
   packageCreater: { type: Schema.Types.ObjectId, ref: "User" },
@@ -14,12 +14,7 @@ const packageSchema = new Schema({
   packageActive: { type: Boolean, default: true },
   examCategory: { type: String },
   examSubCategory: { type: String },
-  examList: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Exam",
-    },
-  ],
+
   packageBuyer: [
     {
       type: Schema.Types.ObjectId,
@@ -28,11 +23,23 @@ const packageSchema = new Schema({
   ],
   timestamps: {
     type: Date,
-    default: Date.now(), 
+    default: Date.now(),
   },
 
-  examDate: { type: String ,require:true},
-  examTime: { type: String ,require:true},
+  examDate: { type: String, require: true },
+  examTime: { type: String, require: true },
+
+  examSerial: { type: String, require: true },
+  examTitle: { type: String, require: true },
+  examDuration: { type: String, require: true },
+  examInfo: { type: String },
+  examMark: { type: String },
+  qestionList: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Question",
+    },
+  ],
 });
 
 module.exports = mongoose.model("ExamPackage", packageSchema);
