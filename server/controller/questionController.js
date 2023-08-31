@@ -80,7 +80,28 @@ const deleteQuestion = async (req, res) => {
   }
 };
 
+const packageQuestionList = async (req, res) => {
+  const { packageUid, nid } = req.body;
+  console.log(packageUid, nid);
+
+  try {
+    const search = await ExamPackage.find({
+      packageUid: packageUid,
+      nid: nid,
+    }).populate("qestionList");
+    console.log(search[0].qestionList.length);
+
+    if (search[0].qestionList.length != 0) {
+      res.status(200).send(search);
+    } else {
+      res.status(400).json({ error: "Invalid Entry" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Server Error", mm: `${error.code}` });
+  }
+};
 module.exports = {
   createQuestion,
   deleteQuestion,
+  packageQuestionList,
 };

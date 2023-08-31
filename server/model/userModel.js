@@ -23,7 +23,7 @@ const userSchema = new Schema({
     type: String,
   },
   avatar: {
-    type: String,
+  type: String,
     default:
       "https://wop-files.s3.us-west-2.amazonaws.com/no-user-image-icon-0-1685274609551.jpg",
   },
