@@ -49,6 +49,11 @@ const LiveExpert = () => {
           <ExamDropdown
             titel={"পরিক্ষাঃ"}
             dataFromeChild={reciveDataFromChild}
+            models={(selectedOption) => {
+              // Do something with the selectedOption
+              // For example, you can log it to the console
+              console.log(selectedOption);
+            }}
           />
         </div>
 
