@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../Axios/axios";
 
-const ExamDropdown = ({ dataFromeChild, titel }) => {
+const ExamDropdown = ({ dataFromeChild, models, titel }) => {
   const [selectedOption, setSelectedOption] = useState("ফ্রী মডেল টেস্ট");
 
   const handleChange = (event) => {
@@ -12,7 +12,9 @@ const ExamDropdown = ({ dataFromeChild, titel }) => {
 
     console.log(selectedOption);
   };
-
+  useEffect(() => {
+    models(selectedOption); // Call the models function whenever selectedOption changes
+  }, [selectedOption]);
   useEffect(() => {
     const fetchData = async () => {
       try {

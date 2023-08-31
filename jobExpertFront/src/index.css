@@ -11,7 +11,11 @@
     overflow: hidden !important;
     background: #26a4de !important;
   }
-  
+.rdw-editor-main {
+   
+    border: 1px solid black;
+    margin-bottom: 50px;
+}
 ol{
   list-style-type: decimal; 
   
