@@ -2,17 +2,12 @@ import axios from "../Axios/axios";
 import React, { useEffect, useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 
+import { EditorState, convertToRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, ContentState, convertToRaw } from "draft-js";
+import GetUnderPackegQution from "./GetUnderPackegQution";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -25,6 +20,7 @@ const rows = [
   createData("Cupcake", 305, 3.7, 67, 4.3),
   createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];
+
 const Question = ({ examSerials, NID }) => {
   let [info, setInfo] = useState({
     optionA: "",
@@ -55,10 +51,14 @@ const Question = ({ examSerials, NID }) => {
       [name]: value,
     });
     setError({ ...error, [name]: value ? "" : `${name} is required` });
-    console.log(info);
   };
 
-  const handelSubmit = async () => {
+  let [post, setPost] = useState("");
+  let [rander, setRander] = useState(true);
+  const handelSubmit = async (event) => {
+    event.preventDefault();
+    event.persist();
+
     setError({
       optionA: !info.optionA ? "Please Input optionA" : "",
       optionB: !info.optionB ? "Please Input optionB" : "",
@@ -69,6 +69,7 @@ const Question = ({ examSerials, NID }) => {
       rightMark: !info.rightMark ? "Please Input rightMark" : "",
       wrongMark: !info.wrongMark ? "Please Input wrongMark" : "",
     });
+
     if (
       !info.optionA ||
       !info.optionB ||
@@ -83,14 +84,29 @@ const Question = ({ examSerials, NID }) => {
     }
 
     try {
-      const res = await axios.post("/jobExpert/api/v1/questioncreate", {
-        ...info,
+      const descriptionHtml = draftToHtml(
+        convertToRaw(description.getCurrentContent())
+      );
+
+      const requestData = {
+        optionA: info.optionA,
+        optionB: info.optionB,
+        optionC: info.optionC,
+        optionD: info.optionD,
+        rightAnsOne: info.rightAnsOne,
+        ansDetail: info.ansDetail,
+        rightMark: info.rightMark,
+        wrongMark: info.wrongMark,
         examSerial: examSerials,
         nid: NID,
-        whatIsTheQuestion: JSON.stringify(editorContent), // Convert to JSON string
-        // other data you want to send
-      });
-      console.log(res);
+        whatIsTheQuestion: descriptionHtml,
+      };
+      const res = await axios.post(
+        "/jobExpert/api/v1/questioncreate",
+        requestData
+      );
+      setPost(res.data.whatIsTheQuestion);
+
       toast.success("Successfully Package Create", {
         position: "bottom-right",
         autoClose: 1000,
@@ -101,20 +117,16 @@ const Question = ({ examSerials, NID }) => {
         progress: undefined,
         theme: "light",
       });
-      setShow(true);
+      setRander(!rander);
     } catch (error) {
       console.log(error);
     }
   };
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [editorContent, setEditorContent] = useState(null);
 
-  const handleEditorChange = (newEditorState) => {
-    setEditorState(newEditorState);
-
-    const contentState = newEditorState.getCurrentContent();
-    const contentRaw = convertToRaw(contentState);
-    setEditorContent(contentRaw);
+  let editorState = EditorState.createEmpty();
+  const [description, setDescription] = useState(editorState);
+  const onEditorStateChange = (editorState) => {
+    setDescription(editorState);
   };
 
   return (
@@ -132,17 +144,26 @@ const Question = ({ examSerials, NID }) => {
               {error.whatIsTheQuestion && (
                 <p className="text-[red] text-lg">{error.whatIsTheQuestion}</p>
               )}
-              {/* <TextField
-                marginTop="10px"
-                label="what Is The Question"
-                name="whatIsTheQuestion"
-                fullWidth
-                onChange={handetype}
-              /> */}
-              <div>
+
+              <div className="form-group col-md-12 editor">
+                <label className="font-weight-bold">
+                  {" "}
+                  Heading <span className="required"> * </span>{" "}
+                </label>
                 <Editor
-                  editorState={editorState}
-                  onEditorStateChange={handleEditorChange}
+                  editorState={description}
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="wrapperClassName"
+                  editorClassName="editorClassName"
+                  onEditorStateChange={onEditorStateChange}
+                />
+                <textarea
+                  style={{ display: "none" }}
+                  disabled
+                  ref={(val) => (info.description = val)}
+                  value={draftToHtml(
+                    convertToRaw(description.getCurrentContent())
+                  )}
                 />
               </div>
 
@@ -191,36 +212,36 @@ const Question = ({ examSerials, NID }) => {
                 <p>Select Correct ANS</p>
                 <input
                   type="radio"
-                  id="html"
+                  id="optionA"
                   name="rightAnsOne"
                   value="optionA"
                   onChange={handetype}
-                ></input>
-                  <label for="html">option A</label> {" "}
+                />
+                <label for="optionA">option A</label>{" "}
                 <input
                   type="radio"
-                  id="css"
+                  id="optionB"
                   name="rightAnsOne"
                   value="optionB"
                   onChange={handetype}
-                ></input>
-                  <label for="css">option B</label> {" "}
+                />
+                <label for="optionB">option B</label>{" "}
                 <input
                   type="radio"
-                  id="javascript"
+                  id="optionC"
                   name="rightAnsOne"
                   value="optionC"
                   onChange={handetype}
-                ></input>
-                <label for="css">option C</label>{" "}
+                />
+                <label for="optionC">option C</label>{" "}
                 <input
                   type="radio"
-                  id="javascript"
+                  id="optionD"
                   name="rightAnsOne"
                   value="optionD"
                   onChange={handetype}
-                ></input>
-                  <label for="javascript">Option D</label>{" "}
+                />
+                <label for="optionD">Option D</label>{" "}
               </div>
 
               {error.ansDetail && (
@@ -260,7 +281,6 @@ const Question = ({ examSerials, NID }) => {
               sx={{
                 display: "block",
                 textAlign: "center",
-
                 margin: "0 auto",
               }}
               variant="contained"
@@ -269,31 +289,9 @@ const Question = ({ examSerials, NID }) => {
             </Button>
           </div>
         </div>
-        <TableContainer sx={{ width: "30%" }} component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Dessert (100g serving)</TableCell>
-                <TableCell align="right">Calories</TableCell>
-                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <div>
+          <GetUnderPackegQution rander={rander} />
+        </div>
       </div>
     </>
   );
