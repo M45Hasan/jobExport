@@ -22,11 +22,14 @@ const userSchema = new Schema({
   phone: {
     type: String,
   },
-  avatar: {
-  type: String,
-    default:
-      "https://wop-files.s3.us-west-2.amazonaws.com/no-user-image-icon-0-1685274609551.jpg",
-  },
+
+  avatar: [
+    {
+      type: String,
+      default:
+        "https://wop-files.s3.us-west-2.amazonaws.com/no-user-image-icon-0-1685274609551.jpg",
+    },
+  ],
   examPackageId: [
     {
       type: Schema.Types.ObjectId,

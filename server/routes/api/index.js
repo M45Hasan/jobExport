@@ -46,7 +46,7 @@ const {
 } = require("../../controller/paymentController");
 
 const imageUp = require("../../controller/imageController")
-_.post('/profile',imageUp)
+_.post('/imgupload',imageUp)
 //regi api
 _.post("/regi", regiController);
 _.post("/emailverification", verifyEmailController);
@@ -82,7 +82,7 @@ _.post("/questioncreate", createQuestion);
 _.post("/deletequestion", deleteQuestion);
 _.post("/examquestion", packageQuestionList);
 
-// paymentgateway
+// paymentgateway 
 
 _.get("/ssl", responseSSL);
 _.post("/ssl-request", sslRequest);
