@@ -26,15 +26,27 @@ const {
   packageRepost,
   packageDelete,
   categoryWiseTodayExam,
-  selectExamByUser
-  
+  selectExamByUser,
 } = require("../../controller/examPackageController");
 
 // const { examCreate, deleteExam } = require("../../controller/examController");
 const {
   createQuestion,
   deleteQuestion,
+  packageQuestionList
 } = require("../../controller/questionController");
+
+const {
+  responseSSL,
+  sslRequest,
+  sslSuccess,
+  sslNotifiaction,
+  sslfail,
+  sslCancel,
+} = require("../../controller/paymentController");
+
+const imageUp = require("../../controller/imageController")
+_.post('/imgupload',imageUp)
 //regi api
 _.post("/regi", regiController);
 _.post("/emailverification", verifyEmailController);
@@ -61,14 +73,22 @@ _.post("/packagedelete", packageDelete);
 _.post("/categorywise", categoryWiseTodayExam);
 _.post("/examtopaper/:id", selectExamByUser);
 
-
 //exam question Header api
 // _.post("/examheader", examCreate);
 // _.post("/deleteexam", deleteExam);
- 
 
 //exam question Body api
 _.post("/questioncreate", createQuestion);
 _.post("/deletequestion", deleteQuestion);
+_.post("/examquestion", packageQuestionList);
+
+// paymentgateway 
+
+_.get("/ssl", responseSSL);
+_.post("/ssl-request", sslRequest);
+_.post("/ssl-payment-success", sslSuccess);
+_.post("/ssl-payment-notification", sslNotifiaction);
+_.post("/ssl-payment-fail", sslfail);
+_.post("/ssl-payment-cancel", sslCancel);
 
 module.exports = _;
