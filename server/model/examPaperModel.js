@@ -4,17 +4,17 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
   packageUid: { type: String, require: true },
-  examineeId: { type: String },
+  examineeId: { type: Schema.Types.ObjectId,ref:"User" },
   ans: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Answer",
+      ref: "Answer"
     },
   ],
-  mark: { type: String },
+  mark: { type: Number },
   show: { type: Boolean, default: false },
-  rightans: { type: String },
-  wrongans: { type: String },
+  rightans: { type: Number },
+  wrongans: { type: Number },
 });
 
-module.exports=mongoose.model("Paper",userSchema)
+module.exports = mongoose.model("Paper", userSchema);

@@ -19,13 +19,15 @@ const createQuestion = async (req, res) => {
     wrongMark,
     examSerial,
     nid,
+    serial,
   } = req.body;
 
   try {
     const saerch = await ExamPackage.find({ examSerial, nid });
+    console.log(search);
     if (saerch.length != 0) {
       const newQuestion = new Question({
-        examTrack: examSerial,
+        examTrack: saerch[0].packageUid,
         whatIsTheQuestion,
         optionA,
         optionB,
@@ -36,6 +38,7 @@ const createQuestion = async (req, res) => {
         ansDetail,
         rightMark,
         wrongMark,
+        serial,
       });
       newQuestion.save();
       await ExamPackage.findByIdAndUpdate(
@@ -107,11 +110,13 @@ const whoCanExam = async (req, res) => {
   try {
     const search = await User.find({
       _id: myId,
-      role:"Student",
+      role: "Student",
       myExam: { $in: id },
     });
     if (search) {
-      const myExam = await ExamPackage.findById({_id:id}).populate("qestionList")
+      const myExam = await ExamPackage.findById({ _id: id }).populate(
+        "qestionList"
+      );
 
       res.send(myExam);
     } else {
@@ -121,8 +126,6 @@ const whoCanExam = async (req, res) => {
     res.status(500).json({ error: "Server error", code: error.code });
   }
 };
-
-
 
 module.exports = {
   createQuestion,

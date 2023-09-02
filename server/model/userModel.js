@@ -60,6 +60,12 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  result: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Paper",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);

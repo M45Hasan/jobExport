@@ -50,9 +50,10 @@ const imageUp = require("../../controller/imageController");
 _.post("/imgupload", imageUp);
 
 //exampaper
-const {createExamPaper,createAnswer} = require("../../controller/answerController");
+const {createExamPaper,createAnswer,resultPulish} = require("../../controller/answerController");
 _.post("/exampaper", createExamPaper);
 _.post("/answer", createAnswer);
+_.post("/result", resultPulish);
 
 //regi api
 _.post("/regi", regiController);

@@ -28,6 +28,8 @@ const createExamPaper = async (req, res) => {
 
       mong.save();
 
+      await User.findOneAndUpdate({_id: user._id},{$push:{result:mong._id}},{new:true})
+
       res.status(200).send(mong);
     } else {
       res.status(404).json({ error: "Invalid Entry" });
@@ -38,7 +40,7 @@ const createExamPaper = async (req, res) => {
 };
 
 const createAnswer = async (req, res) => {
-  const { packageUid, std, answer } = req.body;
+  const { packageUid, std, answer, serial } = req.body;
 
   try {
     const search = await Paper.findOne({
@@ -50,6 +52,7 @@ const createAnswer = async (req, res) => {
         exampaperid: search.packageUid,
         examineeId: search.examineeId,
         answer,
+        serial,
       });
 
       mong.save();
@@ -67,4 +70,58 @@ const createAnswer = async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 };
-module.exports = { createExamPaper, createAnswer };
+
+const calculateMarks = async (examTrack, examineeId, res) => {
+  try {
+    const answers = await Answer.find({ exampaperid: examTrack, examineeId });
+    const use = await User.findOne({_id:examineeId})
+   
+    let rightMarks = 0;
+    let wrongMarks = 0;
+
+    for (const answer of answers) {
+      const question = await Question.findOne({
+        examTrack: examTrack,
+        serial: answer.serial,
+      });
+
+      if (question) {
+        if (answer.answer === question.rightAnsOne) {
+          rightMarks += question.rightMark;
+        } else {
+          wrongMarks += question.wrongMark;
+        }
+      }
+    }
+    const getMark = rightMarks - wrongMarks;
+    const mx = await Paper.findOneAndUpdate(
+      { examineeId },
+      {
+        $set: {
+          mark: getMark,
+          rightans: rightMarks,
+          wrongans: wrongMarks,
+          show: true,
+         
+        },
+      },
+      { new: true }
+    );
+
+   
+    res.status(200).send(mx);
+   
+  } catch (error) {
+    res.status(500).json({ error: error.code });
+  }
+};
+
+
+const resultPulish = async (req, res) => {
+  const { examTrack, examineeId } = req.body;
+  calculateMarks(examTrack, examineeId, res);
+};
+
+
+
+module.exports = { createExamPaper, createAnswer, resultPulish };

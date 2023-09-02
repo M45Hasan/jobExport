@@ -3,8 +3,9 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  exampaperid: { type: String},
-  examineeId: { type:String},
+  exampaperid: { type: String },
+  examineeId: { type: String },
+  serial: { type: Number },
   answer: {
     type: String,
   },
