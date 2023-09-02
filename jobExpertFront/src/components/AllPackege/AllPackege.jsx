@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "../Axios/axios";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const AllPackege = () => {
   let data = useSelector((state) => state);
   let [packages, setPackages] = useState([]);
+  let [rander, setRander] = useState(false);
   let fatch = async () => {
     try {
       let packege = await axios.post("/jobExpert/api/v1/mypackage", {
@@ -18,15 +19,16 @@ const AllPackege = () => {
       console.log(error);
     }
   };
+
   useEffect(() => {
     fatch();
-  }, []);
+  }, [rander]);
+
   const [visiblePackages, setVisiblePackages] = useState(10);
   const handleMoreQuestions = () => {
     setVisiblePackages((prevVisiblePackages) => prevVisiblePackages + 10);
   };
 
-  const ques = useSelector((state) => state);
   const [dedata, setDeData] = useState("");
   let deletes = async (packageid, nid) => {
     try {
@@ -35,6 +37,7 @@ const AllPackege = () => {
         nid: nid,
       });
       setDeData(res.data);
+      setRander(!rander);
       console.log(dedata);
     } catch (error) {
       console.log(error);
@@ -45,7 +48,10 @@ const AllPackege = () => {
   return (
     <>
       {packages?.slice(0, visiblePackages).map((item) => (
-        <div className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] overflow-hidden items-center border border-[#000000] p-[5px] md:p-[20px]">
+        <div
+          key={item.index}
+          className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] overflow-hidden items-center border border-[#000000] p-[5px] md:p-[20px]"
+        >
           <div className="md:w-[20%] w-[60%]">
             <img
               className="w-full "
