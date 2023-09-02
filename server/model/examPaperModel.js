@@ -15,6 +15,9 @@ const userSchema = new Schema({
   show: { type: Boolean, default: false },
   rightans: { type: Number },
   wrongans: { type: Number },
+  rightmark: { type: Number },
+  wrongmark: { type: Number },
+  percentage: { type: Number },
 });
 
 module.exports = mongoose.model("Paper", userSchema);
