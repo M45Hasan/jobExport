@@ -28,7 +28,11 @@ const createExamPaper = async (req, res) => {
 
       mong.save();
 
-      await User.findOneAndUpdate({_id: user._id},{$push:{result:mong._id}},{new:true})
+      await User.findOneAndUpdate(
+        { _id: user._id },
+        { $push: { result: mong._id } },
+        { new: true }
+      );
 
       res.status(200).send(mong);
     } else {
@@ -74,10 +78,12 @@ const createAnswer = async (req, res) => {
 const calculateMarks = async (examTrack, examineeId, res) => {
   try {
     const answers = await Answer.find({ exampaperid: examTrack, examineeId });
-    const use = await User.findOne({_id:examineeId})
-   
+    const use = await User.findOne({ _id: examineeId });
+
     let rightMarks = 0;
+    let rightCount = 0;
     let wrongMarks = 0;
+    let wrongCount = 0;
 
     for (const answer of answers) {
       const question = await Question.findOne({
@@ -88,40 +94,42 @@ const calculateMarks = async (examTrack, examineeId, res) => {
       if (question) {
         if (answer.answer === question.rightAnsOne) {
           rightMarks += question.rightMark;
+          rightCount += 1;
         } else {
           wrongMarks += question.wrongMark;
+          wrongCount += 1;
         }
       }
     }
     const getMark = rightMarks - wrongMarks;
+    const perMark = rightMarks / rightCount;
+
+    const getPercentage = (rightCount / (rightCount + wrongCount)) * 100; ;
     const mx = await Paper.findOneAndUpdate(
       { examineeId },
       {
         $set: {
           mark: getMark,
-          rightans: rightMarks,
-          wrongans: wrongMarks,
+          rightans: rightCount,
+          wrongans: wrongCount,
           show: true,
-         
+          rightmark: rightMarks,
+          wrongmark: wrongMarks,
+          percentage: getPercentage,
         },
       },
       { new: true }
     );
 
-   
     res.status(200).send(mx);
-   
   } catch (error) {
     res.status(500).json({ error: error.code });
   }
 };
 
-
 const resultPulish = async (req, res) => {
   const { examTrack, examineeId } = req.body;
   calculateMarks(examTrack, examineeId, res);
 };
-
-
 
 module.exports = { createExamPaper, createAnswer, resultPulish };
