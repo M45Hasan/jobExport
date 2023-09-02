@@ -125,7 +125,7 @@ export default function singup() {
                 autoFocus
               />
               {errors.name && (
-                <p className="text-red-500 text-lg">name must be use</p>
+                <p className="text-[red] text-lg">name must be use</p>
               )}
               <TextField
                 margin="normal"
