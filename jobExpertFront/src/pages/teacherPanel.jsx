@@ -7,9 +7,12 @@ import Box from "@mui/material/Box";
 import { Button, Checkbox, FormControlLabel, TextField } from "@mui/material";
 import ExamDropdown from "../components/ExamDropdown/ExamDropdown";
 import axios from "../components/Axios/axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import Question from "../components/Creatquestion/Question";
+import { activeUser } from "../userSlice/userSlice";
+import { json } from "react-router-dom";
+import AllPackege from "../components/AllPackege/AllPackege";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -46,7 +49,8 @@ function a11yProps(index) {
 export default function TeacherPanel() {
   const [value, setValue] = React.useState(0);
   const datas = useSelector((state) => state);
-
+  console.log("active user", datas);
+  const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -164,7 +168,14 @@ export default function TeacherPanel() {
         packageCreaterEmail: datas.userData.userInfo.email,
         packageCreater: datas.userData.userInfo.name,
       });
+      const packegData = {
+        ...datas.userData.userInfo,
+        packageUid: res.data.packageUid,
+        nid: res.data.nid,
+      };
 
+      dispatch(activeUser(packegData));
+      localStorage.setItem("userInfo", JSON.stringify(packegData));
       toast.success("Successfully Package Create", {
         position: "bottom-right",
         autoClose: 1000,
@@ -381,7 +392,7 @@ export default function TeacherPanel() {
         )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <AllPackege />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Item Three
