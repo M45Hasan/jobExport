@@ -6,6 +6,7 @@ const ExamPackage = require("../model/examPackage");
 const Exam = require("../model/examModel");
 const Question = require("../model/questionModel");
 const { calculateTimeDifference } = require("../utils/timer");
+const { ObjectId } = require("mongodb");
 
 const packageCreateController = async (req, res) => {
   const {
@@ -123,24 +124,46 @@ const myExamList = async (req, res) => {
 const packageBuyer = async (req, res) => {
   const { packageUid, email } = req.body;
   try {
-    const search = await ExamPackage.find({ packageUid });
-    const searchUser = await User.find({ email, role: "Student" });
-    console.log(searchUser[0]._id);
-    if (search.length != 0 && searchUser.length != 0) {
+    const search = await ExamPackage.findOne({ packageUid, premium: true });
+    const free = await ExamPackage.findOne({ packageUid, premium: false });
+    const searchUser = await User.findOne({
+      email,
+      role: "Student",
+      myExam: search&&{ $nin: [search?._id] },
+    });
+    const searchUse = await User.findOne({
+      email,
+      role: "Student",
+      myExam: free&&{ $nin: [free?._id] },
+    });
+    console.log(free?._id); // Changed from free[0]._id
+
+    if (search && searchUser) {
       await ExamPackage.findOneAndUpdate(
         { packageUid },
-        { $push: { packageBuyer: searchUser[0]._id } }
+        { $push: { packageBuyer: searchUser._id } }
       );
       await User.findOneAndUpdate(
-        { email: searchUser[0].email },
-        { $push: { myExam: search[0]._id } }
+        { email: searchUser.email },
+        { $push: { myExam: search._id } }
       );
-      res.status(200).json({ message: "Purchase  success" });
+      res.status(200).json({ message: "Purchase success" });
+    } else if (free && searchUse) {
+      await ExamPackage.findOneAndUpdate(
+        { packageUid },
+        { $push: { packageBuyer: searchUser._id } }
+      );
+      await User.findOneAndUpdate(
+        { email: searchUser.email },
+        { $push: { myExam: free._id } }
+      );
+      res.status(200).json({ message: "Free Exam Added" });
     } else {
-      res.status(400).json({ error: "Fail purchase " });
+      res.status(400).json({ error: "You have already" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Error Occurs" });
+    console.error(error);
+    res.status(500).json({ error: "Error Occurs",code:error.code });
   }
 };
 
