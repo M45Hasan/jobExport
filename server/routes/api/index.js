@@ -33,7 +33,8 @@ const {
 const {
   createQuestion,
   deleteQuestion,
-  packageQuestionList
+  packageQuestionList,
+  whoCanExam,
 } = require("../../controller/questionController");
 
 const {
@@ -45,8 +46,15 @@ const {
   sslCancel,
 } = require("../../controller/paymentController");
 
-const imageUp = require("../../controller/imageController")
-_.post('/imgupload',imageUp)
+const imageUp = require("../../controller/imageController");
+_.post("/imgupload", imageUp);
+
+//exampaper
+const {createExamPaper,createAnswer,resultPulish} = require("../../controller/answerController");
+_.post("/exampaper", createExamPaper);
+_.post("/answer", createAnswer);
+_.post("/result", resultPulish);
+
 //regi api
 _.post("/regi", regiController);
 _.post("/emailverification", verifyEmailController);
@@ -81,8 +89,9 @@ _.post("/examtopaper/:id", selectExamByUser);
 _.post("/questioncreate", createQuestion);
 _.post("/deletequestion", deleteQuestion);
 _.post("/examquestion", packageQuestionList);
+_.post("/whocanexam", whoCanExam);
 
-// paymentgateway 
+// paymentgateway
 
 _.get("/ssl", responseSSL);
 _.post("/ssl-request", sslRequest);

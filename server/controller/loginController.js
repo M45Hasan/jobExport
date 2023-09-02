@@ -18,6 +18,7 @@ const logController = async (req, res) => {
             name: search[0].name,
             email: search[0].email,
             role: search[0].role,
+            id:search[0]._id,
 
             nid: search[0].nid,
             phone: search[0].phone,
