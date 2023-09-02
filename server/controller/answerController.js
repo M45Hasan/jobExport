@@ -97,6 +97,9 @@ const calculateMarks = async (examTrack, examineeId, res) => {
       }
     }
     const getMark = rightMarks - wrongMarks;
+    const perMark = rightMarks / rightCount;
+
+    const getPercentage = (rightCount / (rightCount + wrongCount)) * 100;
     const mx = await Paper.findOneAndUpdate(
       { examineeId },
       {
