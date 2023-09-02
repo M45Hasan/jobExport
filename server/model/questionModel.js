@@ -17,6 +17,8 @@ const newQuestion = new Schema({
   ansDetail: { type: String },
   rightMark: { type: Number },
   wrongMark: { type: Number },
+  
+  serial: { type: Number,require:true }
 });
 
 module.exports = mongoose.model("Question", newQuestion);
