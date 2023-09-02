@@ -3,6 +3,7 @@ const app = express();
 const Exam = require("../model/examModel");
 const ExamPackage = require("../model/examPackage");
 const Question = require("../model/questionModel");
+const User = require("../model/userModel");
 
 const createQuestion = async (req, res) => {
   const {
@@ -100,8 +101,32 @@ const packageQuestionList = async (req, res) => {
     res.status(500).json({ error: "Server Error", mm: `${error.code}` });
   }
 };
+
+const whoCanExam = async (req, res) => {
+  const { id, myId } = req.body;
+  try {
+    const search = await User.find({
+      _id: myId,
+      role:"Student",
+      myExam: { $in: id },
+    });
+    if (search) {
+      const myExam = await ExamPackage.findById({_id:id}).populate("qestionList")
+
+      res.send(myExam);
+    } else {
+      res.status(404).json({ errro: "No User found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Server error", code: error.code });
+  }
+};
+
+
+
 module.exports = {
   createQuestion,
   deleteQuestion,
   packageQuestionList,
+  whoCanExam,
 };
