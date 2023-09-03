@@ -90,7 +90,7 @@ const AllPackege = () => {
                   ) : (
                     ""
                   )}
-                  Start Now
+                  See Detials
                 </button>
               </Link>
               <Button
