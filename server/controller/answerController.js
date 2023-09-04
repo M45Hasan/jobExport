@@ -86,7 +86,9 @@ const calculateMarks = async (examTrack, examineeId, res) => {
     const use = await User.findOne({ _id: examineeId });
 
     let rightMarks = 0;
+    let rightCount = 0;
     let wrongMarks = 0;
+    let wrongCount = 0;
 
     for (const answer of answers) {
       const question = await Question.findOne({
@@ -97,23 +99,28 @@ const calculateMarks = async (examTrack, examineeId, res) => {
       if (question) {
         if (answer.answer === question.rightAnsOne) {
           rightMarks += question.rightMark;
+          rightCount += 1;
         } else {
           wrongMarks += question.wrongMark;
+          wrongCount += 1;
         }
       }
     }
-    const getMark = rightMarks - wrongMarks;
-    const perMark = rightMarks / rightCount;
 
-    const getPercentage = (rightCount / (rightCount + wrongCount)) * 100;
+    const getMark = rightMarks - wrongMarks;
+    const percentage = (rightCount / (rightCount + wrongCount)) * 100;
+
     const mx = await Paper.findOneAndUpdate(
       { examineeId },
       {
         $set: {
           mark: getMark,
-          rightans: rightMarks,
-          wrongans: wrongMarks,
+          rightans: rightCount,
+          wrongans: wrongCount,
           show: true,
+          rightmark: rightMarks,
+          wrongmark: wrongMarks,
+          percentage: percentage,
         },
       },
       { new: true }
@@ -127,22 +134,43 @@ const calculateMarks = async (examTrack, examineeId, res) => {
 
 const resultPulish = async (req, res) => {
   const { examTrack, examineeId } = req.body;
+  console.log(examTrack, examineeId);
   calculateMarks(examTrack, examineeId, res);
 };
 
 const getPaper = async (req, res) => {
   const { puid, id, optn } = req.body;
 
-  console.log("Received data from frontend:");
-  console.log("puid:", puid);
-  console.log("id:", id);
-  console.log("optn:", optn);
-  // const arr = [];
-  // await optn?.forEach((ans, value) => {
-  //   arr.push(ans);
-  // });
-  // console.log(arr);
-  // Send a response if needed
-  res.status(200).json({ message: "Data received successfully" });
+  try {
+    const search = await Paper.findOne({
+      packageUid: puid,
+      examineeId: id,
+    });
+    if (search) {
+      for (const question in optn) {
+        const answer = await optn[question];
+        // console.log(parseInt(question.split("-")[1]) + 1, answer);
+
+        const answerDocument = new Answer({
+          exampaperid: puid,
+          examineeId: id,
+          serial: parseInt(question.split("-")[1]) + 1,
+          answer: answer,
+        });
+
+        answerDocument.save();
+        const mp = await Paper.findOneAndUpdate(
+          { _id: search._id },
+          { $push: { ans: answerDocument._id } },
+          { new: true }
+        );
+      }
+      res.send("hello");
+    } else {
+      res.status(404).json({ error: "Invalid Entrh" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
 };
 module.exports = { createExamPaper, createAnswer, resultPulish, getPaper };
