@@ -13,30 +13,36 @@ const createExamPaper = async (req, res) => {
   const { packageUid, std } = req.body;
 
   try {
-    const user = await User.findById({ _id: std });
+    const match = await Paper.find({ packageUid: packageUid, examineeId: std });
 
-    const search = await ExamPackage.findOne({
-      packageUid,
-      packageBuyer: { $in: user._id },
-    });
+    if (match.length == 0) {
+      const user = await User.findById({ _id: std });
 
-    if (search) {
-      const mong = new Paper({
+      const search = await ExamPackage.findOne({
         packageUid,
-        examineeId: user._id,
+        packageBuyer: { $in: user._id },
       });
+      console.log(search);
+      if (search) {
+        const mong = new Paper({
+          packageUid,
+          examineeId: user._id,
+        });
 
-      mong.save();
+        mong.save();
 
-      await User.findOneAndUpdate(
-        { _id: user._id },
-        { $push: { result: mong._id } },
-        { new: true }
-      );
+        await User.findOneAndUpdate(
+          { _id: user._id },
+          { $push: { result: mong._id } },
+          { new: true }
+        );
 
-      res.status(200).send(mong);
+        res.status(200).send(mong);
+      } else {
+        res.status(404).json({ error: "Invalid Entry" });
+      }
     } else {
-      res.status(404).json({ error: "Invalid Entry" });
+      res.status(202).json({ error: "You have attended  already this exam" });
     }
   } catch (error) {
     res.status(500).json({ error: "Server Error" });
@@ -124,4 +130,19 @@ const resultPulish = async (req, res) => {
   calculateMarks(examTrack, examineeId, res);
 };
 
-module.exports = { createExamPaper, createAnswer, resultPulish };
+const getPaper = async (req, res) => {
+  const { puid, id, optn } = req.body;
+
+  console.log("Received data from frontend:");
+  console.log("puid:", puid);
+  console.log("id:", id);
+  console.log("optn:", optn);
+  // const arr = [];
+  // await optn?.forEach((ans, value) => {
+  //   arr.push(ans);
+  // });
+  // console.log(arr);
+  // Send a response if needed
+  res.status(200).json({ message: "Data received successfully" });
+};
+module.exports = { createExamPaper, createAnswer, resultPulish, getPaper };

@@ -58,8 +58,8 @@ const LiveExpert = () => {
         </div>
 
         {todayExam.length != 0
-          ? todayExam.slice(0, numQuestions).map((item) => (
-              <div className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] items-center border border-[#000000] p-[5px] md:p-[20px]">
+          ? todayExam.slice(0, numQuestions).map((item,k) => (
+              <div key={k} className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] items-center border border-[#000000] p-[5px] md:p-[20px]">
                 <div className="md:w-[20%] w-[60%]">
                   <img
                     className="w-full "
