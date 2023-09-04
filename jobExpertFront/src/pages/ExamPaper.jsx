@@ -33,18 +33,50 @@ const ExamPaper = () => {
     fetchQuestions();
   }, [id, seletor.userData.userInfo.id]);
 
+  // create paper start *********
+  const [paper, setPaper] = useState({});
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const pushData = await axios.post("/jobExpert/api/v1/exampaper", {
+          std: seletor.userData.userInfo.id,
+          packageUid: data.packageUid,
+        });
+
+        setPaper(pushData.data); 
+      } catch (error) {
+        console.error("Error:", error); 
+      }
+    }
+
+    fetchData();
+  }, [seletor.userData.userInfo.id, data.packageUid]);
+
+  
+   // create paper end *********
   const halfLength = Math.ceil(data.qestionList?.length / 2);
   const firstHalf = data.qestionList?.slice(0, halfLength);
   const secondHalf = data.qestionList?.slice(halfLength);
 
   // Handle radio button change
+  
+  const [optn , setOptn]=useState({})
   const handleRadioChange = (event, questionIndex) => {
     const { name, value } = event.target;
-    setSelectedOptions((prevSelectedOptions) => ({
-      ...prevSelectedOptions,
-      [name]: value,
-    }));
+    setOptn( {
+     ...optn,[name]: value,
+  }); 
   };
+const handeleStore =async (puid)=>{
+  
+
+  await axios.post("/jobExpert/api/v1/examinee-paper-push",{...{puid: puid,id:seletor.userData.userInfo.id},optn}).then(()=>{
+    setOptn({})
+  })
+
+  
+
+}
 
   return (
     <div>
@@ -76,10 +108,10 @@ const ExamPaper = () => {
                         <div className="flex items-center">
                           <input
                             type="radio"
-                            id={`question-option-${index}-A`}
+                            id={`question-option-${index}-optionA`}
                             name={`question-${index}`}
-                            value="A"
-                            checked={selectedOptions[`question-${index}`] === "A"}
+                            value="optionA"
+                            checked={selectedOptions[`question-${index}`] === "optionA"}
                             onChange={(e) => handleRadioChange(e, index)}
                             className="mr-2"
                           />
@@ -92,8 +124,8 @@ const ExamPaper = () => {
                             type="radio"
                             id={`question-option-${index}-B`}
                             name={`question-${index}`}
-                            value="B"
-                            checked={selectedOptions[`question-${index}`] === "B"}
+                            value="optionB"
+                            checked={selectedOptions[`question-${index}`] === "optionB"}
                             onChange={(e) => handleRadioChange(e, index)}
                             className="mr-2"
                           />
@@ -109,8 +141,8 @@ const ExamPaper = () => {
                             type="radio"
                             id={`question-option-${index}-C`}
                             name={`question-${index}`}
-                            value="C"
-                            checked={selectedOptions[`question-${index}`] === "C"}
+                            value="optionC"
+                            checked={selectedOptions[`question-${index}`] === "optionC"}
                             onChange={(e) => handleRadioChange(e, index)}
                             className="mr-2"
                           />
@@ -123,8 +155,8 @@ const ExamPaper = () => {
                             type="radio"
                             id={`question-option-${index}-D`}
                             name={`question-${index}`}
-                            value="D"
-                            checked={selectedOptions[`question-${index}`] === "D"}
+                            value="optionD"
+                            checked={selectedOptions[`question-${index}`] === "optionD"}
                             onChange={(e) => handleRadioChange(e, index)}
                             className="mr-2"
                           />
@@ -133,7 +165,7 @@ const ExamPaper = () => {
                           </label>
                         </div>
                       </div>
-                    </div>
+                    </div>option
                   </div>
                 </li>
               ))}
@@ -167,8 +199,8 @@ const ExamPaper = () => {
                             type="radio"
                             id={`question-option-${index + halfLength * 4}-A`}
                             name={`question-${index + halfLength}`}
-                            value="A"
-                            checked={selectedOptions[`question-${index + halfLength}`] === "A"}
+                            value="optionA"
+                            checked={selectedOptions[`question-${index + halfLength}`] === "optionA"}
                             onChange={(e) => handleRadioChange(e, index + halfLength)}
                             className="mr-2"
                           />
@@ -181,8 +213,8 @@ const ExamPaper = () => {
                             type="radio"
                             id={`question-option-${index + halfLength * 4}-B`}
                             name={`question-${index + halfLength}`}
-                            value="B"
-                            checked={selectedOptions[`question-${index + halfLength}`] === "B"}
+                            value="optionB"
+                            checked={selectedOptions[`question-${index + halfLength}`] === "optionB"}
                             onChange={(e) => handleRadioChange(e, index + halfLength)}
                             className="mr-2"
                           />
@@ -198,8 +230,8 @@ const ExamPaper = () => {
                             type="radio"
                             id={`question-option-${index + halfLength * 4}-C`}
                             name={`question-${index + halfLength}`}
-                            value="C"
-                            checked={selectedOptions[`question-${index + halfLength}`] === "C"}
+                            value="optionC"
+                            checked={selectedOptions[`question-${index + halfLength}`] === "optionC"}
                             onChange={(e) => handleRadioChange(e, index + halfLength)}
                             className="mr-2"
                           />
@@ -212,8 +244,8 @@ const ExamPaper = () => {
                             type="radio"
                             id={`question-option-${index + halfLength * 4}-D`}
                             name={`question-${index + halfLength}`}
-                            value="D"
-                            checked={selectedOptions[`question-${index + halfLength}`] === "D"}
+                            value="optionD"
+                            checked={selectedOptions[`question-${index + halfLength}`] === "optionD"}
                             onChange={(e) => handleRadioChange(e, index + halfLength)}
                             className="mr-2"
                           />
@@ -230,7 +262,7 @@ const ExamPaper = () => {
           </div>
           <div style={{ clear: "both" }}></div>
         </div>
-        <div className="text-center my-10">
+        <div onClick={()=>handeleStore(data.packageUid)} className="text-center my-10">
           <button className="px-10 py-2 mt-4 bg-primary text-[#FFFFFF] rounded-lg">
             Submit
           </button>
