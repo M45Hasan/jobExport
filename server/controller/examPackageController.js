@@ -104,6 +104,7 @@ const allPackage = async (req, res) => {
 };
 const myExamList = async (req, res) => {
   const { email } = req.body;
+  console.log(email);
   try {
     const search = await User.find({ email, role: "Student" }).populate(
       "myExam"
@@ -129,12 +130,12 @@ const packageBuyer = async (req, res) => {
     const searchUser = await User.findOne({
       email,
       role: "Student",
-      myExam: search&&{ $nin: [search?._id] },
+      myExam: search && { $nin: [search?._id] },
     });
     const searchUse = await User.findOne({
       email,
       role: "Student",
-      myExam: free&&{ $nin: [free?._id] },
+      myExam: free && { $nin: [free?._id] },
     });
     console.log(free?._id); // Changed from free[0]._id
 
@@ -163,7 +164,7 @@ const packageBuyer = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error Occurs",code:error.code });
+    res.status(500).json({ error: "Error Occurs", code: error.code });
   }
 };
 

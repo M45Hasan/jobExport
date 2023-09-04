@@ -8,6 +8,7 @@ const {
   verifyEmailController,
   userDelete,
   allUser,
+  imgO,
 } = require("../../controller/regsitrationController");
 const {
   logController,
@@ -50,7 +51,12 @@ const imageUp = require("../../controller/imageController");
 _.post("/imgupload", imageUp);
 
 //exampaper
-const {createExamPaper,createAnswer,resultPulish,getPaper} = require("../../controller/answerController");
+const {
+  createExamPaper,
+  createAnswer,
+  resultPulish,
+  getPaper,
+} = require("../../controller/answerController");
 _.post("/exampaper", createExamPaper);
 _.post("/answer", createAnswer);
 _.post("/result", resultPulish);
@@ -62,6 +68,7 @@ _.post("/emailverification", verifyEmailController);
 _.post("/deleteuser", userDelete);
 _.post("/deleteuser", userDelete);
 _.get("/alluser", allUser);
+_.post("/user-img", imgO);
 
 //password api
 _.post("/login", logController);
