@@ -29,6 +29,7 @@ const router = createBrowserRouter(
         <Route path="examZone" element={<ExamZone />}></Route>
         <Route path="live-expert" element={<LiveExpert />}></Route>
         <Route path="teacherPanel" element={<TeacherPanel />}></Route>
+        <Route path="teacherPanel/examPaper/:id" element={<ExamPaper />}></Route>
         <Route path="live-expert/examPaper/:id" element={<ExamPaper />}></Route>
         <Route path="studentprofile" element={<Studentprofile />}></Route>
       </Route>

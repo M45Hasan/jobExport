@@ -19,12 +19,9 @@ const logController = async (req, res) => {
             email: search[0].email,
             role: search[0].role,
             id:search[0]._id,
-
             nid: search[0].nid,
             phone: search[0].phone,
-
             verify: search[0].hasEmailVerified,
-
             userImg: search[0].avatar ? search[0].avatar : null,
           });
         } else {

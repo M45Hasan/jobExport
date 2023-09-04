@@ -216,7 +216,7 @@ export default function TeacherPanel() {
           aria-label="basic tabs example"
         >
           <Tab label="Create Package" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
+          <Tab label="My All Package" {...a11yProps(1)} />
           <Tab label="Item Three" {...a11yProps(2)} />
         </Tabs>
       </Box>
