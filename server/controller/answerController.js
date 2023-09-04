@@ -44,7 +44,7 @@ const createExamPaper = async (req, res) => {
 };
 
 const createAnswer = async (req, res) => {
-  const { packageUid, std, answer, serial } = req.body;
+  const { packageUid, std, answer } = req.body;
 
   try {
     const search = await Paper.findOne({
@@ -56,7 +56,6 @@ const createAnswer = async (req, res) => {
         exampaperid: search.packageUid,
         examineeId: search.examineeId,
         answer,
-        serial,
       });
 
       mong.save();
@@ -81,9 +80,7 @@ const calculateMarks = async (examTrack, examineeId, res) => {
     const use = await User.findOne({ _id: examineeId });
 
     let rightMarks = 0;
-    let rightCount = 0;
     let wrongMarks = 0;
-    let wrongCount = 0;
 
     for (const answer of answers) {
       const question = await Question.findOne({
@@ -94,10 +91,8 @@ const calculateMarks = async (examTrack, examineeId, res) => {
       if (question) {
         if (answer.answer === question.rightAnsOne) {
           rightMarks += question.rightMark;
-          rightCount += 1;
         } else {
           wrongMarks += question.wrongMark;
-          wrongCount += 1;
         }
       }
     }
@@ -110,12 +105,9 @@ const calculateMarks = async (examTrack, examineeId, res) => {
       {
         $set: {
           mark: getMark,
-          rightans: rightCount,
-          wrongans: wrongCount,
+          rightans: rightMarks,
+          wrongans: wrongMarks,
           show: true,
-          rightmark: rightMarks,
-          wrongmark: wrongMarks,
-          percentage: getPercentage,
         },
       },
       { new: true }
