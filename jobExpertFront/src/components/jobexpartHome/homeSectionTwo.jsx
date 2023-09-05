@@ -12,7 +12,7 @@ const homeSectionTwo = () => {
       </h3>
       <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 justify-items-center items-center gap-5 md:gap-0 mx-5">
         <Link
-          to=""
+          to="dailyquiz"
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img
@@ -56,7 +56,7 @@ const homeSectionTwo = () => {
           </p>
         </Link>
         <Link
-          to=""
+          to="dictionary"
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img

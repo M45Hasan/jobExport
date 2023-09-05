@@ -18,14 +18,6 @@ const verify = () => {
   let user = useSelector((state) => state);
   console.log(user.userData.userInfo);
 
-  let data = async () => {
-    let res = await axios.post("/jobExpert/api/v1/emailverification");
-    console.log(res.data);
-  };
-  useEffect(() => {
-    data();
-  }, []);
-
   const [otp, setOtp] = useState(["", "", "", ""]); // Array to hold individual digits
 
   const handleChange = (e, index) => {
@@ -60,7 +52,7 @@ const verify = () => {
           };
           console.log("updatedUserData", updatedUserData);
           dispathc(activeUser(updatedUserData));
-          navigate("/jobexpart");
+          navigate("/login");
         }, 2000);
       } else {
         setVerificationStatus("error");
