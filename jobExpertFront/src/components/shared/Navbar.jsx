@@ -63,8 +63,8 @@ function Navbar() {
     dipatch(activeUser(null));
     navigate("/");
   };
-  const imgx = userData.userData.userInfo?.userImg?.length-1
-  console.log(imgx)
+  const imgx = userData?.userData?.userInfo?.userImg?.length - 1;
+  console.log(imgx);
   //userData.userData.userInfo.userImg[imgx]
   return (
     <AppBar position="static" sx={{ backgroundColor: "#EAE9E9" }}>
@@ -205,9 +205,13 @@ function Navbar() {
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <img
-                    className=" h-[50px] w-[50px] rounded-full border border-primary shadow-2xl"
+                      className=" h-[50px] w-[50px] rounded-full border border-primary shadow-2xl"
                       alt="Remy Sharp"
-                      src={`http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]}`}
+                      src={
+                        imgx == NaN
+                          ? `http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
+                          : ""
+                      }
                     />
                   </IconButton>
                 </Tooltip>

@@ -21,10 +21,10 @@ const LiveExpert = () => {
 
   async function reciveDataFromChild(data) {
     setTodTayExam(data);
-    setNumQuestions(1);
+    setNumQuestions(10);
   }
 
-  const [numQuestions, setNumQuestions] = useState(1); // Number of questions to display
+  const [numQuestions, setNumQuestions] = useState(10); // Number of questions to display
   const handleMoreQuestions = () => {
     setNumQuestions(numQuestions + 1); // Increase the number of questions by 10
   };
@@ -58,8 +58,11 @@ const LiveExpert = () => {
         </div>
 
         {todayExam.length != 0
-          ? todayExam.slice(0, numQuestions).map((item,k) => (
-              <div key={k} className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] items-center border border-[#000000] p-[5px] md:p-[20px]">
+          ? todayExam.slice(0, numQuestions).map((item, k) => (
+              <div
+                key={k}
+                className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] items-center border border-[#000000] p-[5px] md:p-[20px]"
+              >
                 <div className="md:w-[20%] w-[60%]">
                   <img
                     className="w-full "
@@ -118,7 +121,7 @@ const LiveExpert = () => {
               </>
             )}
       </div>
-      {todayExam.length > 5 ? (
+      {todayExam.length > 0 ? (
         <Button
           onClick={handleMoreQuestions}
           sx={{ textAlign: "center", display: "block", margin: "0 auto" }}
