@@ -1,15 +1,15 @@
 const express = require("express");
-const app = express();
+const app = express(); 
 
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); 
 const { Schema } = mongoose;
 
 const newQuestion = new Schema({
   examTrack: { type: String },
-  examId: { type: Schema.Types.ObjectId, ref: "Exam" },
+  examId: { type: Schema.Types.ObjectId, ref: "ExamPackage" },
   whatIsTheQuestion: { type: String },
   optionA: { type: String },
-  optionB: { type: String },
+  optionB: { type: String }, 
   optionC: { type: String },
   optionD: { type: String },
   rightAnsOne: { type: String, require: true },
@@ -17,6 +17,8 @@ const newQuestion = new Schema({
   ansDetail: { type: String },
   rightMark: { type: Number },
   wrongMark: { type: Number },
+  
+  serial: { type: Number,require:true }
 });
 
 module.exports = mongoose.model("Question", newQuestion);

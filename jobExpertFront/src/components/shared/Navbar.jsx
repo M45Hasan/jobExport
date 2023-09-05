@@ -33,7 +33,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (userData.userData.userInfo) {
+    if (userData?.userData?.userInfo?.verify == true) {
       setShow(true);
     } else {
       setShow(false);
@@ -63,7 +63,9 @@ function Navbar() {
     dipatch(activeUser(null));
     navigate("/");
   };
-
+  const imgx = userData.userData.userInfo?.userImg?.length-1
+  console.log(imgx)
+  //userData.userData.userInfo.userImg[imgx]
   return (
     <AppBar position="static" sx={{ backgroundColor: "#EAE9E9" }}>
       <Container maxWidth="xl">
@@ -194,12 +196,18 @@ function Navbar() {
             }}
           >
             {show ? (
-              <Box sx={{ flexGrow: 0 }}>
+              <Box sx={{ flexGrow: 2 }}>
+                <Link to={"/jobexpart/teacherPanel"}>
+                  <Button sx={{ marginRight: "20px" }} variant="contained">
+                    Teacher Panel
+                  </Button>
+                </Link>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
+                    <img
+                    className=" h-[50px] w-[50px] rounded-full border border-primary shadow-2xl"
                       alt="Remy Sharp"
-                      src={userData?.userData?.userInfo?.userImg}
+                      src={`http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]}`}
                     />
                   </IconButton>
                 </Tooltip>
@@ -220,7 +228,9 @@ function Navbar() {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem>
-                    <Typography textAlign="center">Profile</Typography>
+                    <Link to={"/jobexpart/studentprofile"}>
+                      <Typography textAlign="center">Profile</Typography>
+                    </Link>
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Logout</Typography>

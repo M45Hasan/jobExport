@@ -16,7 +16,6 @@ const PackageDropdown = () => {
         <select
           id="options"
           value={selectedOption}
-          onChange={handleChange}
           className="block appearance-none w-full bg-white border border-gray-300 text-gray-900 py-3 px-4 pr-8 shadow leading-tight focus:outline-none focus:shadow-outline bg-primary text-[#FFFFFF] cursor-pointer"
         >
           <option value="option1">৬ মাস বিসিএস প্রিলি</option>

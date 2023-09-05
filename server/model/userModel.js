@@ -12,6 +12,9 @@ const userSchema = new Schema({
     require: true,
     unique: true,
   },
+  nid: {
+    type: String,
+  },
   pass: {
     type: String,
     require: true,
@@ -19,11 +22,14 @@ const userSchema = new Schema({
   phone: {
     type: String,
   },
-  avatar: {
-    type: String,
-    default:
-      "https://wop-files.s3.us-west-2.amazonaws.com/no-user-image-icon-0-1685274609551.jpg",
-  },
+
+  avatar: [
+    {
+      type: String,
+      default:
+        "https://wop-files.s3.us-west-2.amazonaws.com/no-user-image-icon-0-1685274609551.jpg",
+    },
+  ],
   examPackageId: [
     {
       type: Schema.Types.ObjectId,
@@ -31,6 +37,12 @@ const userSchema = new Schema({
     },
   ],
   myExam: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "ExamPackage",
+    },
+  ],
+  myFab: [
     {
       type: Schema.Types.ObjectId,
       ref: "ExamPackage",
@@ -54,6 +66,12 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  result: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Paper",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);

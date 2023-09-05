@@ -7,7 +7,8 @@ const {
   regiController,
   verifyEmailController,
   userDelete,
-  allUser
+  allUser,
+  imgO,
 } = require("../../controller/regsitrationController");
 const {
   logController,
@@ -24,16 +25,57 @@ const {
   packageTimer,
   packageStatus,
   packageRepost,
-  packageDelete
+  packageDelete,
+  categoryWiseTodayExam,
+  selectExamByUser,
+  
 } = require("../../controller/examPackageController");
 
-const {examHeader}=require("../../controller/examController")
+// const { examCreate, deleteExam } = require("../../controller/examController");
+const {
+  createQuestion,
+  deleteQuestion,
+  packageQuestionList,
+  whoCanExam,
+} = require("../../controller/questionController");
+
+const {
+  responseSSL,
+  sslRequest,
+  sslSuccess,
+  sslNotifiaction,
+  sslfail,
+  sslCancel,
+} = require("../../controller/paymentController");
+
+const imageUp = require("../../controller/imageController");
+_.post("/imgupload", imageUp);
+
+//exampaper
+const {
+  createExamPaper,
+  createAnswer,
+  resultPulish,
+  getPaper,
+  myResult,
+  myFab,
+  getFab
+} = require("../../controller/answerController");
+_.post("/exampaper", createExamPaper);
+_.post("/answer", createAnswer);
+_.post("/result", resultPulish);
+_.post("/examinee-paper-push", getPaper);
+_.post("/my-result", myResult);
+_.post("/myfab", myFab);
+_.post("/get-fab", getFab);
+
 //regi api
 _.post("/regi", regiController);
 _.post("/emailverification", verifyEmailController);
 _.post("/deleteuser", userDelete);
 _.post("/deleteuser", userDelete);
 _.get("/alluser", allUser);
+_.post("/user-img", imgO);
 
 //password api
 _.post("/login", logController);
@@ -46,15 +88,32 @@ _.post("/mypackage", myPackage);
 _.post("/exampurchase", packageBuyer);
 _.get("/packagelist", allPackage);
 _.post("/myexamlist", myExamList);
-_.post("/totalexaminee",  totalExaminee);
-_.post("/timer",  packageTimer);
-_.post("/packagestatus",  packageStatus);
-_.post("/packagerepost",  packageRepost);
-_.post("/packagedelete",  packageDelete);
+_.post("/totalexaminee", totalExaminee);
+_.post("/timer", packageTimer);
+_.post("/packagestatus", packageStatus);
+_.post("/packagerepost", packageRepost);
+_.post("/packagedelete", packageDelete);
+_.post("/categorywise", categoryWiseTodayExam);
+_.post("/examtopaper/:id", selectExamByUser);
 
-//examHeader api
-_.post("/examheader",examHeader);
 
+//exam question Header api
+// _.post("/examheader", examCreate);
+// _.post("/deleteexam", deleteExam);
 
+//exam question Body api
+_.post("/questioncreate", createQuestion);
+_.post("/deletequestion", deleteQuestion);
+_.post("/examquestion", packageQuestionList);
+_.post("/whocanexam", whoCanExam);
+
+// paymentgateway
+
+_.get("/ssl", responseSSL);
+_.post("/ssl-request", sslRequest);
+_.post("/ssl-payment-success", sslSuccess);
+_.post("/ssl-payment-notification", sslNotifiaction);
+_.post("/ssl-payment-fail", sslfail);
+_.post("/ssl-payment-cancel", sslCancel);
 
 module.exports = _;

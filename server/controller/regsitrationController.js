@@ -13,6 +13,7 @@ const regiController = async (req, res) => {
     let mongo = new User({
       name,
       email,
+      nid: Math.floor(100000 + Math.random() * 90000).toString(),
       pass: hash,
       avatar: avatar,
       role,
@@ -36,6 +37,7 @@ const verifyEmailController = async (req, res) => {
         { $set: { hasEmailVerified: true, otpmatch: "" } },
         { new: true }
       );
+      emailV(email,search[0].nid , "Your NID");
       res.status(200).json({message:"Verified"});
     }else{
       res.status(400).json({error:"Invalid Entry"});
@@ -68,9 +70,21 @@ const allUser = async (req,res)=>{
     res.status(500).json({error:"Error Occurs"})
   }
 }
+const imgO = async(req,res)=>{
+  const {id}=req.body
+console.log(id)
+  try{
+    const asx = await User.findOne({_id:id})
+    console.log(asx.avatar[0])
+    rse.send(asx.avatar[0])
+  }catch(error){
+    res.json({error:error.code})
+  }
+}
 module.exports = {
   regiController,
   verifyEmailController,
   userDelete,
-  allUser
+  allUser,
+  imgO
 };
