@@ -103,13 +103,15 @@ const allPackage = async (req, res) => {
   }
 };
 const myExamList = async (req, res) => {
-  const { email } = req.body;
+  const { email,cat } = req.body;
   console.log(email);
   try {
-    const search = await User.find({ email, role: "Student" }).populate(
-      "myExam"
-    );
+  
 
+    const search = await User.find({ email, role: "Student" }).populate({
+      path: "myExam",
+      match: { examCategory: cat }, 
+    })
     if (search.length != 0) {
       res.status(200).json(search);
     } else {

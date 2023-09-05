@@ -63,7 +63,7 @@ function Navbar() {
     dipatch(activeUser(null));
     navigate("/");
   };
-  const imgx = userData.userData.userInfo.userImg.length-1
+  const imgx = userData.userData.userInfo?.userImg?.length-1
   console.log(imgx)
   //userData.userData.userInfo.userImg[imgx]
   return (
@@ -207,7 +207,7 @@ function Navbar() {
                     <img
                     className=" h-[50px] w-[50px] rounded-full border border-primary shadow-2xl"
                       alt="Remy Sharp"
-                      src={`http://localhost:5000/uploads/${userData.userData.userInfo.userImg[imgx]}`}
+                      src={`http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]}`}
                     />
                   </IconButton>
                 </Tooltip>

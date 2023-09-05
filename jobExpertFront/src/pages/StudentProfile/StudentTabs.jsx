@@ -13,20 +13,8 @@ const StudentTabs = () => {
       <Tabs>
         {/* tab list */}
         <TabList>
-          <Tab>
-            <h3 className="flex justify-center items-center gap-2 py-2 px-7">
-              {" "}
-              <Icon icon="jam:refresh" width={20} />
-              <span>প্যাকেজ আপডেট</span>
-            </h3>
-          </Tab>
-          <Tab>
-            <h3 className="flex justify-center items-center gap-2 py-2 px-7">
-              {" "}
-              <Icon icon="jam:refresh" width={20} />
-              <span>আপডেট রুটিন</span>
-            </h3>
-          </Tab>
+        
+          
           <Tab>
             <h3 className="flex justify-center items-center gap-2 py-2 px-12">
               {" "}
@@ -53,16 +41,9 @@ const StudentTabs = () => {
         {/* tab list items  */}
 
         {/* package update */}
-        <TabPanel>
-          <div>
-            <PackageUpdate />
-          </div>
-        </TabPanel>
 
         {/* routine update */}
-        <TabPanel>
-          <Routine />
-        </TabPanel>
+        
 
         {/* Result update */}
         <TabPanel>

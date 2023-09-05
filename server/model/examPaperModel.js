@@ -18,6 +18,9 @@ const userSchema = new Schema({
   rightmark: { type: Number },
   wrongmark: { type: Number },
   percentage: { type: Number },
+  packageName: { type: String },
+  examCategory: { type: String },
+  coment: { type: String },
 });
 
 module.exports = mongoose.model("Paper", userSchema);
