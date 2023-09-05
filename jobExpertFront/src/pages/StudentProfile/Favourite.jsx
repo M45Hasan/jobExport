@@ -24,12 +24,24 @@ const Favourite = () => {
     }
     how()
 
-  }, [])
+  }, [email])
   const [show, setShow] = useState(false)
   const handleCLick = (a) => {
     setShow(a)
   }
   console.log(show)
+
+  const deleteFun =(del)=>{
+    const how = async () => {
+      try {
+        const response = await axios.post('/jobExpert/api/v1/del-fab', { del,email });
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    how();
+  }
   return (
 
     <>
@@ -54,8 +66,9 @@ const Favourite = () => {
           {show &&
             <div className="flex-grow p-4 max-h-[500px] overflow-y-auto scrollbar-hide mr-[10%]">
               {useInfo.myFab?.map((info, fi) => (
-                <div key={fi} className="bg-white rounded-lg bg-[#CB9E00] shadow-md p-4 mb-4">
-                  <h2 className="text-lg font-semibold">{info.examCategory} : {info.examSubCategory}</h2>
+                <div key={fi}   className="bg-white relative rounded-lg bg-[#CB9E00] shadow-md p-4 mb-4">
+                  <h2 className="text-lg inline font-semibold">{info.examCategory} : {info.examSubCategory}</h2> 
+                  <button className="text-base absolute right-2 top-1 font-medium text-[#f14242]" onClick={()=>deleteFun(info._id)}>X</button>
 
                   {info.qestionList.map((question, qi) => (
                     <div key={qi} className=" mb-4 ">
@@ -65,7 +78,7 @@ const Favourite = () => {
                       <p className="text-gray-700">{question.ansDetail}</p>
                     </div>
                   ))}
-
+                     
                 </div>
               ))}
             </div>
