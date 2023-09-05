@@ -105,7 +105,30 @@ const getFab = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const delFab = async (req, res) => {
+  const { del, email } = req.body;
+  try {
+    const search = await User.findOne({ email });
+    console.log(search);
+    if (search) {
+      const user = await User.findByIdAndUpdate(
+        { _id: search._id },
+        { $pull: { myFab: del } },
+        { new: true }
+      );
 
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      res.status(200).json({ message: "Item deleted successfully", user });
+    } else {
+      res.status(400).json({ message: "Invalid Entry" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Error occurred", message: error.message });
+  }
+};
 const createAnswer = async (req, res) => {
   const { packageUid, std, answer } = req.body;
 
@@ -272,4 +295,5 @@ module.exports = {
   myResult,
   myFab,
   getFab,
+  delFab,
 };

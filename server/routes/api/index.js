@@ -59,7 +59,8 @@ const {
   getPaper,
   myResult,
   myFab,
-  getFab
+  getFab,
+  delFab
 } = require("../../controller/answerController");
 _.post("/exampaper", createExamPaper);
 _.post("/answer", createAnswer);
@@ -68,6 +69,7 @@ _.post("/examinee-paper-push", getPaper);
 _.post("/my-result", myResult);
 _.post("/myfab", myFab);
 _.post("/get-fab", getFab);
+_.post("/del-fab", delFab);
 
 //regi api
 _.post("/regi", regiController);
