@@ -2,8 +2,7 @@ const nodemailer = require("nodemailer");
 
 async function emailV(email, code, sub) {
   let transporter = nodemailer.createTransport({
-    service: "gmail",
-
+    host: "smtp.gmail.com",
     auth: {
       user: process.env.EMAIL_USER, // generated ethereal user
       pass: process.env.EMAIL_PASSWORD, // generated ethereal password
