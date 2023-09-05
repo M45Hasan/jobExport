@@ -10,7 +10,7 @@ const ExamPaper = () => {
   const [data, setData] = useState({});
   const [selectedOptions, setSelectedOptions] = useState({});
 
-  console.log(selectedOptions)
+  console.log(selectedOptions);
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -41,44 +41,50 @@ const ExamPaper = () => {
         const pushData = await axios.post("/jobExpert/api/v1/exampaper", {
           std: seletor.userData.userInfo.id,
           packageUid: data.packageUid,
-          packageName:data.packageName,
-          examCategory:data.examCategory,
+          packageName: data.packageName,
+          examCategory: data.examCategory,
         });
 
-        setPaper(pushData.data); 
+        setPaper(pushData.data);
       } catch (error) {
-        console.error("Error:", error); 
+        console.error("Error:", error);
       }
     }
 
     fetchData();
-  }, [seletor.userData.userInfo.id, data.packageUid,data.packageName,data.examCategory]);
-console.log(paper)
-  
-   // create paper end *********
+  }, [
+    seletor.userData.userInfo.id,
+    data.packageUid,
+    data.packageName,
+    data.examCategory,
+  ]);
+  console.log(paper);
+
+  // create paper end *********
   const halfLength = Math.ceil(data.qestionList?.length / 2);
   const firstHalf = data.qestionList?.slice(0, halfLength);
   const secondHalf = data.qestionList?.slice(halfLength);
 
   // Handle radio button change
-  
-  const [optn , setOptn]=useState({})
+
+  const [optn, setOptn] = useState({});
   const handleRadioChange = (event, questionIndex) => {
     const { name, value } = event.target;
-    setOptn( {
-     ...optn,[name]: value,
-  }); 
+    setOptn({
+      ...optn,
+      [name]: value,
+    });
   };
-const handeleStore =async (puid)=>{
-  
-
-  await axios.post("/jobExpert/api/v1/examinee-paper-push",{...{puid: puid,id:seletor.userData.userInfo.id},optn}).then(()=>{
-    setOptn({})
-  })
-
-  
-
-}
+  const handeleStore = async (puid) => {
+    await axios
+      .post("/jobExpert/api/v1/examinee-paper-push", {
+        ...{ puid: puid, id: seletor.userData.userInfo.id },
+        optn,
+      })
+      .then(() => {
+        setOptn({});
+      });
+  };
 
   return (
     <div>
@@ -113,7 +119,9 @@ const handeleStore =async (puid)=>{
                             id={`question-option-${index}-optionA`}
                             name={`question-${index}`}
                             value="optionA"
-                            checked={selectedOptions[`question-${index}`] === "optionA"}
+                            checked={
+                              selectedOptions[`question-${index}`] === "optionA"
+                            }
                             onChange={(e) => handleRadioChange(e, index)}
                             className="mr-2"
                           />
@@ -127,7 +135,9 @@ const handeleStore =async (puid)=>{
                             id={`question-option-${index}-B`}
                             name={`question-${index}`}
                             value="optionB"
-                            checked={selectedOptions[`question-${index}`] === "optionB"}
+                            checked={
+                              selectedOptions[`question-${index}`] === "optionB"
+                            }
                             onChange={(e) => handleRadioChange(e, index)}
                             className="mr-2"
                           />
@@ -144,7 +154,9 @@ const handeleStore =async (puid)=>{
                             id={`question-option-${index}-C`}
                             name={`question-${index}`}
                             value="optionC"
-                            checked={selectedOptions[`question-${index}`] === "optionC"}
+                            checked={
+                              selectedOptions[`question-${index}`] === "optionC"
+                            }
                             onChange={(e) => handleRadioChange(e, index)}
                             className="mr-2"
                           />
@@ -158,7 +170,9 @@ const handeleStore =async (puid)=>{
                             id={`question-option-${index}-D`}
                             name={`question-${index}`}
                             value="optionD"
-                            checked={selectedOptions[`question-${index}`] === "optionD"}
+                            checked={
+                              selectedOptions[`question-${index}`] === "optionD"
+                            }
                             onChange={(e) => handleRadioChange(e, index)}
                             className="mr-2"
                           />
@@ -167,7 +181,8 @@ const handeleStore =async (puid)=>{
                           </label>
                         </div>
                       </div>
-                    </div>option
+                    </div>
+                    option
                   </div>
                 </li>
               ))}
@@ -202,11 +217,21 @@ const handeleStore =async (puid)=>{
                             id={`question-option-${index + halfLength * 4}-A`}
                             name={`question-${index + halfLength}`}
                             value="optionA"
-                            checked={selectedOptions[`question-${index + halfLength}`] === "optionA"}
-                            onChange={(e) => handleRadioChange(e, index + halfLength)}
+                            checked={
+                              selectedOptions[
+                                `question-${index + halfLength}`
+                              ] === "optionA"
+                            }
+                            onChange={(e) =>
+                              handleRadioChange(e, index + halfLength)
+                            }
                             className="mr-2"
                           />
-                          <label htmlFor={`question-option-${index + halfLength * 4}-A`}>
+                          <label
+                            htmlFor={`question-option-${
+                              index + halfLength * 4
+                            }-A`}
+                          >
                             {item.optionA}
                           </label>
                         </div>
@@ -216,11 +241,21 @@ const handeleStore =async (puid)=>{
                             id={`question-option-${index + halfLength * 4}-B`}
                             name={`question-${index + halfLength}`}
                             value="optionB"
-                            checked={selectedOptions[`question-${index + halfLength}`] === "optionB"}
-                            onChange={(e) => handleRadioChange(e, index + halfLength)}
+                            checked={
+                              selectedOptions[
+                                `question-${index + halfLength}`
+                              ] === "optionB"
+                            }
+                            onChange={(e) =>
+                              handleRadioChange(e, index + halfLength)
+                            }
                             className="mr-2"
                           />
-                          <label htmlFor={`question-option-${index + halfLength * 4}-B`}>
+                          <label
+                            htmlFor={`question-option-${
+                              index + halfLength * 4
+                            }-B`}
+                          >
                             {item.optionB}
                           </label>
                         </div>
@@ -233,11 +268,21 @@ const handeleStore =async (puid)=>{
                             id={`question-option-${index + halfLength * 4}-C`}
                             name={`question-${index + halfLength}`}
                             value="optionC"
-                            checked={selectedOptions[`question-${index + halfLength}`] === "optionC"}
-                            onChange={(e) => handleRadioChange(e, index + halfLength)}
+                            checked={
+                              selectedOptions[
+                                `question-${index + halfLength}`
+                              ] === "optionC"
+                            }
+                            onChange={(e) =>
+                              handleRadioChange(e, index + halfLength)
+                            }
                             className="mr-2"
                           />
-                          <label htmlFor={`question-option-${index + halfLength * 4}-C`}>
+                          <label
+                            htmlFor={`question-option-${
+                              index + halfLength * 4
+                            }-C`}
+                          >
                             {item.optionC}
                           </label>
                         </div>
@@ -247,11 +292,21 @@ const handeleStore =async (puid)=>{
                             id={`question-option-${index + halfLength * 4}-D`}
                             name={`question-${index + halfLength}`}
                             value="optionD"
-                            checked={selectedOptions[`question-${index + halfLength}`] === "optionD"}
-                            onChange={(e) => handleRadioChange(e, index + halfLength)}
+                            checked={
+                              selectedOptions[
+                                `question-${index + halfLength}`
+                              ] === "optionD"
+                            }
+                            onChange={(e) =>
+                              handleRadioChange(e, index + halfLength)
+                            }
                             className="mr-2"
                           />
-                          <label htmlFor={`question-option-${index + halfLength * 4}-D`}>
+                          <label
+                            htmlFor={`question-option-${
+                              index + halfLength * 4
+                            }-D`}
+                          >
                             {item.optionD}
                           </label>
                         </div>
@@ -264,7 +319,10 @@ const handeleStore =async (puid)=>{
           </div>
           <div style={{ clear: "both" }}></div>
         </div>
-        <div onClick={()=>handeleStore(data.packageUid)} className="text-center my-10">
+        <div
+          onClick={() => handeleStore(data.packageUid)}
+          className="text-center my-10"
+        >
           <button className="px-10 py-2 mt-4 bg-primary text-[#FFFFFF] rounded-lg">
             Submit
           </button>
