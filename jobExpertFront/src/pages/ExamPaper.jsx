@@ -41,6 +41,8 @@ const ExamPaper = () => {
         const pushData = await axios.post("/jobExpert/api/v1/exampaper", {
           std: seletor.userData.userInfo.id,
           packageUid: data.packageUid,
+          packageName:data.packageName,
+          examCategory:data.examCategory,
         });
 
         setPaper(pushData.data); 
@@ -50,8 +52,8 @@ const ExamPaper = () => {
     }
 
     fetchData();
-  }, [seletor.userData.userInfo.id, data.packageUid]);
-
+  }, [seletor.userData.userInfo.id, data.packageUid,data.packageName,data.examCategory]);
+console.log(paper)
   
    // create paper end *********
   const halfLength = Math.ceil(data.qestionList?.length / 2);

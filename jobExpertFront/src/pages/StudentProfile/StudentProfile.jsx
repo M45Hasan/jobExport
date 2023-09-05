@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from "react"
 import profile from "../../assets/studentprofile/image 54.png";
+import axios from "../../components/Axios/axios";
 
 import "react-circular-progressbar/dist/styles.css";
 
@@ -8,7 +9,7 @@ import StudentTabs from "./StudentTabs";
 import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../../userSlice/userSlice";
 
-import axios from '../../components/Axios/axios'
+
 
 
 
@@ -83,7 +84,7 @@ console.log(useInfo)
       <div className="grid relative grid-cols-1 md:grid-cols-3 gap-5 justify-items-center items-center mt-16 bg-secondary p-10 w-4/5 mx-auto">
       {}
         <div onClick={handleShow}>
-          <img className=" rounded-full w-[170px] h-[170px]" src={`http://localhost:5000/uploads/${userDa.userData.userInfo.userImg[imgx]}`}/>
+          <img className=" rounded-full shadow-2xl w-[170px] h-[170px]" src={`http://localhost:5000/uploads/${userDa.userData.userInfo.userImg[imgx]}`}/>
 
         </div>
 
@@ -107,19 +108,29 @@ console.log(useInfo)
                   </div>
                 </div>
         </div>}
-        <div >
-          <h1 className="text-xl lg:text-4xl  font-bold pb-1">
+
+        <div className="  shadow-md" >
+          <h1 className="text-xl lg:text-4xl mb-1 font-medium text-[#gray-900] dark:text-whitepb-1">
            {userDa.userData.userInfo.name}
 
           </h1>
-          <p className="text-md lg:text-4xl  font-bold pb-1">{userDa.userData.userInfo.email}</p>
-          <p className="text-md lg:text-4xl  font-bold pb-1">User-Id:{userDa.userData.userInfo.nid}</p>
+          <p className="text-md lg:text-4xl   text-[#gray-500 ]dark:text-gray-400 pb-1">{userDa.userData.userInfo.email}</p>
+          <p className="text-md lg:text-4xl   text-[#gray-300 ]dark:text-gray-400 pb-1">User-Id:{userDa.userData.userInfo.nid}</p>
    
       
       
         </div>
+    
+
+      
+
+
+
+
       </div>
       {/* students tabs  */}
+
+      
       <StudentTabs />
     </>
   );
