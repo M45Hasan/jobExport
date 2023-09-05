@@ -42,6 +42,12 @@ const userSchema = new Schema({
       ref: "ExamPackage",
     },
   ],
+  myFab: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "ExamPackage",
+    },
+  ],
   otpmatch: {
     type: String,
   },

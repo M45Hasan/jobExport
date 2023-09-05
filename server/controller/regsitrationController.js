@@ -70,9 +70,21 @@ const allUser = async (req,res)=>{
     res.status(500).json({error:"Error Occurs"})
   }
 }
+const imgO = async(req,res)=>{
+  const {id}=req.body
+console.log(id)
+  try{
+    const asx = await User.findOne({_id:id})
+    console.log(asx.avatar[0])
+    rse.send(asx.avatar[0])
+  }catch(error){
+    res.json({error:error.code})
+  }
+}
 module.exports = {
   regiController,
   verifyEmailController,
   userDelete,
-  allUser
+  allUser,
+  imgO
 };

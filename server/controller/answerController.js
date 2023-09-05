@@ -10,36 +10,99 @@ const Paper = require("../model/examPaperModel");
 const { mongo } = require("mongoose");
 
 const createExamPaper = async (req, res) => {
-  const { packageUid, std } = req.body;
+  const { packageUid, std, examCategory, packageName } = req.body;
 
   try {
-    const user = await User.findById({ _id: std });
+    const match = await Paper.find({ packageUid: packageUid, examineeId: std });
+
+    if (match.length == 0) {
+      const user = await User.findById({ _id: std });
+
+      const search = await ExamPackage.findOne({
+        packageUid,
+        packageBuyer: { $in: user._id },
+      });
+      console.log(search);
+      if (search) {
+        const mong = new Paper({
+          packageUid,
+          examineeId: user._id,
+          examCategory: examCategory,
+          packageName: packageName,
+        });
+
+        mong.save();
+
+        await User.findOneAndUpdate(
+          { _id: user._id },
+          { $push: { result: mong._id } },
+          { new: true }
+        );
+
+        res.status(200).send(mong);
+      } else {
+        res.status(404).json({ error: "Invalid Entry" });
+      }
+    } else {
+      res.status(202).json({ error: "You have attended  already this exam" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+};
+const myFab = async (req, res) => {
+  const { packageUid, std } = req.body;
+  console.log(packageUid);
+  try {
+    const user = await User.findById(std);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
     const search = await ExamPackage.findOne({
       packageUid,
       packageBuyer: { $in: user._id },
     });
 
-    if (search) {
-      const mong = new Paper({
-        packageUid,
-        examineeId: user._id,
-      });
+    if (!search) {
+      return res.status(404).json({ error: "Package not found for this user" });
+    }
 
-      mong.save();
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: user._id },
+      { $push: { myFab: search._id } },
+      { new: true }
+    );
 
-      await User.findOneAndUpdate(
-        { _id: user._id },
-        { $push: { result: mong._id } },
-        { new: true }
-      );
+    const packageWithQuestions = await ExamPackage.findById(
+      search._id
+    ).populate("qestionList");
 
-      res.status(200).send(mong);
+    res.status(200).send(packageWithQuestions);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const getFab = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const packageWithQuestions = await User.findOne({ email }).populate({
+      path: "myFab",
+      populate: {
+        path: "qestionList",
+        model: "Question",
+      },
+    });
+
+    if (packageWithQuestions) {
+      res.status(200).send(packageWithQuestions);
     } else {
-      res.status(404).json({ error: "Invalid Entry" });
+      return res.status(404).json({ error: "Package not found for this user" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -80,7 +143,9 @@ const calculateMarks = async (examTrack, examineeId, res) => {
     const use = await User.findOne({ _id: examineeId });
 
     let rightMarks = 0;
+    let rightCount = 0;
     let wrongMarks = 0;
+    let wrongCount = 0;
 
     for (const answer of answers) {
       const question = await Question.findOne({
@@ -91,23 +156,41 @@ const calculateMarks = async (examTrack, examineeId, res) => {
       if (question) {
         if (answer.answer === question.rightAnsOne) {
           rightMarks += question.rightMark;
+          rightCount += 1;
         } else {
           wrongMarks += question.wrongMark;
+          wrongCount += 1;
         }
       }
     }
-    const getMark = rightMarks - wrongMarks;
-    const perMark = rightMarks / rightCount;
 
-    const getPercentage = (rightCount / (rightCount + wrongCount)) * 100;
+    const getMark = rightMarks - wrongMarks;
+    const percentage = (rightCount / (rightCount + wrongCount)) * 100;
+
+    if (getMark >= 85) {
+      comment = "Excellent";
+    } else if (getMark >= 70 && getMark <= 84) {
+      comment = "Good Shape";
+    } else if (getMark >= 60 && getMark <= 69) {
+      comment = "Need More Efforts";
+    } else if (getMark >= 40 && getMark <= 59) {
+      comment = "Try again & Practice more";
+    } else {
+      comment = "Keep pushing & Try ...";
+    }
+
     const mx = await Paper.findOneAndUpdate(
       { examineeId },
       {
         $set: {
           mark: getMark,
-          rightans: rightMarks,
-          wrongans: wrongMarks,
+          rightans: rightCount,
+          wrongans: wrongCount,
           show: true,
+          rightmark: rightMarks,
+          wrongmark: wrongMarks,
+          percentage: percentage,
+          coment: comment,
         },
       },
       { new: true }
@@ -121,7 +204,72 @@ const calculateMarks = async (examTrack, examineeId, res) => {
 
 const resultPulish = async (req, res) => {
   const { examTrack, examineeId } = req.body;
+  console.log(examTrack, examineeId);
   calculateMarks(examTrack, examineeId, res);
 };
 
-module.exports = { createExamPaper, createAnswer, resultPulish };
+const getPaper = async (req, res) => {
+  const { puid, id, optn } = req.body;
+
+  try {
+    const search = await Paper.findOne({
+      packageUid: puid,
+      examineeId: id,
+    });
+    if (search) {
+      for (const question in optn) {
+        const answer = await optn[question];
+        // console.log(parseInt(question.split("-")[1]) + 1, answer);
+
+        const answerDocument = new Answer({
+          exampaperid: puid,
+          examineeId: id,
+          serial: parseInt(question.split("-")[1]) + 1,
+          answer: answer,
+        });
+
+        answerDocument.save();
+        const mp = await Paper.findOneAndUpdate(
+          { _id: search._id },
+          { $push: { ans: answerDocument._id } },
+          { new: true }
+        );
+      }
+      res.send("hello");
+    } else {
+      res.status(404).json({ error: "Invalid Entrh" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+};
+
+const myResult = async (req, res) => {
+  const { email, cat } = req.body;
+  console.log(email);
+  try {
+    const search = await User.find({ email, role: "Student" }).populate({
+      path: "result",
+      match: { examCategory: cat },
+    });
+
+    if (search.length != 0) {
+      res.status(200).json(search);
+    } else {
+      res.status(400).json({
+        error: "NO Result Collection",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Error Occurs" });
+  }
+};
+module.exports = {
+  createExamPaper,
+  createAnswer,
+  resultPulish,
+  getPaper,
+  myResult,
+  myFab,
+  getFab,
+};

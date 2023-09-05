@@ -1,12 +1,14 @@
-import React,{useState} from "react"
+import React,{useState,useEffect} from "react"
 import profile from "../../assets/studentprofile/image 54.png";
+import axios from "../../components/Axios/axios";
 
 import "react-circular-progressbar/dist/styles.css";
 
 import StudentTabs from "./StudentTabs";
-import axios from "../../components/Axios/axios"
+
 import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../../userSlice/userSlice";
+
 
 
 
@@ -55,18 +57,39 @@ const StudentProfile = () => {
   
 
   }
+
+const imgx = userDa.userData.userInfo.userImg.length-1
+
+const [useInfo ,setUseInfo]=useState()
+const email=userDa.userData.userInfo.email
+useEffect(()=>{
+  const how = async ()=>{
+  let data = await axios.post("/jobExpert/api/v1/myexamlist", {email});
+  console.log(data)
+  try{
+    if(data.data){
+      setUseInfo(data.data)
+    }
+  }catch(error){
+    console.log(error.code)
+  }
+  }
+  how()
+
+},[])
+console.log(useInfo)
+
   return (
     <>
       <div className="grid relative grid-cols-1 md:grid-cols-3 gap-5 justify-items-center items-center mt-16 bg-secondary p-10 w-4/5 mx-auto">
-        {/* student image  */}
+      {}
         <div onClick={handleShow}>
-          <img src={userDa.userData.userInfo.userImg[0]? "": profile} alt={userDa.userData.userInfo.userImg[0]} className="w-1/2 rounded-full mx-auto" />
-
+          <img className=" rounded-full shadow-2xl w-[170px] h-[170px]" src={`http://localhost:5000/uploads/${userDa.userData.userInfo.userImg[imgx]}`}/>
 
         </div>
 
         {/* student info  */}
-        { hide && <div className=" w-[5%]    absolute z-20 shadow-2xl left-[11%] border-gray-700  ">
+        { hide && <div className=" w-[5%]   absolute z-20 shadow-2xl left-[11%] border-gray-700  ">
                 <div className="grid grid-cols-1 relative">
                   <div className="mt-4  mb-3 ml-auto rounded-sm bg-green-400  text-sm max-w-[181px]">
                     <input
@@ -85,16 +108,29 @@ const StudentProfile = () => {
                   </div>
                 </div>
         </div>}
-        <div>
-          <h1 className="text-xl lg:text-4xl  font-bold pb-3">
-            Sabbir Hossain
+
+        <div className="  shadow-md" >
+          <h1 className="text-xl lg:text-4xl mb-1 font-medium text-[#gray-900] dark:text-whitepb-1">
+           {userDa.userData.userInfo.name}
+
           </h1>
-          <p>বিসিএস প্রিলি-২০২৩</p>
-          <p>Id: Free 754552321</p>
-          <p>প্যাকেজ মেয়াদঃ ২৪ ঘন্টা</p>
+          <p className="text-md lg:text-4xl   text-[#gray-500 ]dark:text-gray-400 pb-1">{userDa.userData.userInfo.email}</p>
+          <p className="text-md lg:text-4xl   text-[#gray-300 ]dark:text-gray-400 pb-1">User-Id:{userDa.userData.userInfo.nid}</p>
+   
+      
+      
         </div>
+    
+
+      
+
+
+
+
       </div>
       {/* students tabs  */}
+
+      
       <StudentTabs />
     </>
   );

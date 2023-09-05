@@ -20,6 +20,8 @@ router.post("/imgupload", upload.single("avatar"), async (req, res) => {
   const { email } = req.body;
   const avatar = req.file ? req.file.filename : null;
 
+  //uploads/1693549919075-707024495.jpg
+
   try {
     if (avatar) {
       const search = await User.findOneAndUpdate(
@@ -35,6 +37,7 @@ router.post("/imgupload", upload.single("avatar"), async (req, res) => {
     res.status(500).json({ error: "Server error", reason: error.message });
   }
 });
+
 
 module.exports = router;
 
