@@ -1,6 +1,8 @@
 const express = require("express");
+const { ObjectId } = require("mongodb");
 const app = express();
 const SSLCommerzPayment = require("sslcommerz-lts");
+const ExamPackage =require("../model/examPackage")
 
 const responseSSL = async (req, res) => {
   res.status(200).json({
@@ -9,6 +11,7 @@ const responseSSL = async (req, res) => {
   });
 };
 
+const tranId = new ObjectId().toString();
 const sslRequest = async (req, res) => {
   const {
     nid,
@@ -19,12 +22,12 @@ const sslRequest = async (req, res) => {
     examCategory,
     packageFee,
   } = req.body;
-  const amount = parseInt(packageFee);
+  const pack = await ExamPackage.findOne({ packageUid });
 
   const dataa = {
-    total_amount: amount,
+    total_amount: pack?.packageFee,
     currency: "BDT",
-    tran_id: packageUid,
+    tran_id: tranId,
     success_url: `${process.env.ROOT}/ssl-payment-success`,
     fail_url: `${process.env.ROOT}/ssl-payment-fail`,
     cancel_url: `${process.env.ROOT}/ssl-payment-cancel`,
@@ -55,12 +58,12 @@ const sslRequest = async (req, res) => {
     process.env.STORE_PASSWORD,
     false
   );
-  
+
   await sslcommerz.init(dataa).then((data) => {
     console.log(dataa);
 
     if (data?.GatewayPageURL) {
-      res.status(200).json({ GatewayPageURL: data?.GatewayPageURL  });
+      res.status(200).json({ url: data?.GatewayPageURL });
       {
         /**const responseFromBackend = {
   GatewayPageURL: "your-gateway-url"

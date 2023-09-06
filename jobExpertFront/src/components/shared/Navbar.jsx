@@ -208,7 +208,7 @@ function Navbar() {
                       className=" h-[50px] w-[50px] rounded-full border border-primary shadow-2xl"
                       alt="Remy Sharp"
                       src={
-                        imgx == NaN
+                        imgx !== NaN
                           ? `http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
                           : ""
                       }

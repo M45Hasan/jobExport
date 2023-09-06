@@ -72,6 +72,12 @@ const userSchema = new Schema({
       ref: "Paper",
     },
   ],
+  quiz: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "QuizHead",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);
