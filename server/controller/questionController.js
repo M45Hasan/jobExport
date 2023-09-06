@@ -24,7 +24,7 @@ const createQuestion = async (req, res) => {
 
   try {
     const saerch = await ExamPackage.find({ examSerial, nid });
-    console.log(search);
+
     if (saerch.length != 0) {
       const newQuestion = new Question({
         examTrack: saerch[0].packageUid,

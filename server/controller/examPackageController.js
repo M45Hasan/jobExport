@@ -103,15 +103,13 @@ const allPackage = async (req, res) => {
   }
 };
 const myExamList = async (req, res) => {
-  const { email,cat } = req.body;
+  const { email, cat } = req.body;
   console.log(email);
   try {
-  
-
     const search = await User.find({ email, role: "Student" }).populate({
       path: "myExam",
-      match: { examCategory: cat }, 
-    })
+      match: { examCategory: cat },
+    });
     if (search.length != 0) {
       res.status(200).json(search);
     } else {
@@ -154,10 +152,10 @@ const packageBuyer = async (req, res) => {
     } else if (free && searchUse) {
       await ExamPackage.findOneAndUpdate(
         { packageUid },
-        { $push: { packageBuyer: searchUser._id } }
+        { $push: { packageBuyer: searchUser?._id } }
       );
       await User.findOneAndUpdate(
-        { email: searchUser.email },
+        { email: searchUser?.email },
         { $push: { myExam: free._id } }
       );
       res.status(200).json({ message: "Free Exam Added" });

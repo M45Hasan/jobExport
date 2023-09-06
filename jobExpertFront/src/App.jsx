@@ -12,12 +12,13 @@ import Rootlayout from "./components/Layout/Rootlayout";
 import Leanding from "./pages/leanding";
 import Studentprofile from "./pages/StudentProfile/StudentProfile";
 import Verify from "./pages/verify";
-import ExamZone from "./pages/examZone";
+import ExamZone from "./pages/ExamZone";
 import LiveExpert from "./pages/LiveExpert";
 import TeacherPanel from "./pages/teacherPanel";
 import ExamPaper from "./pages/ExamPaper";
 import DailyQuiz from "./pages/DailyQuiz";
 import Dictionary from "./pages/Dictionary";
+import PremiumZone from "./pages/PremiumZone";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="/jobexpart" element={<Rootlayout />}>
         <Route index element={<Leanding />}></Route>
         <Route path="examZone" element={<ExamZone />}></Route>
+        <Route path="premiumZone" element={<PremiumZone />}></Route>
         <Route path="live-expert" element={<LiveExpert />}></Route>
         <Route path="teacherPanel" element={<TeacherPanel />}></Route>
         <Route path="dailyquiz" element={<DailyQuiz />}></Route>

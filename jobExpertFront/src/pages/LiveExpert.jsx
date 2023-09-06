@@ -90,6 +90,7 @@ const LiveExpert = () => {
                         Total Examinee : {item.packageBuyer.length}
                       </p>
                     </div>
+
                     <Link to={`examPaper/${item._id}`}>
                       <button className="bg-primary mx-auto mt-[10px] md:mt-0 text-[#FFFFFF] flex justify-center items-center py-3 gap-2 px-16 rounded-lg">
                         {item.premium == true ? (

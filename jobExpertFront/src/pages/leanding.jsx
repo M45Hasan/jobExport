@@ -43,7 +43,7 @@ const leading = () => {
           </p>
         </Link>
         <Link
-          to="{item.url}"
+          to="examZone"
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img
@@ -62,12 +62,31 @@ const leading = () => {
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img
-            src="https://i.ibb.co/fq6TbNN/icon-1.png"
+            src="https://i.ibb.co/cx7b5yH/icon-3.png"
             alt=""
             className="w-20 mx-auto"
           />
 
-          <h3 className="text-center text-lg font-bold py-2">"Exam Zone"</h3>
+          <h3 className="text-center text-lg font-bold py-2">
+            "Video Support"
+          </h3>
+          <p className="text-center px-2">
+            "Live Exam, Archive, Routine, Syllabus, Merit List etc."
+          </p>
+        </Link>
+        <Link
+          to="premiumZone"
+          className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
+        >
+          <img
+            src="https://i.ibb.co/VNSSTr1/icon-2.png"
+            alt=""
+            className="w-20 mx-auto"
+          />
+
+          <h3 className="text-center text-lg font-bold py-2">
+            "Premium Member"
+          </h3>
           <p className="text-center px-2">
             "Live Exam, Archive, Routine, Syllabus, Merit List etc."
           </p>
@@ -77,12 +96,12 @@ const leading = () => {
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img
-            src="https://i.ibb.co/fq6TbNN/icon-1.png"
+            src="https://i.ibb.co/h2LmgGk/icon-5.png"
             alt=""
             className="w-20 mx-auto"
           />
 
-          <h3 className="text-center text-lg font-bold py-2">"Exam Zone"</h3>
+          <h3 className="text-center text-lg font-bold py-2">"Pdf Support"</h3>
           <p className="text-center px-2">
             "Live Exam, Archive, Routine, Syllabus, Merit List etc."
           </p>
@@ -92,27 +111,14 @@ const leading = () => {
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img
-            src="https://i.ibb.co/fq6TbNN/icon-1.png"
+            src="https://i.ibb.co/0JyPKLf/icon-6.png"
             alt=""
             className="w-20 mx-auto"
           />
 
-          <h3 className="text-center text-lg font-bold py-2">"Exam Zone"</h3>
-          <p className="text-center px-2">
-            "Live Exam, Archive, Routine, Syllabus, Merit List etc."
-          </p>
-        </Link>
-        <Link
-          to="{item.url}"
-          className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
-        >
-          <img
-            src="https://i.ibb.co/fq6TbNN/icon-1.png"
-            alt=""
-            className="w-20 mx-auto"
-          />
-
-          <h3 className="text-center text-lg font-bold py-2">"Exam Zone"</h3>
+          <h3 className="text-center text-lg font-bold py-2">
+            "Study Communities"
+          </h3>
           <p className="text-center px-2">
             "Live Exam, Archive, Routine, Syllabus, Merit List etc."
           </p>

@@ -28,7 +28,6 @@ const {
   packageDelete,
   categoryWiseTodayExam,
   selectExamByUser,
-  
 } = require("../../controller/examPackageController");
 
 // const { examCreate, deleteExam } = require("../../controller/examController");
@@ -60,7 +59,7 @@ const {
   myResult,
   myFab,
   getFab,
-  delFab
+  delFab,
 } = require("../../controller/answerController");
 _.post("/exampaper", createExamPaper);
 _.post("/answer", createAnswer);
@@ -97,7 +96,6 @@ _.post("/packagerepost", packageRepost);
 _.post("/packagedelete", packageDelete);
 _.post("/categorywise", categoryWiseTodayExam);
 _.post("/examtopaper/:id", selectExamByUser);
-
 
 //exam question Header api
 // _.post("/examheader", examCreate);
