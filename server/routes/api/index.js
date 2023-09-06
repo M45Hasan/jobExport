@@ -96,6 +96,7 @@ _.post("/packagestatus", packageStatus);
 _.post("/packagerepost", packageRepost);
 _.post("/packagedelete", packageDelete);
 _.post("/categorywise", categoryWiseTodayExam);
+
 _.post("/examtopaper/:id", selectExamByUser);
 
 
@@ -118,4 +119,20 @@ _.post("/ssl-payment-notification", sslNotifiaction);
 _.post("/ssl-payment-fail", sslfail);
 _.post("/ssl-payment-cancel", sslCancel);
 
+//quiz start 
+
+const {createQuizHead,createQuizBody,getAllQuiz}=require("../../controller/quizController")
+_.post("/create-quiz-head", createQuizHead);
+_.post("/create-quiz-body", createQuizBody);
+_.get("/all-quiz", getAllQuiz);
+// student Story & Comment 
+
+const {storyCreate,storyDelete,allStory,commentCreate,commentDelete,allComment,ourSuccess}=require("../../controller/commentController")
+_.post("/story-create",storyCreate)
+_.delete("/story-delete/:id",storyDelete)
+_.get("/story-all",allStory)
+_.get("/comment-all",allComment)
+_.get("/our-success",ourSuccess)
+_.post("/comment-create",commentCreate) 
+_.delete("/comment-delete/:id",commentDelete)
 module.exports = _;
