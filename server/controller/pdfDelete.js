@@ -21,7 +21,8 @@ const deletePdf = async (req, res) => {
         { new: true }
       );
     }
-    const filePath = path.join(__dirname, "your-pdf-upload-folder", filename);
+
+    const filePath = path.join(__dirname, "pdfs", filename);
 
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
@@ -48,4 +49,4 @@ const getPdfs = async (req, res) => {
     res.status(500).json({ error: error.code });
   }
 };
-module.exports = {deletePdf,getPdfs};
+module.exports = { deletePdf, getPdfs };
