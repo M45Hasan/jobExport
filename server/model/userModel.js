@@ -73,6 +73,7 @@ const userSchema = new Schema({
     },
   ],
   pdf: [{ type: Schema.Types.ObjectId, ref: "PDF" }],
+  video: [{ type: Schema.Types.ObjectId, ref: "Video" }],
   quiz: [
     {
       type: Schema.Types.ObjectId,
