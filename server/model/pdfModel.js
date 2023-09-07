@@ -6,7 +6,10 @@ const userPdf = new Schema({
     teacherName:{type:String},
     subject:{type:String},
     pdfUrl:{type:String},
-    userId:{type:Schema.Types.ObjectId,ref:"User"}
+    text:{type:String},
+    userId:{type:Schema.Types.ObjectId,ref:"User"},
+    title:{type:String},
+   
 })
 
 module.exports=mongoose.model("PDF",userPdf)

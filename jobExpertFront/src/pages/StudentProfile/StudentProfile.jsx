@@ -18,32 +18,7 @@ const StudentProfile = () => {
   const [hide, setHide] = useState(false)
   const userDa = useSelector((state) => state);
   let dispatch = useDispatch();
-  //pdf start
-  const [selectedFile, setSelectedFile] = useState(null);
 
-
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-
-  const handleFileUpload = async () => {
-   
-    const mx = "hello"
-    const formData = new FormData();
-    formData.append('pdf', selectedFile);
-    formData.append("email", m);
-    formData.append("subject",mx );
-
-    try {
-      await axios.post('/jobExpert/api/v1/upload-pdf', formData );
-      alert('File uploaded successfully.');
-    } catch (error) {
-      alert('Error uploading file.');
-      console.error(error);
-    }
-  };
-  //pdf end 
   const handleShow = () => {
     setHide(!hide)
 
@@ -149,14 +124,11 @@ const StudentProfile = () => {
 
 
 
-        <div>
-          <input type="file" accept=".pdf" onChange={handleFileChange} />
-          <button onClick={handleFileUpload}>Upload PDF</button>
-        </div>
 
 
-      </div>  
-      
+
+      </div>
+
       {/* students tabs  */}
 
 
