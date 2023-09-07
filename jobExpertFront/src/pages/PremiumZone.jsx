@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import noexam from "../assets/brandLogo/noexam1.png";
 import axios from "../components/Axios/axios";
 import { ToastContainer, toast } from "react-toastify";
-const ExamZone = () => {
+const PremiumZone = () => {
   const [datax, setData] = useState([]);
   const userData = useSelector((state) => state);
   const navigate = useNavigate();
@@ -38,8 +38,7 @@ const ExamZone = () => {
         packageUid: uid,
         email: userData.userData.userInfo.email,
       });
-      console.log("ddd", data);
-      toast("Free Exam Added", {
+      toast(" Exam Added", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -49,8 +48,9 @@ const ExamZone = () => {
         progress: undefined,
         theme: "light",
       });
+      console.log(data);
     } catch (e) {
-      toast("You have already", {
+      toast("Allready Added", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -72,7 +72,6 @@ const ExamZone = () => {
   }, []);
   return (
     <div>
-      <Banner />
       <ToastContainer
         position="top-right"
         autoClose={2000}
@@ -85,8 +84,7 @@ const ExamZone = () => {
         pauseOnHover
         theme="light"
       />
-      {/* Same as */}
-      <ToastContainer />
+      <Banner />
       <div className="w-11/12 md:w-4/5 mx-auto pb-16">
         <div className="pl-4 md:pl-12 mt-16 mb-[64px]">
           <ExamDropdown
@@ -102,7 +100,7 @@ const ExamZone = () => {
 
         {todayExam.length != 0
           ? todayExam.slice(0, numQuestions).map((item, k) =>
-              item.premium == false ? (
+              item.premium == true ? (
                 <div
                   key={k}
                   className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] items-center border border-[#000000] p-[5px] md:p-[20px]"
@@ -183,4 +181,4 @@ const ExamZone = () => {
   );
 };
 
-export default ExamZone;
+export default PremiumZone;

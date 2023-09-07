@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import Question from "../components/Creatquestion/Question";
 import { activeUser } from "../userSlice/userSlice";
-import { json } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import AllPackege from "../components/AllPackege/AllPackege";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -49,12 +49,17 @@ function a11yProps(index) {
 export default function TeacherPanel() {
   const [value, setValue] = React.useState(0);
   const datas = useSelector((state) => state);
+  const navigate = useNavigate();
   console.log("active user", datas);
   const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  React.useEffect(() => {
+    if (datas?.userData?.userInfo?.role == "Student") {
+      navigate("/jobexpart");
+    }
+  }, []);
   const [todayExam, setTodTayExam] = React.useState("");
 
   async function reciveDataFromChild(data) {
@@ -298,12 +303,12 @@ export default function TeacherPanel() {
                 {error.examDate && (
                   <p className="text-[red] text-lg">{error.examDate}</p>
                 )}
-                <p className="text-[red]">Formate will Be: 8-31-2023</p>
+                <p className="text-[red]">Formate will Be: 2023-09-06</p>
                 <TextField
                   onChange={handetype}
                   name="examDate"
                   label="Exam Date"
-                  placeholder="DD-MM-YYYY"
+                  placeholder="YYY-MM-DD"
                   fullWidth
                 />
                 {error.examTime && (
