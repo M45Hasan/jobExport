@@ -4,11 +4,10 @@ const multer = require("multer");
 const path = require("path");
 const User = require("../../server/model/userModel");
 const PDF = require("../../server/model/pdfModel");
-
-// img upload ********************************************************************
-// *******************************************************************************
 const storage = multer.diskStorage({
-  destination: "uploads/",
+  destination: function (req, file, cb) {
+    cb(null, "pdfs/");
+  },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + path.extname(file.originalname));
@@ -16,19 +15,29 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-router.post("/imgupload", upload.single("avatar"), async (req, res) => {
-  const { email } = req.body;
-  const avatar = req.file ? req.file.filename : null;
-
+router.post("/upload-pdf",  upload.single("pdf"), async (req, res) => {
+  const { email, subject } = req.body;
+  const pdf = req.file ? req.file.filename : null;
+  console.log(email, subject);
+  //pdfUrl
   try {
-    if (avatar) {
-      const search = await User.findOneAndUpdate(
-        { email: email },
-        { $push: { avatar: avatar } },
+    if (pdf) {
+      const user = await User.findOne({ email: email });
+
+      const mong = new PDF({
+        teacherName: user.name,
+        userId: User._id,
+        subject: subject,
+        pdfUrl: pdf,
+      });
+      mong.save();
+      await User.findByIdAndUpdate(
+        { _id: user._id },
+        { $push: { pdf: mong._id } },
         { new: true }
       );
-      res.status(200).json({ message: "Upload", avatar: search.avatar });
+
+      res.status(200).json({ message: "Upload", pdf: User.pdf });
     } else {
       res.status(400).json({ error: "Fail" });
     }
@@ -36,7 +45,5 @@ router.post("/imgupload", upload.single("avatar"), async (req, res) => {
     res.status(500).json({ error: "Server error", reason: error.message });
   }
 });
-
-
 
 module.exports = router;

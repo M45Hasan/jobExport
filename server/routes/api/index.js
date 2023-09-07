@@ -50,7 +50,8 @@ const {
 
 const imageUp = require("../../controller/imageController");
 _.post("/imgupload", imageUp);
-
+const getPdf =require("../../controller/pdfController")
+_.post("/upload-pdf", getPdf);
 //exampaper
 const {
   createExamPaper,
@@ -114,10 +115,10 @@ _.post("/whocanexam", whoCanExam);
 
 _.get("/ssl", responseSSL);
 _.post("/ssl-request", sslRequest);
-_.post("/ssl-payment-success", sslSuccess);
-_.post("/ssl-payment-notification", sslNotifiaction);
-_.post("/ssl-payment-fail", sslfail);
-_.post("/ssl-payment-cancel", sslCancel);
+_.post("/ssl-payment-success/:id", sslSuccess);
+_.post("/ssl-payment-notification/:id", sslNotifiaction);
+_.post("/ssl-payment-fail/:id", sslfail);
+_.post("/ssl-payment-cancel/:id", sslCancel);
 
 //quiz start 
 
