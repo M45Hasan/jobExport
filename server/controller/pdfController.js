@@ -4,6 +4,8 @@ const multer = require("multer");
 const path = require("path");
 const User = require("../../server/model/userModel");
 const PDF = require("../../server/model/pdfModel");
+const fs = require("fs");
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "pdfs/");
@@ -16,7 +18,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 router.post("/upload-pdf", upload.single("pdf"), async (req, res) => {
-  const { email, subject } = req.body;
+  const { email, subject, text, title } = req.body;
   const pdf = req.file ? req.file.filename : null;
   console.log(email, subject);
   //pdfUrl
@@ -29,6 +31,8 @@ router.post("/upload-pdf", upload.single("pdf"), async (req, res) => {
         userId: User._id,
         subject: subject,
         pdfUrl: pdf,
+        text: text,
+        title: title,
       });
       mong.save();
       await User.findByIdAndUpdate(
@@ -45,5 +49,7 @@ router.post("/upload-pdf", upload.single("pdf"), async (req, res) => {
     res.status(500).json({ error: "Server error", reason: error.message });
   }
 });
+
+// delete pdf start
 
 module.exports = router;
