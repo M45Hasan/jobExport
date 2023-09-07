@@ -24,9 +24,7 @@ const deletePdf = async (req, res) => {
 
     const filePath = path.join(__dirname, "pdfs", filename);
 
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-      res.status(204).send();
+      return res.status(200).json({ message: "Delete success" });
     } else {
       res.status(404).json({ error: "File not found" });
     }
