@@ -100,7 +100,7 @@ const verify = () => {
         </div>
         <button
           type="submit"
-          className="ml-4 px-24 md:px-28 py-2 bg-blue-500 text-white rounded bg-primary focus:outline-none mt-10"
+          className="ml-4 px-24 md:px-28 py-2 bg-blue-500 text-white rounded focus:outline-none mt-10"
         >
           ভেরিফাই করুন
         </button>

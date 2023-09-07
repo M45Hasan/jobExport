@@ -1,20 +1,91 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Banner from "../components/Banner/Banner";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "../components/Axios/axios";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import veifysucces from "../assets/verificationIcon/verifysuccess.png";
 
 const ExamPaper = () => {
-  // ... (rest of your code)
+  const { id } = useParams();
+  const seletor = useSelector((state) => state);
+  const [data, setData] = useState({});
+  const [selectedOptions, setSelectedOptions] = useState({});
 
-  // CSS style to change the radio button color when selected
-  const radioStyle = {
-    backgroundColor: "#yourSelectedColor", // Replace with the color you want
+  useEffect(() => {
+    async function fetchQuestions() {
+      try {
+        let response = await axios.post("/jobExpert/api/v1/whocanexam", {
+          id: id,
+          myId: seletor.userData.userInfo.id,
+        });
+        setData(response.data);
+        const initialSelectedOptions = {};
+        response.data.qestionList?.forEach((item, index) => {
+          initialSelectedOptions[`question-${index}`] = "";
+        });
+        setSelectedOptions(initialSelectedOptions);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    fetchQuestions();
+  }, [id, seletor.userData.userInfo.id]);
+
+  const [paper, setPaper] = useState({});
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const pushData = await axios.post("/jobExpert/api/v1/exampaper", {
+          std: seletor.userData.userInfo.id,
+          packageUid: data.packageUid,
+          packageName: data.packageName,
+          examCategory: data.examCategory,
+        });
+
+        setPaper(pushData.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchData();
+  }, [
+    seletor.userData.userInfo.id,
+    data.packageUid,
+    data.packageName,
+    data.examCategory,
+  ]);
+
+  const selectedRadioStyle = {
+    backgroundColor: "green", // Replace with the color you want for selected radio inputs
+  };
+  const [optn, setOptn] = useState({});
+
+  const handleRadioChange = (event, questionIndex) => {
+    const { name, value } = event.target;
+    setOptn({
+      ...optn,
+      [name]: value,
+    });
+    setSelectedOptions({
+      ...selectedOptions,
+      [name]: value,
+    });
   };
 
-  // ... (rest of your code)
+  let [show, setShow] = useState(false);
+  const handeleStore = async (puid) => {
+    await axios
+      .post("/jobExpert/api/v1/examinee-paper-push", {
+        ...{ puid: puid, id: seletor.userData.userInfo.id },
+        optn,
+      })
+      .then(() => {
+        setShow(!show);
+        setOptn({});
+      });
+  };
 
   return (
     <div>
@@ -34,7 +105,17 @@ const ExamPaper = () => {
 
       <div className="w-11/12 md:w-4/5 mx-auto text-left">
         {show ? (
-          // ... (rest of your code)
+          <div className="text-center mx-0">
+            <img
+              className="text-center mx-auto my-4"
+              src={veifysucces}
+              alt=""
+            />
+            <h2 className="text-xl">Exam Submited</h2>
+            <Link to="/jobexpart">
+              <button>Go To Home</button>
+            </Link>
+          </div>
         ) : (
           <>
             <div className="text-center my-10">
@@ -43,9 +124,9 @@ const ExamPaper = () => {
               <p>সময়-{data.examDuration} মিনিট</p>
             </div>
             <div className="w-11/12 md:w-4/5 mx-auto text-left">
-              <div className="md:w-1/2 float-left">
+              <div className="Qestion">
                 <ol>
-                  {firstHalf?.map((item, index) => (
+                  {data.qestionList?.map((item, index) => (
                     <li key={index}>
                       <div
                         className={`w-11/12 md:w-4/5 mx-auto bg-white ml-2 rounded-lg my-4`}
@@ -74,7 +155,7 @@ const ExamPaper = () => {
                                 style={
                                   selectedOptions[`question-${index}`] ===
                                   "optionA"
-                                    ? radioStyle
+                                    ? selectedRadioStyle
                                     : {}
                                 }
                               />
@@ -97,7 +178,7 @@ const ExamPaper = () => {
                                 style={
                                   selectedOptions[`question-${index}`] ===
                                   "optionB"
-                                    ? radioStyle
+                                    ? selectedRadioStyle
                                     : {}
                                 }
                               />
@@ -123,7 +204,7 @@ const ExamPaper = () => {
                                 style={
                                   selectedOptions[`question-${index}`] ===
                                   "optionC"
-                                    ? radioStyle
+                                    ? selectedRadioStyle
                                     : {}
                                 }
                               />
@@ -146,7 +227,7 @@ const ExamPaper = () => {
                                 style={
                                   selectedOptions[`question-${index}`] ===
                                   "optionD"
-                                    ? radioStyle
+                                    ? selectedRadioStyle
                                     : {}
                                 }
                               />
@@ -161,9 +242,13 @@ const ExamPaper = () => {
                   ))}
                 </ol>
               </div>
+
+              <div style={{ clear: "both" }}></div>
             </div>
             {paper.error ? (
-              // ... (rest of your code)
+              <h1 className="text-xl text-[red] text-center font-bold">
+                "You have already attended this exam"
+              </h1>
             ) : (
               <div
                 onClick={() => handeleStore(data.packageUid)}
@@ -174,7 +259,7 @@ const ExamPaper = () => {
                 </button>
               </div>
             )}
-         
+          </>
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Banner from "../components/Banner/Banner";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "../components/Axios/axios";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -10,9 +10,8 @@ const ExamPaper = () => {
   const { id } = useParams();
   const seletor = useSelector((state) => state);
   const [data, setData] = useState({});
-  const [selectedOptions, setSelectedOptions] = useState({});
 
-  console.log(selectedOptions);
+  const [selectedOptions, setSelectedOptions] = useState({});
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -22,7 +21,6 @@ const ExamPaper = () => {
           myId: seletor.userData.userInfo.id,
         });
         setData(response.data);
-        // Initialize selectedOptions with empty values for each question
         const initialSelectedOptions = {};
         response.data.qestionList?.forEach((item, index) => {
           initialSelectedOptions[`question-${index}`] = "";
@@ -35,7 +33,6 @@ const ExamPaper = () => {
     fetchQuestions();
   }, [id, seletor.userData.userInfo.id]);
 
-  // create paper start *********
   const [paper, setPaper] = useState({});
   useEffect(() => {
     async function fetchData() {
@@ -60,34 +57,21 @@ const ExamPaper = () => {
     data.packageName,
     data.examCategory,
   ]);
-  if (paper.error) {
-    toast.error("You have attended  already this exam", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  }
-  const radioStyle = {
-    backgroundColor: "red", // Replace with the color you want
+
+  const selectedRadioStyle = {
+    backgroundColor: "green", // Replace with the color you want for selected radio inputs
   };
-
-  // create paper end *********
-  const halfLength = Math.ceil(data.qestionList?.length / 2);
-  const firstHalf = data.qestionList?.slice(0, halfLength);
-  const secondHalf = data.qestionList?.slice(halfLength);
-
-  // Handle radio button change
-
   const [optn, setOptn] = useState({});
+  const optnRef = useRef(optn);
+
   const handleRadioChange = (event, questionIndex) => {
     const { name, value } = event.target;
     setOptn({
       ...optn,
+      [name]: value,
+    });
+    setSelectedOptions({
+      ...selectedOptions,
       [name]: value,
     });
   };
@@ -104,6 +88,37 @@ const ExamPaper = () => {
         setOptn({});
       });
   };
+  // ======================
+
+  const examDuration = parseInt(data?.examDuration);
+
+  const initialTimeRemaining = examDuration * 60;
+  const [timeRemaining, setTimeRemaining] = useState(0);
+
+  const [isExamSubmitted, setIsExamSubmitted] = useState(false);
+
+  useEffect(() => {
+    setTimeRemaining(initialTimeRemaining);
+
+    let timer;
+
+    if (initialTimeRemaining > 0 && !isExamSubmitted) {
+      timer = setInterval(() => {
+        setTimeRemaining((prevTime) => {
+          if (prevTime <= 0) {
+            clearInterval(timer);
+            handeleStore(data.packageUid, optnRef.current);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 100);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [initialTimeRemaining, optnRef, isExamSubmitted]);
 
   return (
     <div>
@@ -131,253 +146,312 @@ const ExamPaper = () => {
             />
             <h2 className="text-xl">Exam Submited</h2>
             <Link to="/jobexpart">
-              <button>Go To Home</button>
+              <button className="text-xl text-blue-700">Go To Home</button>
             </Link>
           </div>
         ) : (
           <>
-            <div className="text-center my-10">
-              <h1 className="text-2xl font-bold">{data.examSerial}</h1>
-              <h3 className="my-3">{data.examTitle}</h3>
-              <p>সময়-{data.examDuration} মিনিট</p>
-            </div>
-            <div className="w-11/12 md:w-4/5 mx-auto text-left">
-              <div className="md:w-1/2 float-left">
-                <ol>
-                  {firstHalf?.map((item, index) => (
-                    <li key={index}>
-                      <div
-                        className={`w-11/12 md:w-4/5 mx-auto bg-white ml-2 rounded-lg my-4`}
-                      >
-                        <h1 className="text-xl font-bold mb-4">
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: item.whatIsTheQuestion,
-                            }}
-                          ></div>
-                        </h1>
-                        <div className="flex items-center gap-x-4">
-                          <div>
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                id={`question-option-${index}-optionA`}
-                                name={`question-${index}`}
-                                value="optionA"
-                                checked={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionA"
-                                }
-                                onChange={(e) => handleRadioChange(e, index)}
-                                className="mr-2"
-                              />
-                              <label htmlFor={`question-option-${index}-A`}>
-                                {item.optionA}
-                              </label>
-                            </div>
-                            <div className="flex items-center mt-2">
-                              <input
-                                type="radio"
-                                id={`question-option-${index}-optionB`}
-                                name={`question-${index}`}
-                                value="optionB"
-                                checked={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionB"
-                                }
-                                onChange={(e) => handleRadioChange(e, index)}
-                                className="mr-2"
-                              />
-                              <label htmlFor={`question-option-${index}-B`}>
-                                {item.optionB}
-                              </label>
-                            </div>
-                          </div>
-
-                          <div>
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                id={`question-option-${index}-optionC`}
-                                name={`question-${index}`}
-                                value="optionC"
-                                checked={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionC"
-                                }
-                                onChange={(e) => handleRadioChange(e, index)}
-                                className="mr-2"
-                              />
-                              <label htmlFor={`question-option-${index}-C`}>
-                                {item.optionC}
-                              </label>
-                            </div>
-                            <div className="flex items-center mt-2">
-                              <input
-                                type="radio"
-                                id={`question-option-${index}-optionD`}
-                                name={`question-${index}`}
-                                value="optionD"
-                                checked={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionD"
-                                }
-                                onChange={(e) => handleRadioChange(e, index)}
-                                className="mr-2"
-                              />
-                              <label htmlFor={`question-option-${index}-D`}>
-                                {item.optionD}
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
+            <>
+              <div className="text-center my-10">
+                <h1 className="text-2xl font-bold">{data.examSerial}</h1>
+                <h3 className="my-3">{data.examTitle}</h3>
+                <p>সময়-{data.examDuration} মিনিট</p>
+                {paper.error ? (
+                  ""
+                ) : (
+                  <p>
+                    Time Remaining: {Math.floor(timeRemaining / 60)}:
+                    {(timeRemaining % 60).toString().padStart(2, "0")}
+                  </p>
+                )}
               </div>
-
-              <div className="md:w-1/2 float-left">
-                <ol>
-                  {secondHalf?.map((item, index) => (
-                    <span className="inlinex" key={index + halfLength}>
-                      <div
-                        className={`w-11/12 md:w-4/5 mx-auto bg-white ml-2 rounded-lg my-4`}
-                      >
-                        <div className="flex">
-                          <span className="inlinex mr-4">
-                            {index + halfLength}.
-                          </span>
-                          <h1 className="text-xl font-bold mb-4">
+              <div className="w-11/12 md:w-4/5 mx-auto text-left clearfix">
+                <div className="left-side">
+                  <ul>
+                    {data.qestionList?.map((item, index) => {
+                      // Render even-numbered questions on the left side
+                      if (index % 2 === 0) {
+                        return (
+                          <li key={index}>
                             <div
-                              dangerouslySetInnerHTML={{
-                                __html: item.whatIsTheQuestion,
-                              }}
-                            ></div>
-                          </h1>
-                        </div>
+                              className={`w-11/12 md:w-4/5 mx-auto bg-white ml-2 rounded-lg my-4`}
+                            >
+                              <h1 className="text-xl font-bold mb-4">
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: item.whatIsTheQuestion,
+                                  }}
+                                ></div>
+                              </h1>
+                              <div className="flex items-center gap-x-4">
+                                <div>
+                                  <div className="flex items-center">
+                                    <input
+                                      type="radio"
+                                      id={`question-option-${index}-optionA`}
+                                      name={`question-${index}`}
+                                      value="optionA"
+                                      checked={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionA"
+                                      }
+                                      onChange={(e) =>
+                                        handleRadioChange(e, index)
+                                      }
+                                      className="mr-2"
+                                      style={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionA"
+                                          ? selectedRadioStyle
+                                          : {}
+                                      }
+                                    />
+                                    <label
+                                      htmlFor={`question-option-${index}-A`}
+                                    >
+                                      {item.optionA}
+                                    </label>
+                                  </div>
+                                  <div className="flex items-center mt-2">
+                                    <input
+                                      type="radio"
+                                      id={`question-option-${index}-optionB`}
+                                      name={`question-${index}`}
+                                      value="optionB"
+                                      checked={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionB"
+                                      }
+                                      onChange={(e) =>
+                                        handleRadioChange(e, index)
+                                      }
+                                      className="mr-2"
+                                      style={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionB"
+                                          ? selectedRadioStyle
+                                          : {}
+                                      }
+                                    />
+                                    <label
+                                      htmlFor={`question-option-${index}-B`}
+                                    >
+                                      {item.optionB}
+                                    </label>
+                                  </div>
+                                </div>
 
-                        <div className="flex items-center gap-x-4">
-                          <div>
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                id={`question-option-${
-                                  index + halfLength
-                                }-optionA`}
-                                name={`question-${index + halfLength}`}
-                                value="optionA"
-                                checked={
-                                  selectedOptions[
-                                    `question-${index + halfLength}`
-                                  ] === "optionA"
-                                }
-                                onChange={(e) =>
-                                  handleRadioChange(e, index + halfLength)
-                                }
-                                className="mr-2"
-                              />
-                              <label
-                                htmlFor={`question-option-${
-                                  index + halfLength
-                                }-A`}
-                              >
-                                {item.optionA}
-                              </label>
+                                <div>
+                                  <div className="flex items-center">
+                                    <input
+                                      type="radio"
+                                      id={`question-option-${index}-optionC`}
+                                      name={`question-${index}`}
+                                      value="optionC"
+                                      checked={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionC"
+                                      }
+                                      onChange={(e) =>
+                                        handleRadioChange(e, index)
+                                      }
+                                      className="mr-2"
+                                      style={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionC"
+                                          ? selectedRadioStyle
+                                          : {}
+                                      }
+                                    />
+                                    <label
+                                      htmlFor={`question-option-${index}-C`}
+                                    >
+                                      {item.optionC}
+                                    </label>
+                                  </div>
+                                  <div className="flex items-center mt-2">
+                                    <input
+                                      type="radio"
+                                      id={`question-option-${index}-optionD`}
+                                      name={`question-${index}`}
+                                      value="optionD"
+                                      checked={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionD"
+                                      }
+                                      onChange={(e) =>
+                                        handleRadioChange(e, index)
+                                      }
+                                      className="mr-2"
+                                      style={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionD"
+                                          ? selectedRadioStyle
+                                          : {}
+                                      }
+                                    />
+                                    <label
+                                      htmlFor={`question-option-${index}-D`}
+                                    >
+                                      {item.optionD}
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex items-center mt-2">
-                              <input
-                                type="radio"
-                                id={`question-option-${
-                                  index + halfLength
-                                }-optionB`}
-                                name={`question-${index + halfLength}`}
-                                value="optionB"
-                                checked={
-                                  selectedOptions[
-                                    `question-${index + halfLength}`
-                                  ] === "optionB"
-                                }
-                                onChange={(e) =>
-                                  handleRadioChange(e, index + halfLength)
-                                }
-                                className="mr-2"
-                              />
-                              <label
-                                htmlFor={`question-option-${
-                                  index + halfLength
-                                }-B`}
-                              >
-                                {item.optionB}
-                              </label>
-                            </div>
-                          </div>
+                          </li>
+                        );
+                      }
+                      return null; // Skip odd-numbered questions in this column
+                    })}
+                  </ul>
+                </div>
+                <div className="right-side">
+                  <ul>
+                    {data.qestionList?.map((item, index) => {
+                      // Render odd-numbered questions on the right side
+                      if (index % 2 !== 0) {
+                        return (
+                          <li key={index}>
+                            <div
+                              className={`w-11/12 md:w-4/5 mx-auto bg-white ml-2 rounded-lg my-4`}
+                            >
+                              <h1 className="text-xl font-bold mb-4">
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: item.whatIsTheQuestion,
+                                  }}
+                                ></div>
+                              </h1>
+                              <div className="flex items-center gap-x-4">
+                                <div>
+                                  <div className="flex items-center">
+                                    <input
+                                      type="radio"
+                                      id={`question-option-${index}-optionA`}
+                                      name={`question-${index}`}
+                                      value="optionA"
+                                      checked={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionA"
+                                      }
+                                      onChange={(e) =>
+                                        handleRadioChange(e, index)
+                                      }
+                                      className="mr-2"
+                                      style={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionA"
+                                          ? selectedRadioStyle
+                                          : {}
+                                      }
+                                    />
+                                    <label
+                                      htmlFor={`question-option-${index}-A`}
+                                    >
+                                      {item.optionA}
+                                    </label>
+                                  </div>
+                                  <div className="flex items-center mt-2">
+                                    <input
+                                      type="radio"
+                                      id={`question-option-${index}-optionB`}
+                                      name={`question-${index}`}
+                                      value="optionB"
+                                      checked={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionB"
+                                      }
+                                      onChange={(e) =>
+                                        handleRadioChange(e, index)
+                                      }
+                                      className="mr-2"
+                                      style={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionB"
+                                          ? selectedRadioStyle
+                                          : {}
+                                      }
+                                    />
+                                    <label
+                                      htmlFor={`question-option-${index}-B`}
+                                    >
+                                      {item.optionB}
+                                    </label>
+                                  </div>
+                                </div>
 
-                          <div>
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                id={`question-option-${
-                                  index + halfLength
-                                }-optionC`}
-                                name={`question-${index + halfLength}`}
-                                value="optionC"
-                                checked={
-                                  selectedOptions[
-                                    `question-${index + halfLength}`
-                                  ] === "optionC"
-                                }
-                                onChange={(e) =>
-                                  handleRadioChange(e, index + halfLength)
-                                }
-                                className="mr-2"
-                              />
-                              <label
-                                htmlFor={`question-option-${
-                                  index + halfLength
-                                }-C`}
-                              >
-                                {item.optionC}
-                              </label>
+                                <div>
+                                  <div className="flex items-center">
+                                    <input
+                                      type="radio"
+                                      id={`question-option-${index}-optionC`}
+                                      name={`question-${index}`}
+                                      value="optionC"
+                                      checked={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionC"
+                                      }
+                                      onChange={(e) =>
+                                        handleRadioChange(e, index)
+                                      }
+                                      className="mr-2"
+                                      style={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionC"
+                                          ? selectedRadioStyle
+                                          : {}
+                                      }
+                                    />
+                                    <label
+                                      htmlFor={`question-option-${index}-C`}
+                                    >
+                                      {item.optionC}
+                                    </label>
+                                  </div>
+                                  <div className="flex items-center mt-2">
+                                    <input
+                                      type="radio"
+                                      id={`question-option-${index}-optionD`}
+                                      name={`question-${index}`}
+                                      value="optionD"
+                                      checked={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionD"
+                                      }
+                                      onChange={(e) =>
+                                        handleRadioChange(e, index)
+                                      }
+                                      className="mr-2"
+                                      style={
+                                        selectedOptions[`question-${index}`] ===
+                                        "optionD"
+                                          ? selectedRadioStyle
+                                          : {}
+                                      }
+                                    />
+                                    <label
+                                      htmlFor={`question-option-${index}-D`}
+                                    >
+                                      {item.optionD}
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex items-center mt-2">
-                              <input
-                                type="radio"
-                                id={`question-option-${
-                                  index + halfLength
-                                }-optionD`}
-                                name={`question-${index + halfLength}`}
-                                value="optionD"
-                                checked={
-                                  selectedOptions[
-                                    `question-${index + halfLength}`
-                                  ] === "optionD"
-                                }
-                                onChange={(e) =>
-                                  handleRadioChange(e, index + halfLength)
-                                }
-                                className="mr-2"
-                              />
-                              <label
-                                htmlFor={`question-option-${
-                                  index + halfLength
-                                }-D`}
-                              >
-                                {item.optionD}
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </span>
-                  ))}
-                </ol>
+                          </li>
+                        );
+                      }
+                      return null; // Skip even-numbered questions in this column
+                    })}
+                  </ul>
+                </div>
               </div>
-              <div style={{ clear: "both" }}></div>
-            </div>
+            </>
+
             {paper.error ? (
               <h1 className="text-xl text-[red] text-center font-bold">
-                "You have attended already this exam"
+                "You have already attended this exam"
               </h1>
             ) : (
               <div
