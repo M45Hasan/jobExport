@@ -19,7 +19,7 @@ import ExamPaper from "./pages/ExamPaper";
 import DailyQuiz from "./pages/DailyQuiz";
 import Dictionary from "./pages/Dictionary";
 import PremiumZone from "./pages/PremiumZone";
-
+import paymentReq from "./pages/paymentreq";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -27,7 +27,9 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />}></Route>
       <Route path="/singup" element={<Singup />}></Route>
       <Route path="/verify" element={<Verify />}></Route>
+     
       <Route path="/jobexpart" element={<Rootlayout />}>
+      <Route path="ssl-request" element={<paymentReq/>}></Route>
         <Route index element={<Leanding />}></Route>
         <Route path="examZone" element={<ExamZone />}></Route>
         <Route path="premiumZone" element={<PremiumZone />}></Route>

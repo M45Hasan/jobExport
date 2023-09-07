@@ -51,14 +51,14 @@ const getVideo = async (req, res) => {
 };
 
 const videoDelete = async (req, res) => {
-  const { videoUrl, userId } = req.body;
+    const { id } = req.params;
   try {
-    const vd = await Video.findOne({ videoUrl: videoUrl, userId: userId });
+    const vd = await Video.findById({ _id: id });
     if (vd) {
       await Video.findByIdAndDelete({ _id: vd._id });
       await User.updateMany(
-        { videoUrl: vd._id },
-        { $pull: { videoUrl: vd._id } },
+        { video: vd._id },
+        { $pull: { video: vd._id } },
         { new: true }
       );
       res.status(200).json({message:"Delete success"});
@@ -68,4 +68,4 @@ const videoDelete = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-module.exports = { createVideo, getVideo };
+module.exports = { createVideo, getVideo ,videoDelete};

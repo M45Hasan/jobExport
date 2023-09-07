@@ -56,9 +56,10 @@ _.get("/upload-pdf", getPdfs);
 _.delete("/upload-pdf/:filename", deletePdf);
 
 
-const {createVideo,getVideo} =require("../../controller/videoController")
+const {createVideo,getVideo,videoDelete} =require("../../controller/videoController")
 _.post("/video-upload",createVideo)
 _.get("/video-upload",getVideo)
+_.delete("/video-upload/:id",videoDelete)
 // pdf image video end 
 
 //exampaper
