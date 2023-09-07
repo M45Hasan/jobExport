@@ -19,6 +19,7 @@ import ExamPaper from "./pages/ExamPaper";
 import DailyQuiz from "./pages/DailyQuiz";
 import Dictionary from "./pages/Dictionary";
 import PremiumZone from "./pages/PremiumZone";
+import PdfSupport from "./pages/PdfSupport";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
         <Route path="live-expert" element={<LiveExpert />}></Route>
         <Route path="teacherPanel" element={<TeacherPanel />}></Route>
         <Route path="dailyquiz" element={<DailyQuiz />}></Route>
+        <Route path="pdfSupport" element={<PdfSupport />}></Route>
         <Route path="dictionary" element={<Dictionary />}></Route>
         <Route
           path="teacherPanel/examPaper/:id"
