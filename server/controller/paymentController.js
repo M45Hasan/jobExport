@@ -21,7 +21,7 @@ const sslRequest = async (req, res) => {
     packageUid,
     packageName,
     examCategory,
-    packageFee,
+  
   } = req.body;
   const pack = await ExamPackage.findOne({ packageUid });
   console.log(pack);
@@ -30,7 +30,7 @@ const sslRequest = async (req, res) => {
     total_amount: parseInt(pack?.packageFee),
     currency: "BDT",
     tran_id: tran_id,
-    success_url: `${process.env.ROOT}/ssl-payment-success/${tran_id}`,
+    success_url: `localhost:5173/jobexpart/ssl-payment-success/${tran_id}`,
     fail_url: `${process.env.ROOT}/ssl-payment-fail/${tran_id}`,
     cancel_url: `${process.env.ROOT}/ssl-payment-cancel/${tran_id}`,
     shipping_method: "No",
