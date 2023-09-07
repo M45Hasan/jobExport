@@ -1,0 +1,12 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
+
+const userPdf = new Schema({
+    teacherName:{type:String},
+    subject:{type:String},
+    pdfUrl:{type:String},
+    userId:{type:Schema.Types.ObjectId,ref:"User"}
+})
+
+module.exports=mongoose.model("PDF",userPdf)

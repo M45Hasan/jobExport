@@ -72,12 +72,15 @@ const userSchema = new Schema({
       ref: "Paper",
     },
   ],
+  pdf: [{ type: Schema.Types.ObjectId, ref: "PDF" }],
   quiz: [
     {
       type: Schema.Types.ObjectId,
       ref: "QuizHead",
     },
   ],
+  orderId: { type: String },
+  orderPk: { type: String },
 });
 
 module.exports = mongoose.model("User", userSchema);
