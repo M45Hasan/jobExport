@@ -46,11 +46,16 @@ const {
   sslfail,
   sslCancel,
 } = require("../../controller/paymentController");
-
+// pdf image video  start
 const imageUp = require("../../controller/imageController");
 _.post("/imgupload", imageUp);
 const getPdf =require("../../controller/pdfController")
+const {deletePdf,getPdfs} =require("../../controller/pdfDelete")
 _.post("/upload-pdf", getPdf);
+_.get("/upload-pdf", getPdfs);
+_.delete("/upload-pdf/:filename", deletePdf);
+// pdf image video end 
+
 //exampaper
 const {
   createExamPaper,
