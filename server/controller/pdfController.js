@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-router.post("/upload-pdf",  upload.single("pdf"), async (req, res) => {
+router.post("/upload-pdf", upload.single("pdf"), async (req, res) => {
   const { email, subject } = req.body;
   const pdf = req.file ? req.file.filename : null;
   console.log(email, subject);
