@@ -13,6 +13,7 @@ import Question from "../components/Creatquestion/Question";
 import { activeUser } from "../userSlice/userSlice";
 import { json, useNavigate } from "react-router-dom";
 import AllPackege from "../components/AllPackege/AllPackege";
+import UploadPDF from "../components/UploadPDF/UploadPDF";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -400,7 +401,7 @@ export default function TeacherPanel() {
         <AllPackege />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        <UploadPDF />
       </CustomTabPanel>
     </Box>
   );
