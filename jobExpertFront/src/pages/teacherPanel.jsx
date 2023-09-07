@@ -14,6 +14,7 @@ import { activeUser } from "../userSlice/userSlice";
 import { json, useNavigate } from "react-router-dom";
 import AllPackege from "../components/AllPackege/AllPackege";
 import UploadPDF from "../components/UploadPDF/UploadPDF";
+import UploadVideo from "../components/UploadVideo/UploadVideo";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -223,7 +224,8 @@ export default function TeacherPanel() {
         >
           <Tab label="Create Package" {...a11yProps(0)} />
           <Tab label="My All Package" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          <Tab label="PDF " {...a11yProps(2)} />
+          <Tab label="Vidoe Upload " {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -402,6 +404,9 @@ export default function TeacherPanel() {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <UploadPDF />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        <UploadVideo />
       </CustomTabPanel>
     </Box>
   );
