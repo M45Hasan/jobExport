@@ -8,10 +8,18 @@ import Banner from "../components/Banner/Banner";
 
 import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
+import { useLocation, useParams } from "react-router-dom";
+
 
 
 
 const paymentSucc = () => {
+
+  const {id}=useParams
+console.log(id)
+
+    console.log(location.pathname)
+   
     return (
         <>
             <Navbar />
