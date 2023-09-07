@@ -158,6 +158,13 @@ const packageBuyer = async (req, res) => {
     } else if (free && searchUse) {
       await ExamPackage.findOneAndUpdate(
         { packageUid },
+
+        { $push: { packageBuyer: searchUser?._id } }
+      );
+      await User.findOneAndUpdate(
+        { email: searchUser?.email },
+        { $push: { myExam: free._id } }
+
         { $push: { packageBuyer: searchUser?._id } },
         { new: true }
       );
@@ -165,6 +172,7 @@ const packageBuyer = async (req, res) => {
         { email: searchUser?.email },
         { $push: { myExam: free?._id } },
         { new: true }
+
       );
       res.status(200).json({ message: "Free Exam Added" });
     } else {

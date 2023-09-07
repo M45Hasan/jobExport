@@ -197,20 +197,31 @@ function Navbar() {
           >
             {show ? (
               <Box sx={{ flexGrow: 2 }}>
-                <Link to={"/jobexpart/teacherPanel"}>
-                  <Button sx={{ marginRight: "20px" }} variant="contained">
-                    Teacher Panel
-                  </Button>
-                </Link>
+                {userData?.userData?.userInfo?.role == "Teacher" ? (
+                  <Link to={"/jobexpart/teacherPanel"}>
+                    <Button sx={{ marginRight: "20px" }} variant="contained">
+                      Teacher Panel
+                    </Button>
+                  </Link>
+                ) : (
+                  ""
+                )}
+
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <img
                       className=" h-[50px] w-[50px] rounded-full border border-primary shadow-2xl"
                       alt="Remy Sharp"
                       src={
+
+                        userData?.userData?.userInfo?.avatar?.length == 0
+                          ? ""
+                          : `http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
+
                         imgx !== NaN
                           ? `http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
                           : ""
+
                       }
                     />
                   </IconButton>
