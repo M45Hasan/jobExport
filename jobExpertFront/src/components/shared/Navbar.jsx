@@ -124,15 +124,15 @@ function Navbar() {
             >
               {show
                 ? Loginpages.map((page) => (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
-                    </MenuItem>
-                  ))
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))
                 : pages.map((pagees) => (
-                    <MenuItem key={pagees} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{pagees}</Typography>
-                    </MenuItem>
-                  ))}
+                  <MenuItem key={pagees} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{pagees}</Typography>
+                  </MenuItem>
+                ))}
             </Menu>
           </Box>
           <Typography
@@ -218,9 +218,7 @@ function Navbar() {
                           ? ""
                           : `http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
 
-                        imgx !== NaN
-                          ? `http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
-                          : ""
+
 
                       }
                     />
