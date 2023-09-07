@@ -11,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/uploads", express.static("uploads"));
+app.use("/pdfs", express.static("pdfs"));
 // http://localhost:5000/uploads/1693549919075-707024495.jpg
 console.log(process.env.HOST_URL);
 app.listen(5000, () => {
