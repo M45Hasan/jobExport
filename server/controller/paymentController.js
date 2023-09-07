@@ -1,6 +1,9 @@
 const express = require("express");
+const { ObjectId } = require("mongodb");
 const app = express();
 const SSLCommerzPayment = require("sslcommerz-lts");
+const ExamPackage = require("../model/examPackage");
+const User = require("../model/userModel");
 
 const responseSSL = async (req, res) => {
   res.status(200).json({
@@ -9,6 +12,7 @@ const responseSSL = async (req, res) => {
   });
 };
 
+const tran_id = new ObjectId().toString();
 const sslRequest = async (req, res) => {
   const {
     nid,
@@ -19,19 +23,20 @@ const sslRequest = async (req, res) => {
     examCategory,
     packageFee,
   } = req.body;
-  const amount = parseInt(packageFee);
+  const pack = await ExamPackage.findOne({ packageUid });
+  console.log(pack);
 
   const dataa = {
-    total_amount: amount,
+    total_amount: parseInt(pack?.packageFee),
     currency: "BDT",
-    tran_id: packageUid,
-    success_url: `${process.env.ROOT}/ssl-payment-success`,
-    fail_url: `${process.env.ROOT}/ssl-payment-fail`,
-    cancel_url: `${process.env.ROOT}/ssl-payment-cancel`,
+    tran_id: tran_id,
+    success_url: `${process.env.ROOT}/ssl-payment-success/${tran_id}`,
+    fail_url: `${process.env.ROOT}/ssl-payment-fail/${tran_id}`,
+    cancel_url: `${process.env.ROOT}/ssl-payment-cancel/${tran_id}`,
     shipping_method: "No",
     product_name: packageName,
     product_category: examCategory,
-    product_profile: "general",
+    product_profile: "hello",
     cus_name: name,
     cus_email: email,
     cus_add1: nid,
@@ -47,7 +52,7 @@ const sslRequest = async (req, res) => {
     value_b: "ref002_B",
     value_c: "ref003_C",
     value_d: "ref004_D",
-    ipn_url: `${process.env.ROOT}/ssl-payment-notification`,
+    ipn_url: `${process.env.ROOT}/ssl-payment-notification${tran_id}`,
   };
 
   const sslcommerz = new SSLCommerzPayment(
@@ -55,20 +60,18 @@ const sslRequest = async (req, res) => {
     process.env.STORE_PASSWORD,
     false
   );
-  
-  await sslcommerz.init(dataa).then((data) => {
-    console.log(dataa);
+
+  await sslcommerz.init(dataa).then(async (data) => {
+    console.log(data);
 
     if (data?.GatewayPageURL) {
-      res.status(200).json({ GatewayPageURL: data?.GatewayPageURL  });
-      {
-        /**const responseFromBackend = {
-  GatewayPageURL: "your-gateway-url"
-};
-
-// Redirect the user to the GatewayPageURL
-window.location.href = responseFromBackend.GatewayPageURL; */
-      }
+      const mx = await User.findOneAndUpdate(
+        { email },
+        { $set: { orderId: tran_id, orderPk: pack._id } },
+        { new: true }
+      );
+      console.log(mx);
+      res.status(200).json({ url: data?.GatewayPageURL });
     } else {
       res.status(400).json({
         message: "Session was not successful",
@@ -77,18 +80,16 @@ window.location.href = responseFromBackend.GatewayPageURL; */
   });
 };
 const sslSuccess = async (req, res) => {
-  console.log(req.body);
   try {
-    // Extract val_id from the request body or query parameters
-    const valId = req.body.val_id || req.query.val_id;
-    console.log(valId);
-    // Verify the transaction using the val_id and update your records
-    // (Replace this with your own verification and record update logic)
+    const mx = await User.findOne({ orderId: req.params.id });
+    await User.findByIdAndUpdate(
+      { _id: mx._id },
+      { $set: { orderId: "", orderPk: "" }, $push: { myExam: mx.orderPk } },
+      { new: true }
+    );
 
-    // Respond with a success message
     return res.status(200).json({
       message: "Payment success",
-      val_id: valId,
     });
   } catch (error) {
     console.error(error);
@@ -104,9 +105,12 @@ const sslNotifiaction = async (req, res) => {
 };
 
 const sslfail = async (req, res) => {
-  /**
-   * If payment failed
-   */
+  const mx = await User.findOne({ orderId: req.params.id });
+  await User.findByIdAndUpdate(
+    { _id: mx._id },
+    { $set: { orderId: "", orderPk: "" } },
+    { new: true }
+  );
 
   return res.status(200).json({
     data: req.body,
@@ -115,9 +119,12 @@ const sslfail = async (req, res) => {
 };
 
 const sslCancel = async (req, res) => {
-  /**
-   * If payment cancelled
-   */
+  const mx = await User.findOne({ orderId: req.params.id });
+  await User.findByIdAndUpdate(
+    { _id: mx._id },
+    { $set: { orderId: "", orderPk: "" } },
+    { new: true }
+  );
 
   return res.status(200).json({
     data: req.body,

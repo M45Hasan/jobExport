@@ -66,7 +66,7 @@ const Favourite = () => {
           {show &&
             <div className="flex-grow p-4 max-h-[500px] overflow-y-auto scrollbar-hide mr-[10%]">
               {useInfo.myFab?.map((info, fi) => (
-                <div key={fi}   className="bg-white relative rounded-lg bg-[#CB9E00] shadow-md p-4 mb-4">
+                <div key={fi}   className=" relative rounded-lg bg-[#33c35a] shadow-md p-4 mb-4">
                   <h2 className="text-lg inline font-semibold">{info.examCategory} : {info.examSubCategory}</h2> 
                   <button className="text-base absolute right-2 top-1 font-medium text-[#f14242]" onClick={()=>deleteFun(info._id)}>X</button>
 

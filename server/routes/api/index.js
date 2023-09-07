@@ -49,7 +49,8 @@ const {
 
 const imageUp = require("../../controller/imageController");
 _.post("/imgupload", imageUp);
-
+const getPdf =require("../../controller/pdfController")
+_.post("/upload-pdf", getPdf);
 //exampaper
 const {
   createExamPaper,
@@ -95,6 +96,7 @@ _.post("/packagestatus", packageStatus);
 _.post("/packagerepost", packageRepost);
 _.post("/packagedelete", packageDelete);
 _.post("/categorywise", categoryWiseTodayExam);
+
 _.post("/examtopaper/:id", selectExamByUser);
 
 //exam question Header api
@@ -111,9 +113,25 @@ _.post("/whocanexam", whoCanExam);
 
 _.get("/ssl", responseSSL);
 _.post("/ssl-request", sslRequest);
-_.post("/ssl-payment-success", sslSuccess);
-_.post("/ssl-payment-notification", sslNotifiaction);
-_.post("/ssl-payment-fail", sslfail);
-_.post("/ssl-payment-cancel", sslCancel);
+_.post("/ssl-payment-success/:id", sslSuccess);
+_.post("/ssl-payment-notification/:id", sslNotifiaction);
+_.post("/ssl-payment-fail/:id", sslfail);
+_.post("/ssl-payment-cancel/:id", sslCancel);
 
+//quiz start 
+
+const {createQuizHead,createQuizBody,getAllQuiz}=require("../../controller/quizController")
+_.post("/create-quiz-head", createQuizHead);
+_.post("/create-quiz-body", createQuizBody);
+_.get("/all-quiz", getAllQuiz);
+// student Story & Comment 
+
+const {storyCreate,storyDelete,allStory,commentCreate,commentDelete,allComment,ourSuccess}=require("../../controller/commentController")
+_.post("/story-create",storyCreate)
+_.delete("/story-delete/:id",storyDelete)
+_.get("/story-all",allStory)
+_.get("/comment-all",allComment)
+_.get("/our-success",ourSuccess)
+_.post("/comment-create",commentCreate) 
+_.delete("/comment-delete/:id",commentDelete)
 module.exports = _;

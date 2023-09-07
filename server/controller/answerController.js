@@ -15,6 +15,8 @@ const createExamPaper = async (req, res) => {
   try {
     const match = await Paper.find({ packageUid: packageUid, examineeId: std });
 
+    console.log(match)
+
     if (match.length == 0) {
       const user = await User.findById({ _id: std });
 

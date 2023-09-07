@@ -124,39 +124,55 @@ const myExamList = async (req, res) => {
 
 const packageBuyer = async (req, res) => {
   const { packageUid, email } = req.body;
+
   try {
     const search = await ExamPackage.findOne({ packageUid, premium: true });
     const free = await ExamPackage.findOne({ packageUid, premium: false });
+
     const searchUser = await User.findOne({
       email,
       role: "Student",
-      myExam: search && { $nin: [search?._id] },
+      myExam: { $nin: [search?._id] },
     });
+
     const searchUse = await User.findOne({
       email,
       role: "Student",
-      myExam: free && { $nin: [free?._id] },
+      myExam: { $nin: [free?._id] },
     });
+    console.log(searchUse);
     console.log(free?._id); // Changed from free[0]._id
 
     if (search && searchUser) {
       await ExamPackage.findOneAndUpdate(
         { packageUid },
-        { $push: { packageBuyer: searchUser._id } }
+        { $push: { packageBuyer: searchUser?._id } },
+        { new: true }
       );
       await User.findOneAndUpdate(
-        { email: searchUser.email },
-        { $push: { myExam: search._id } }
+        { email: searchUser?.email },
+        { $push: { myExam: search?._id } },
+        { new: true }
       );
       res.status(200).json({ message: "Purchase success" });
     } else if (free && searchUse) {
       await ExamPackage.findOneAndUpdate(
         { packageUid },
+
         { $push: { packageBuyer: searchUser?._id } }
       );
       await User.findOneAndUpdate(
         { email: searchUser?.email },
         { $push: { myExam: free._id } }
+
+        { $push: { packageBuyer: searchUser?._id } },
+        { new: true }
+      );
+      await User.findOneAndUpdate(
+        { email: searchUser?.email },
+        { $push: { myExam: free?._id } },
+        { new: true }
+
       );
       res.status(200).json({ message: "Free Exam Added" });
     } else {
