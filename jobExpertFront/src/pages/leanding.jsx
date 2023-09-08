@@ -8,6 +8,8 @@ import Slider from "../components/Slider/Slider";
 import JobExpart from "../components/JobExpart/JobExpart";
 import Banner from "../components/Banner/Banner";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import Api from "../components/Axios/axios";
 
 const leading = () => {
   const [data, setData] = useState([]);
@@ -19,6 +21,17 @@ const leading = () => {
       navigate("/login");
     }
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${Api.defaults.baseURL}/jobExpert/api/v1/story-all`)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [data]);
 
   return (
     <div className="mt">
@@ -107,7 +120,7 @@ const leading = () => {
           </p>
         </Link>
         <Link
-          to="{item.url}"
+          to="socialMediya"
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img

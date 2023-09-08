@@ -137,11 +137,6 @@ const StudentProfile = () => {
             User-Id:{userDa.userData.userInfo.nid}
           </p>
         </div>
-
-        <div>
-          <input type="file" accept=".pdf" onChange={handleFileChange} />
-          <button onClick={handleFileUpload}>Upload PDF</button>
-        </div>
       </div>
 
       {/* students tabs  */}

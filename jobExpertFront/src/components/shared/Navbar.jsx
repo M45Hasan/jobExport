@@ -17,6 +17,7 @@ import CallIcon from "@mui/icons-material/Call";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../../userSlice/userSlice";
+import { Icon } from "@iconify/react";
 
 const settings = ["Profile", "Logout"];
 const Loginpages = ["হোম", "সাকসেস স্টোরি", "এক্সাম", "আমার কোর্স"];
@@ -43,6 +44,8 @@ function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  const notification = true;
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -64,30 +67,30 @@ function Navbar() {
     navigate("/");
   };
   const imgx = userData?.userData?.userInfo?.userImg?.length - 1;
-  console.log(imgx);
+  // console.log(imgx);
   //userData.userData.userInfo.userImg[imgx]
   return (
     <AppBar position="static" sx={{ backgroundColor: "#EAE9E9" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <img src={logo} alt="" />
-          </Typography>
-
+          <Link to={"/"}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              <img src={logo} alt="" />
+            </Typography>
+          </Link>
           <Box
             sx={{
               flexGrow: 1,
@@ -122,17 +125,42 @@ function Navbar() {
                 display: { xs: "block", md: "none" },
               }}
             >
+
               {show
                 ? Loginpages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))
+                    <MenuItem key={page} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  ))
                 : pages.map((pagees) => (
+                    <MenuItem key={pagees} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{pagees}</Typography>
+                    </MenuItem>
+                  ))}
+
+              {show ? (
+                <>
+                  <Link to={"/"}>
+                    <h1 className="text-black my-2 mx-2">হোম</h1>
+                  </Link>
+                  <Link to={"#successfullyStory"}>
+                    <h1 className="text-black my-2 mx-2">সাকসেস স্টোরি</h1>{" "}
+                  </Link>
+                  <Link to={"examZone"}>
+                    <h1 className="text-black my-2 mx-2">এক্সাম</h1>
+                  </Link>
+                  <Link to={"premiumZone"}>
+                    <h1 className="text-black my-2">আমার কোর্স</h1>
+                  </Link>
+                </>
+              ) : (
+                pages.map((pagees) => (
                   <MenuItem key={pagees} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{pagees}</Typography>
                   </MenuItem>
-                ))}
+                ))
+              )}
+
             </Menu>
           </Box>
           <Typography
@@ -162,15 +190,18 @@ function Navbar() {
           >
             {show ? (
               <>
-                {Loginpages.map((page) => (
-                  <Button
-                    key={page}
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: "black", display: "block" }}
-                  >
-                    {page}
-                  </Button>
-                ))}
+                <Link to={"/"}>
+                  <h1 className="text-black my-2 mx-2">হোম</h1>
+                </Link>
+                <Link to={"#successfullyStory"}>
+                  <h1 className="text-black my-2 mx-2">সাকসেস স্টোরি</h1>{" "}
+                </Link>
+                <Link to={"examZone"}>
+                  <h1 className="text-black my-2 mx-2">এক্সাম</h1>
+                </Link>
+                <Link to={"premiumZone"}>
+                  <h1 className="text-black my-2">আমার কোর্স</h1>
+                </Link>
               </>
             ) : (
               <>
@@ -207,19 +238,35 @@ function Navbar() {
                   ""
                 )}
 
+                <Tooltip title="Notification">
+                  <IconButton sx={{ p: 0 }}>
+                    <div className="mr-5">
+                      <Icon
+                        icon="ooui:message"
+                        className="relative text-[#26A4DE] text-3xl"
+                      />
+                      <div className="absolute -top-2 -left-2">
+                        <div className="relative flex h-4 w-4">
+                          {notification ? (
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EE8419] opacity-75"></span>
+                          ) : (
+                            <></>
+                          )}
+                          <span className="relative inline-flex rounded-full h-4 w-4 bg-[#EE8419]"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </IconButton>
+                </Tooltip>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <img
                       className=" h-[50px] w-[50px] rounded-full border border-primary shadow-2xl"
                       alt="Remy Sharp"
                       src={
-
                         userData?.userData?.userInfo?.avatar?.length == 0
                           ? ""
                           : `http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
-
-
-
                       }
                     />
                   </IconButton>
