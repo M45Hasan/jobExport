@@ -1,22 +1,31 @@
+import { useParams } from "react-router-dom";
 import logo from "../assets/brandLogo/logo.png";
-
 import appstore from "../assets/brandLogo/appstore (1).png";
 import googlestore from "../assets/brandLogo/appstore (2).png";
-
-
-import Banner from "../components/Banner/Banner";
-
-import Navbar from "../components/shared/Navbar";
-import Footer from "../components/shared/Footer";
+import { useNavigate } from "react-router-dom"
 
 
 
-const paymentFail = () => {
+
+
+const PaymentFail = () => {
+    const { tran_id } = useParams();
+    const navigate = useNavigate()
+
+
+
     return (
         <>
-            <Navbar />
-            
-            <Banner />
+
+            <h1 className="text-xl md:text-2xl text-center mt-10 mb-10 font-semibold">Payment Failed Id: {tran_id}</h1>
+
+       
+
+            <div onClick={() => navigate("/jobexpart/premiumZone")} className="w-[100px] absolute right-[45%] cursor-pointer text-sm md:text-2xl text-[#blue]  mt-10 mb-10  font-semibold " >
+                    Back
+                </div>
+         
+
             <section>
                 <img src={logo} alt="" className="mx-auto mt-16" />
                 <h1 className="text-xl md:text-2xl text-center mt-10 mb-10 font-semibold">
@@ -27,9 +36,9 @@ const paymentFail = () => {
                     <img src={googlestore} alt="" className="w-40" />
                 </div>
             </section>
-            < Footer/>
-    </>
+
+        </>
     )
 }
 
-export default paymentFail
+export default PaymentFail

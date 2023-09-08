@@ -49,18 +49,21 @@ const {
 // pdf image video  start
 const imageUp = require("../../controller/imageController");
 _.post("/imgupload", imageUp);
-const getPdf =require("../../controller/pdfController")
-const {deletePdf,getPdfs} =require("../../controller/pdfDelete")
+const getPdf = require("../../controller/pdfController");
+const { deletePdf, getPdfs } = require("../../controller/pdfDelete");
 _.post("/upload-pdf", getPdf);
 _.get("/upload-pdf", getPdfs);
 _.delete("/upload-pdf/:filename", deletePdf);
 
-
-const {createVideo,getVideo,videoDelete} =require("../../controller/videoController")
-_.post("/video-upload",createVideo)
-_.get("/video-upload",getVideo)
-_.delete("/video-upload/:id",videoDelete)
-// pdf image video end 
+const {
+  createVideo,
+  getVideo,
+  videoDelete,
+} = require("../../controller/videoController");
+_.post("/video-upload", createVideo);
+_.get("/video-upload", getVideo);
+_.delete("/video-upload/:id", videoDelete);
+// pdf image video end
 
 //exampaper
 const {
@@ -124,25 +127,38 @@ _.post("/whocanexam", whoCanExam);
 
 _.get("/ssl", responseSSL);
 _.post("/ssl-request", sslRequest);
-_.post("/ssl-payment-success/:id", sslSuccess);
+_.post("/ssl-payment-success/:tran_id", sslSuccess);
+
 _.post("/ssl-payment-notification/:id", sslNotifiaction);
-_.post("/ssl-payment-fail/:id", sslfail);
+_.post("/ssl-payment-fail/:tran_id", sslfail);
 _.post("/ssl-payment-cancel/:id", sslCancel);
 
-//quiz start 
+//quiz start
 
-const {createQuizHead,createQuizBody,getAllQuiz}=require("../../controller/quizController")
+const {
+  createQuizHead,
+  createQuizBody,
+  getAllQuiz,
+} = require("../../controller/quizController");
 _.post("/create-quiz-head", createQuizHead);
 _.post("/create-quiz-body", createQuizBody);
 _.get("/all-quiz", getAllQuiz);
-// student Story & Comment 
+// student Story & Comment
 
-const {storyCreate,storyDelete,allStory,commentCreate,commentDelete,allComment,ourSuccess}=require("../../controller/commentController")
-_.post("/story-create",storyCreate)
-_.delete("/story-delete/:id",storyDelete)
-_.get("/story-all",allStory)
-_.get("/comment-all",allComment)
-_.get("/our-success",ourSuccess)
-_.post("/comment-create",commentCreate) 
-_.delete("/comment-delete/:id",commentDelete)
+const {
+  storyCreate,
+  storyDelete,
+  allStory,
+  commentCreate,
+  commentDelete,
+  allComment,
+  ourSuccess,
+} = require("../../controller/commentController");
+_.post("/story-create", storyCreate);
+_.delete("/story-delete/:id", storyDelete);
+_.get("/story-all", allStory);
+_.get("/comment-all", allComment);
+_.get("/our-success", ourSuccess);
+_.post("/comment-create", commentCreate);
+_.delete("/comment-delete/:id", commentDelete);
 module.exports = _;
