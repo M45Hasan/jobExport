@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-async function emailV(email, code, sub) {
+async function emailV(email, code, sub,text) {
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     auth: {
@@ -12,7 +12,7 @@ async function emailV(email, code, sub) {
     from: "Lost & Found", // sender address
     to: email, // list of receivers
     subject: sub, // Subject line
-    text: "Click Here", // plain text body
+    text: text, // plain text body
     html: `<button  >${code}</button>`, // html body
   });
 }
