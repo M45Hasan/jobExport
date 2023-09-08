@@ -17,6 +17,7 @@ import CallIcon from "@mui/icons-material/Call";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../../userSlice/userSlice";
+import { Icon } from "@iconify/react";
 
 const settings = ["Profile", "Logout"];
 const Loginpages = ["হোম", "সাকসেস স্টোরি", "এক্সাম", "আমার কোর্স"];
@@ -43,6 +44,8 @@ function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  const notification = true;
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -64,7 +67,7 @@ function Navbar() {
     navigate("/");
   };
   const imgx = userData?.userData?.userInfo?.userImg?.length - 1;
-  console.log(imgx);
+  // console.log(imgx);
   //userData.userData.userInfo.userImg[imgx]
   return (
     <AppBar position="static" sx={{ backgroundColor: "#EAE9E9" }}>
@@ -122,6 +125,19 @@ function Navbar() {
                 display: { xs: "block", md: "none" },
               }}
             >
+
+              {show
+                ? Loginpages.map((page) => (
+                    <MenuItem key={page} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  ))
+                : pages.map((pagees) => (
+                    <MenuItem key={pagees} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{pagees}</Typography>
+                    </MenuItem>
+                  ))}
+
               {show ? (
                 <>
                   <Link to={"/"}>
@@ -144,6 +160,7 @@ function Navbar() {
                   </MenuItem>
                 ))
               )}
+
             </Menu>
           </Box>
           <Typography
@@ -221,6 +238,26 @@ function Navbar() {
                   ""
                 )}
 
+                <Tooltip title="Notification">
+                  <IconButton sx={{ p: 0 }}>
+                    <div className="mr-5">
+                      <Icon
+                        icon="ooui:message"
+                        className="relative text-[#26A4DE] text-3xl"
+                      />
+                      <div className="absolute -top-2 -left-2">
+                        <div className="relative flex h-4 w-4">
+                          {notification ? (
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EE8419] opacity-75"></span>
+                          ) : (
+                            <></>
+                          )}
+                          <span className="relative inline-flex rounded-full h-4 w-4 bg-[#EE8419]"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </IconButton>
+                </Tooltip>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <img

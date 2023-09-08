@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
 
 import { useState, useEffect } from "react";
+
+import axios from "axios";
+import Api from "../Axios/axios";
+
 import job from "../../assets/brandLogo/job.png";
+
 
 const homeSectionTwo = () => {
   const [data, setData] = useState([]);
