@@ -53,8 +53,6 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ["Admin", "Student", "Teacher"],
-    default: "Student",
   },
   hasEmailVerified: {
     type: Boolean,

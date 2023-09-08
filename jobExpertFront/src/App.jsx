@@ -28,6 +28,7 @@ import PaymentFail from "./pages/paymentFail";
 
 
 import VideoSupport from "./pages/VideoSupport";
+import SocialMediya from "./pages/SocialMediya";
 
 
 const router = createBrowserRouter(
@@ -52,8 +53,12 @@ const router = createBrowserRouter(
         <Route path="video" element={<VideoSupport />}></Route>
         <Route path="pdfSupport" element={<PdfSupport />}></Route>
         <Route path="dictionary" element={<Dictionary />}></Route>
+
+        <Route path="socialMediya" element={<SocialMediya />}></Route>
+
         <Route path="payment/:tran_id" element={<PaymentSucc />}></Route>
         <Route path="fail/:tran_id" element={<PaymentFail />}></Route>
+
         <Route
           path="teacherPanel/examPaper/:id"
           element={<ExamPaper />}

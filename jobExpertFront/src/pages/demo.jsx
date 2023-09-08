@@ -1,269 +1,201 @@
-import React, { useState, useEffect } from "react";
-import Banner from "../components/Banner/Banner";
-import { useParams, Link } from "react-router-dom";
+import React, { useState } from "react";
+import logo from "../assets/brandLogo/logo.png";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import { Link, useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Navbar from "../components/shared/Navbar";
+import Footer from "../components/shared/Footer";
 import axios from "../components/Axios/axios";
-import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
-import veifysucces from "../assets/verificationIcon/verifysuccess.png";
+import { useDispatch, useSelector } from "react-redux";
+import { activeUser } from "../userSlice/userSlice";
+import FormControl from "@mui/material/FormControl";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
 
-const ExamPaper = () => {
-  const { id } = useParams();
-  const seletor = useSelector((state) => state);
-  const [data, setData] = useState({});
-  const [selectedOptions, setSelectedOptions] = useState({});
+const defaultTheme = createTheme();
 
-  useEffect(() => {
-    async function fetchQuestions() {
+export default function Signup() {
+  const userData = useSelector((state) => state);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    pass: "",
+  });
+  const [infoData, setInfoData] = useState({
+    name: "",
+    email: "",
+    pass: "",
+    role: "student", // Default role is set to "student"
+  });
+
+  const handelInput = (e) => {
+    let { name, value } = e.target;
+    setInfoData({ ...infoData, [name]: value });
+    setErrors({ ...errors, [name]: value ? "" : `${name} is required` });
+  };
+
+  const handleRoleChange = (e) => {
+    setInfoData({ ...infoData, role: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    if (!infoData.name) {
+      setErrors({ ...errors, name: "Name is required" });
+    } else if (!infoData.email) {
+      setErrors({ ...errors, email: "Email is required" });
+    } else if (!infoData.pass) {
+      setErrors({ ...errors, pass: "Password is required" });
+    } else {
       try {
-        let response = await axios.post("/jobExpert/api/v1/whocanexam", {
-          id: id,
-          myId: seletor.userData.userInfo.id,
-        });
-        setData(response.data);
-        const initialSelectedOptions = {};
-        response.data.qestionList?.forEach((item, index) => {
-          initialSelectedOptions[`question-${index}`] = "";
-        });
-        setSelectedOptions(initialSelectedOptions);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    fetchQuestions();
-  }, [id, seletor.userData.userInfo.id]);
-
-  const [paper, setPaper] = useState({});
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const pushData = await axios.post("/jobExpert/api/v1/exampaper", {
-          std: seletor.userData.userInfo.id,
-          packageUid: data.packageUid,
-          packageName: data.packageName,
-          examCategory: data.examCategory,
-        });
-
-        setPaper(pushData.data);
+        setLoading(true);
+        let data = await axios.post("/jobExpert/api/v1/regi", infoData);
+        dispatch(activeUser(data.data));
+        setTimeout(() => {
+          navigate("/verify");
+        }, 2000);
       } catch (error) {
-        console.error("Error:", error);
+        console.log(error);
+        setLoading(false);
       }
     }
-
-    fetchData();
-  }, [
-    seletor.userData.userInfo.id,
-    data.packageUid,
-    data.packageName,
-    data.examCategory,
-  ]);
-
-  const selectedRadioStyle = {
-    backgroundColor: "green", // Replace with the color you want for selected radio inputs
-  };
-  const [optn, setOptn] = useState({});
-
-  const handleRadioChange = (event, questionIndex) => {
-    const { name, value } = event.target;
-    setOptn({
-      ...optn,
-      [name]: value,
-    });
-    setSelectedOptions({
-      ...selectedOptions,
-      [name]: value,
-    });
   };
 
-  let [show, setShow] = useState(false);
-  const handeleStore = async (puid) => {
-    await axios
-      .post("/jobExpert/api/v1/examinee-paper-push", {
-        ...{ puid: puid, id: seletor.userData.userInfo.id },
-        optn,
-      })
-      .then(() => {
-        setShow(!show);
-        setOptn({});
-      });
-  };
+  React.useEffect(() => {
+    if (userData?.userData?.userInfo?.verify == true) {
+      navigate("/jobexpart");
+    }
+  }, []);
 
   return (
-    <div>
-      <Banner />
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+    <>
+      <Navbar />
+      <ThemeProvider theme={defaultTheme}>
+        <Box sx={{ mt: 10, mb: 10 }}>
+          <Container component="main" maxWidth="xs">
+            <CssBaseline />
 
-      <div className="w-11/12 md:w-4/5 mx-auto text-left">
-        {show ? (
-          <div className="text-center mx-0">
-            <img
-              className="text-center mx-auto my-4"
-              src={veifysucces}
-              alt=""
-            />
-            <h2 className="text-xl">Exam Submited</h2>
-            <Link to="/jobexpart">
-              <button>Go To Home</button>
-            </Link>
-          </div>
-        ) : (
-          <>
-            <div className="text-center my-10">
-              <h1 className="text-2xl font-bold">{data.examSerial}</h1>
-              <h3 className="my-3">{data.examTitle}</h3>
-              <p>সময়-{data.examDuration} মিনিট</p>
-            </div>
-            <div className="w-11/12 md:w-4/5 mx-auto text-left">
-              <div className="Qestion">
-                <ol>
-                  {data.qestionList?.map((item, index) => (
-                    <li key={index}>
-                      <div
-                        className={`w-11/12 md:w-4/5 mx-auto bg-white ml-2 rounded-lg my-4`}
-                      >
-                        <h1 className="text-xl font-bold mb-4">
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: item.whatIsTheQuestion,
-                            }}
-                          ></div>
-                        </h1>
-                        <div className="flex items-center gap-x-4">
-                          <div>
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                id={`question-option-${index}-optionA`}
-                                name={`question-${index}`}
-                                value="optionA"
-                                checked={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionA"
-                                }
-                                onChange={(e) => handleRadioChange(e, index)}
-                                className="mr-2"
-                                style={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionA"
-                                    ? selectedRadioStyle
-                                    : {}
-                                }
-                              />
-                              <label htmlFor={`question-option-${index}-A`}>
-                                {item.optionA}
-                              </label>
-                            </div>
-                            <div className="flex items-center mt-2">
-                              <input
-                                type="radio"
-                                id={`question-option-${index}-optionB`}
-                                name={`question-${index}`}
-                                value="optionB"
-                                checked={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionB"
-                                }
-                                onChange={(e) => handleRadioChange(e, index)}
-                                className="mr-2"
-                                style={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionB"
-                                    ? selectedRadioStyle
-                                    : {}
-                                }
-                              />
-                              <label htmlFor={`question-option-${index}-B`}>
-                                {item.optionB}
-                              </label>
-                            </div>
-                          </div>
+            <Box
+              sx={{
+                marginTop: 8,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ width: "200px", mb: 3 }}>
+                <img src={logo} alt="" />
+              </Box>
 
-                          <div>
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                id={`question-option-${index}-optionC`}
-                                name={`question-${index}`}
-                                value="optionC"
-                                checked={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionC"
-                                }
-                                onChange={(e) => handleRadioChange(e, index)}
-                                className="mr-2"
-                                style={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionC"
-                                    ? selectedRadioStyle
-                                    : {}
-                                }
-                              />
-                              <label htmlFor={`question-option-${index}-C`}>
-                                {item.optionC}
-                              </label>
-                            </div>
-                            <div className="flex items-center mt-2">
-                              <input
-                                type="radio"
-                                id={`question-option-${index}-optionD`}
-                                name={`question-${index}`}
-                                value="optionD"
-                                checked={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionD"
-                                }
-                                onChange={(e) => handleRadioChange(e, index)}
-                                className="mr-2"
-                                style={
-                                  selectedOptions[`question-${index}`] ===
-                                  "optionD"
-                                    ? selectedRadioStyle
-                                    : {}
-                                }
-                              />
-                              <label htmlFor={`question-option-${index}-D`}>
-                                {item.optionD}
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
+              <Typography component="h1" variant="h5" sx={{ fontSize: "16px" }}>
+                Signup with Email or Phone
+              </Typography>
+
+              <FormControl component="fieldset" sx={{ mt: 2 }}>
+                <RadioGroup
+                  row
+                  name="role"
+                  value={infoData.role}
+                  onChange={handleRoleChange}
+                >
+                  <FormControlLabel
+                    value="student"
+                    control={<Radio />}
+                    label="Student"
+                  />
+                  <FormControlLabel
+                    value="teacher"
+                    control={<Radio />}
+                    label="Teacher"
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              <TextField
+                margin="normal"
+                fullWidth
+                id="name"
+                label="Name"
+                name="name"
+                autoComplete="name"
+                onChange={handelInput}
+                autoFocus
+                error={!!errors.name}
+                helperText={errors.name}
+              />
+
+              <TextField
+                margin="normal"
+                fullWidth
+                id="email"
+                label="Email or Phone Number"
+                name="email"
+                autoComplete="email"
+                onChange={handelInput}
+                error={!!errors.email}
+                helperText={errors.email}
+              />
+
+              <TextField
+                margin="normal"
+                fullWidth
+                name="pass"
+                label="Password"
+                type="password"
+                onChange={handelInput}
+                id="password"
+                autoComplete="current-password"
+                error={!!errors.pass}
+                helperText={errors.pass}
+              />
+
+              <div onClick={handleSubmit}>
+                {loading ? (
+                  <LoadingButton
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      pt: 1.5,
+                      fontSize: "16px",
+                    }}
+                    loading
+                    loadingPosition="start"
+                    startIcon={<SaveIcon />}
+                    variant="outlined"
+                  >
+                    Register
+                  </LoadingButton>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      pt: 1.5,
+                      backgroundColor: "#26A4DE",
+                      "&:hover": {
+                        backgroundColor: "#26A4DE",
+                      },
+                      fontSize: "16px",
+                    }}
+                  >
+                    <Link to="/register">Register</Link>
+                  </Button>
+                )}
               </div>
-
-              <div style={{ clear: "both" }}></div>
-            </div>
-            {paper.error ? (
-              <h1 className="text-xl text-[red] text-center font-bold">
-                "You have already attended this exam"
-              </h1>
-            ) : (
-              <div
-                onClick={() => handeleStore(data.packageUid)}
-                className="text-center my-10"
-              >
-                <button className="px-10 py-2 mt-4 bg-primary text-[#FFFFFF] rounded-lg">
-                  Submit
-                </button>
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+            </Box>
+          </Container>
+        </Box>
+      </ThemeProvider>
+      <Footer />
+    </>
   );
-};
-
-export default ExamPaper;
+}
