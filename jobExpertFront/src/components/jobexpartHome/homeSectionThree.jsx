@@ -20,7 +20,7 @@ const homeSectionThree = () => {
   }, [data]);
 
   return (
-    <>
+    <div id="successfullyStory">
       <h3 className="text-2xl text-center font-bold mb-10 mt-20">
         Job Expert -সাকসেস স্টোরি
       </h3>
@@ -50,7 +50,7 @@ const homeSectionThree = () => {
           </>
         ))}
       </section>
-    </>
+    </div>
   );
 };
 

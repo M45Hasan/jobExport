@@ -1,106 +1,153 @@
-import React from 'react'
-import JobExpart from "../../components/JobExpart/JobExpart";
-import { useState, useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
 import axios from "../../components/Axios/axios";
 import { useSelector } from "react-redux";
 
-const Stroy = () => {
-    // const [store, setStore] = useState({});
-    // const [story, setStory] = useState('');
-    // const userDa = useSelector((state) => state);
-    // const email = userDa?.userData?.userInfo?.email;
-    // const name = userDa?.userData?.userInfo?.name;
-    // const imgx = userDa?.userData.userInfo?.userImg.length - 1
+const Story = () => {
+  const userDa = useSelector((state) => state);
+  const imgx = userDa?.userData.userInfo?.userImg.length - 1;
+  const email = userDa?.userData?.userInfo?.email;
+  const profile = userDa?.userData.userInfo?.userImg[imgx];
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     console.log(story)
-    //     try {
+  const [storyData, setStoryData] = useState({
+    story: "",
+    email: email,
+    url: profile,
+    name: "",
+  });
 
-    //         const response = await axios.post('/jobExpert/api/v1/stroy', {
-    //             story,
-    //             email,
-    //             name,
-    //             img: userDa?.userData.userInfo?.userImg[imgx]
-    //         });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setStoryData({ ...storyData, [name]: value });
+  };
 
+  console.log(storyData);
 
-    //         console.log(response.data);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("/jobExpert/api/v1/story-create", storyData);
+      // Fetch all stories after creating a new story
+      const response = await axios.get("/jobExpert/api/v1/story-all");
+      setStories(response.data);
+      setStoryData({
+        story: "",
+        email: email,
+        url: profile,
+        name: "",
+      });
+    } catch (error) {
+      console.error("Error creating story:", error);
+    }
+  };
 
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-    // useEffect(() => {
+  const [stories, setStories] = useState([]);
 
-    //     axios.get('/api/get-stories').then((response) => {
-    //         setStore(response.data);
-    //     });
-    // }, []);
+  // Fetch all stories when the component mounts
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        const response = await axios.get("/jobExpert/api/v1/story-all");
+        setStories(response.data);
+      } catch (error) {
+        console.error("Error fetching stories:", error);
+      }
+    };
 
-    // const handleDelete = async (storyId) => {
-    //     try {
+    fetchStories();
+  }, []);
 
-    //         await axios.delete(`/api/delete-story/${storyId}?email=${email}`);
+  const handleDelete = async (storyId) => {
+    try {
+      await axios.delete(
+        `/jobExpert/api/v1/story-delete/${storyId}?email=${email}`
+      );
+      // Fetch all stories after deleting a story
+      const response = await axios.get("/jobExpert/api/v1/story-all");
+      setStories(response.data);
+      alert("Story deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting story:", error);
+      alert("Error deleting story.");
+    }
+  };
 
+  return (
+    <>
+      <div className="max-w-lg mx-auto p-4">
+        <h2 className="text-2xl font-semibold mb-4">Create a Story</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label
+              htmlFor="story"
+              className="block text-gray-700 font-semibold"
+            >
+              Story:
+            </label>
+            <textarea
+              id="story"
+              name="story"
+              value={storyData.story}
+              onChange={handleInputChange}
+              className="border rounded-lg p-2 w-full h-32"
+              required
+            />
+          </div>
 
-    //         setStore((prevStories) => prevStories.filter((story) => story._id !== storyId));
-    //     } catch (error) {
-    //         console.error(error);
+          <div className="mb-4">
+            <label htmlFor="name" className="block text-gray-700 font-semibold">
+              Your Name:
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={storyData.name}
+              onChange={handleInputChange}
+              className="border rounded-lg p-2 w-full"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark focus:outline-none focus:ring focus:ring-primary focus:border-primary"
+          >
+            Submit Story
+          </button>
+        </form>
+      </div>
 
-    //     }
-    // }
+      <div className="max-w-4xl mx-auto p-4">
+        <h2 className="text-2xl font-semibold mb-4">All Stories</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {stories.length === 0 ? (
+            <p className="text-gray-500">No stories available.</p>
+          ) : (
+            stories.map((story) => (
+              <div
+                key={story._id}
+                className="bg-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 relative"
+              >
+                <button
+                  className="absolute top-2 right-2 text-red-600 hover:text-red-800 focus:outline-none"
+                  onClick={() => handleDelete(story._id)}
+                >
+                  Delete
+                </button>
+                <img
+                  src={`http://localhost:5000/uploads/${story.url}`}
+                  alt={`Image for ${story.name}'s story`}
+                  className="w-full h-40 object-cover rounded-lg"
+                />
+                <h3 className="text-lg font-semibold mt-2">{story.name}</h3>
+                <p className="text-gray-600">{story.story}</p>
+                <p className="text-gray-600">{story.email}</p>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
 
-    // return (
-    //     <>
-    //         <div className='flex space-x-2'>
-    //             <div className="mx-auto mt-2">
-    //                 <form onSubmit={handleSubmit}>
-    //                     <div className="flex flex-col w-96">
-    //                         <label className="text-lg font-semibold mb-2">Student Success Story</label>
-    //                         <textarea
-    //                             className="w-full h-32 border rounded p-2 focus:outline-none focus:ring focus:border-blue-300"
-    //                             placeholder="Write your success story here..."
-    //                             value={story}
-    //                             onChange={(e) => setStory(e.target.value)}
-    //                             required
-    //                         ></textarea>
-    //                         <button
-    //                             type="submit"
-    //                             className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded cursor-pointer"
-    //                         >
-    //                             Submit
-    //                         </button>
-    //                     </div>
-    //                 </form>
-    //             </div>
-
-    //             <div className="mx-auto mt-2">
-    //                 <div className="flex flex-col w-96">
-    //                     <h1 className="text-lg font-semibold mb-4">Student Success Stories</h1>
-    //                     {store?.map((story) => (
-    //                         <div key={story._id} className="bg-white rounded-lg shadow-md p-4 mb-4">
-    //                             <p className="text-gray-700">{story.content}</p>
-    //                             <p className="text-gray-500 mt-2">Submitted by: {story.author}</p>
-    //                             {story?.email === email && (
-    //                                 <button
-    //                                     className="mt-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded cursor-pointer"
-    //                                     onClick={() => handleDelete(story._id)}
-    //                                 >
-    //                                     Delete
-    //                                 </button>
-    //                             )}
-    //                         </div>
-    //                     ))}
-    //                 </div>
-    //             </div>
-
-    //         </div>
-    //         < JobExpart />
-
-    //     </>
-    // )
-
-}
-export default Stroy
+export default Story;
