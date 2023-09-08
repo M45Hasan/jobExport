@@ -1,8 +1,63 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
+import Api from "../Axios/axios";
 
 const homeSectionFour = () => {
-  const [data, setData] = useState([]);
+  const [user, setUser] = useState([]);
+  const [packageList, setPackageList] = useState([]);
+
+  // all packageList
+  useEffect(() => {
+    axios
+      .get(`${Api.defaults.baseURL}/jobExpert/api/v1/packagelist`)
+      .then((res) => {
+        setPackageList(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [packageList]);
+
+  // all user
+  useEffect(() => {
+    axios
+      .get(`${Api.defaults.baseURL}/jobExpert/api/v1/alluser`)
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [user]);
+
+  // total student and teacherCount
+  let studentCount = 0;
+  let teacherCount = 0;
+
+  user.forEach((item) => {
+    if (item.role === "Student") {
+      studentCount++;
+    } else if (item.role === "Teacher") {
+      teacherCount++;
+    }
+  });
+
+  // total day of company
+
+  const firstDate = new Date("2015-01-01"); // Set your desired first date here
+  const [yearCount, setYearCount] = useState(null);
+
+  useEffect(() => {
+    // Get the current date as a Date object
+    const currentDate = new Date();
+
+    // Calculate the difference in years
+    const yearDifference = currentDate.getFullYear() - firstDate.getFullYear();
+
+    // Set the yearCount state with the result
+    setYearCount(yearDifference);
+  }, []);
 
   return (
     <>
@@ -18,7 +73,7 @@ const homeSectionFour = () => {
           />
           <h3 className="text-center text-lg font-bold py-2">মোট সাব্জেক্ট</h3>
           <span className="flex justify-center font-bold text-lg">
-            <CountUp end={28} duration={5} />+
+            <CountUp end={packageList.length} duration={5} />+
           </span>
         </div>
         <div className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF] cursor-pointer">
@@ -29,7 +84,7 @@ const homeSectionFour = () => {
           />
           <h3 className="text-center text-lg font-bold py-2">শিক্ষার্থী</h3>
           <span className="flex justify-center font-bold text-lg">
-            <CountUp end={2800} duration={5} />+
+            <CountUp end={studentCount} duration={5} />+
           </span>
         </div>
         <div className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF] cursor-pointer">
@@ -40,7 +95,7 @@ const homeSectionFour = () => {
           />
           <h3 className="text-center text-lg font-bold py-2">সফল শিক্ষার্থী</h3>
           <span className="flex justify-center font-bold text-lg">
-            <CountUp end={180} duration={5} />+
+            <CountUp end={user.length} duration={5} />+
           </span>
         </div>
         <div className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF] cursor-pointer">
@@ -51,7 +106,7 @@ const homeSectionFour = () => {
           />
           <h3 className="text-center text-lg font-bold py-2">মেন্টর</h3>
           <span className="flex justify-center font-bold text-lg">
-            <CountUp end={18} duration={5} />+
+            <CountUp end={teacherCount} duration={5} />+
           </span>
         </div>
         <div className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF] cursor-pointer">
@@ -62,7 +117,7 @@ const homeSectionFour = () => {
           />
           <h3 className="text-center text-lg font-bold py-2">সাফলতার বছর</h3>
           <span className="flex justify-center font-bold text-lg">
-            <CountUp end={8} duration={5} />+
+            <CountUp end={yearCount} duration={5} />+
           </span>
         </div>
       </section>

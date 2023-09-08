@@ -19,16 +19,11 @@ import ExamPaper from "./pages/ExamPaper";
 import DailyQuiz from "./pages/DailyQuiz";
 import Dictionary from "./pages/Dictionary";
 import PremiumZone from "./pages/PremiumZone";
-import PdfSupport from "./pages/PdfSupport"
-
-import PaymentSucc from "./pages/paymentSucc";
-import PaymentFail from "./pages/paymentFail";
-
-
-
-
+import PdfSupport from "./pages/PdfSupport";
+import paymentReq from "./pages/paymentreq";
+import paymentSucc from "./pages/paymentSucc";
+import paymentFail from "./pages/paymentFail";
 import VideoSupport from "./pages/VideoSupport";
-
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,9 +34,11 @@ const router = createBrowserRouter(
       <Route path="/verify" element={<Verify />}></Route>
 
       <Route path="/jobexpart" element={<Rootlayout />}>
+        <Route path="ssl-request" element={<paymentReq />}></Route>
+        <Route path="ssl-payment-success/:id" element={<paymentSucc />}></Route>
+        <Route path="ssl-payment-fail" element={<paymentFail />}></Route>
 
-
-
+        <Route path="ssl-request" element={<paymentReq />}></Route>
 
         <Route index element={<Leanding />}></Route>
         <Route path="examZone" element={<ExamZone />}></Route>
@@ -52,8 +49,6 @@ const router = createBrowserRouter(
         <Route path="video" element={<VideoSupport />}></Route>
         <Route path="pdfSupport" element={<PdfSupport />}></Route>
         <Route path="dictionary" element={<Dictionary />}></Route>
-        <Route path="payment/:tran_id" element={<PaymentSucc />}></Route>
-        <Route path="fail/:tran_id" element={<PaymentFail />}></Route>
         <Route
           path="teacherPanel/examPaper/:id"
           element={<ExamPaper />}
