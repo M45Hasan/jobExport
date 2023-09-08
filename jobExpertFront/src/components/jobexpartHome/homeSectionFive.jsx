@@ -1,12 +1,23 @@
 import { useState, useEffect } from "react";
-
 import { Icon } from "@iconify/react";
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import axios from "axios";
+import Api from "../Axios/axios";
 
 const homeSectionFive = () => {
   const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${Api.defaults.baseURL}/jobExpert/api/v1/comment-all`)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [data]);
 
   return (
     <>
@@ -31,151 +42,34 @@ const homeSectionFive = () => {
           },
         }}
       >
-        <SwiperSlide>
-          <div className="w-11/12 py-10 rounded-lg duration-500 shadow-lg border-2 relative cursor-pointer group">
-            <span className=" :">
-              <Icon
-                icon="icon-park:quote"
-                width={40}
-                className="absolute -top-6  left-5"
-              />
-            </span>
-            <p className="text-left px-5">
-              ফলাবর্তন যা কোনো বিষয়ের উপর আলোচনা কিংবা সমালোচনা কিংবা কোন অবস্থা
-              সম্পর্কে সার্বিক মন্তব্য। যাকে প্রদান করা হয় তিনি তাঁর কাজের মান
-              সম্পর্কে ধারনা অর্জন করতে পারেন ফলাবর্তন বা Feedback এর মাধ্যমে।
-            </p>
-            <div className="flex items-center gap-4 px-5 pt-5">
-              <img
-                src="https://i.ibb.co/ww4kHY7/image-96.png"
-                alt=""
-                className="w-20 rounded-full"
-              />
-              <div>
-                <h3 className="text-center text-2xl font-bold pt-2">
-                  Reduanul Riyad
-                </h3>
-                <p>Dhaka, Bangladesh</p>
+        {data?.map((datas) => (
+          <>
+            <SwiperSlide>
+              <div className="w-11/12 py-10 rounded-lg duration-500 shadow-lg border-2 relative cursor-pointer group">
+                <span className=" :">
+                  <Icon
+                    icon="icon-park:quote"
+                    width={40}
+                    className="absolute -top-6  left-5"
+                  />
+                </span>
+                <p className="text-left px-5">{datas?.comment}</p>
+                <div className="flex items-center gap-4 px-5 pt-5">
+                  <div className="w-10 h-10">
+                    <img
+                      src={`http://localhost:5000/uploads/${datas?.url}`}
+                      alt=""
+                      className="w-full rounded-full"
+                    />
+                  </div>
+                  <div>
+                    <p>{datas?.email}</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className="w-11/12 py-10 rounded-lg duration-500 shadow-lg border-2 relative cursor-pointer group">
-            <span className=" :">
-              <Icon
-                icon="icon-park:quote"
-                width={40}
-                className="absolute -top-6  left-5"
-              />
-            </span>
-            <p className="text-left px-5">
-              ফলাবর্তন যা কোনো বিষয়ের উপর আলোচনা কিংবা সমালোচনা কিংবা কোন অবস্থা
-              সম্পর্কে সার্বিক মন্তব্য। যাকে প্রদান করা হয় তিনি তাঁর কাজের মান
-              সম্পর্কে ধারনা অর্জন করতে পারেন ফলাবর্তন বা Feedback এর মাধ্যমে।
-            </p>
-            <div className="flex items-center gap-4 px-5 pt-5">
-              <img
-                src="https://i.ibb.co/z5hSDwY/image-97.png"
-                alt=""
-                className="w-20 rounded-full"
-              />
-              <div>
-                <h3 className="text-center text-2xl font-bold pt-2">
-                  Reduanul Riyad
-                </h3>
-                <p>Dhaka, Bangladesh</p>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className="w-11/12 py-10 rounded-lg duration-500 shadow-lg border-2 relative cursor-pointer group">
-            <span className=" :">
-              <Icon
-                icon="icon-park:quote"
-                width={40}
-                className="absolute -top-6  left-5"
-              />
-            </span>
-            <p className="text-left px-5">
-              ফলাবর্তন যা কোনো বিষয়ের উপর আলোচনা কিংবা সমালোচনা কিংবা কোন অবস্থা
-              সম্পর্কে সার্বিক মন্তব্য। যাকে প্রদান করা হয় তিনি তাঁর কাজের মান
-              সম্পর্কে ধারনা অর্জন করতে পারেন ফলাবর্তন বা Feedback এর মাধ্যমে।
-            </p>
-            <div className="flex items-center gap-4 px-5 pt-5">
-              <img
-                src="https://i.ibb.co/z5hSDwY/image-97.png"
-                alt=""
-                className="w-20 rounded-full"
-              />
-              <div>
-                <h3 className="text-center text-2xl font-bold pt-2">
-                  Reduanul Riyad
-                </h3>
-                <p>Dhaka, Bangladesh</p>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className="w-11/12 py-10 rounded-lg duration-500 shadow-lg border-2 relative cursor-pointer group">
-            <span className=" :">
-              <Icon
-                icon="icon-park:quote"
-                width={40}
-                className="absolute -top-6  left-5"
-              />
-            </span>
-            <p className="text-left px-5">
-              ফলাবর্তন যা কোনো বিষয়ের উপর আলোচনা কিংবা সমালোচনা কিংবা কোন অবস্থা
-              সম্পর্কে সার্বিক মন্তব্য। যাকে প্রদান করা হয় তিনি তাঁর কাজের মান
-              সম্পর্কে ধারনা অর্জন করতে পারেন ফলাবর্তন বা Feedback এর মাধ্যমে।
-            </p>
-            <div className="flex items-center gap-4 px-5 pt-5">
-              <img
-                src="https://i.ibb.co/z5hSDwY/image-97.png"
-                alt=""
-                className="w-20 rounded-full"
-              />
-              <div>
-                <h3 className="text-center text-2xl font-bold pt-2">
-                  Reduanul Riyad
-                </h3>
-                <p>Dhaka, Bangladesh</p>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className="w-11/12 py-10 rounded-lg duration-500 shadow-lg border-2 relative cursor-pointer group">
-            <span className=" :">
-              <Icon
-                icon="icon-park:quote"
-                width={40}
-                className="absolute -top-6  left-5"
-              />
-            </span>
-            <p className="text-left px-5">
-              ফলাবর্তন যা কোনো বিষয়ের উপর আলোচনা কিংবা সমালোচনা কিংবা কোন অবস্থা
-              সম্পর্কে সার্বিক মন্তব্য। যাকে প্রদান করা হয় তিনি তাঁর কাজের মান
-              সম্পর্কে ধারনা অর্জন করতে পারেন ফলাবর্তন বা Feedback এর মাধ্যমে।
-            </p>
-            <div className="flex items-center gap-4 px-5 pt-5">
-              <img
-                src="https://i.ibb.co/z5hSDwY/image-97.png"
-                alt=""
-                className="w-20 rounded-full"
-              />
-              <div>
-                <h3 className="text-center text-2xl font-bold pt-2">
-                  Reduanul Riyad
-                </h3>
-                <p>Dhaka, Bangladesh</p>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
+            </SwiperSlide>
+          </>
+        ))}
       </Swiper>
     </>
   );
