@@ -107,7 +107,7 @@ const leading = () => {
           </p>
         </Link>
         <Link
-          to="{item.url}"
+          to="socialMediya"
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img

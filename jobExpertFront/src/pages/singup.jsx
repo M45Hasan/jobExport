@@ -21,6 +21,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../userSlice/userSlice";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 
 const defaultTheme = createTheme();
 export default function singup() {
@@ -45,6 +46,11 @@ export default function singup() {
     console.log(infoData);
   };
 
+  const [selectedRole, setSelectedRole] = useState(""); // Default role
+  const handleRoleChange = (event) => {
+    setSelectedRole(event.target.value);
+  };
+
   const handleSubmit = async () => {
     if (!infoData.name) {
       setErrors({ ...errors, name: "name Must be usees" });
@@ -55,7 +61,11 @@ export default function singup() {
     } else {
       try {
         setLoading(true);
-        let data = await axios.post("/jobExpert/api/v1/regi", infoData);
+        const data = await axios.post("/jobExpert/api/v1/regi", {
+          ...infoData,
+          role: selectedRole, // Include the selected role in the request data
+        });
+        conosle.log(data);
         dispatch(activeUser(data.data));
         setTimeout(() => {
           navigate("/verify");
@@ -163,6 +173,24 @@ export default function singup() {
                 id="password"
                 autoComplete="current-password"
               />
+              <RadioGroup
+                aria-label="role"
+                name="role"
+                value={selectedRole}
+                onChange={handleRoleChange}
+                sx={{ flexDirection: "row" }} // Align radio buttons horizontally
+              >
+                <FormControlLabel
+                  value="Teacher"
+                  control={<Radio />}
+                  label="Teacher"
+                />
+                <FormControlLabel
+                  value="Student"
+                  control={<Radio />}
+                  label="Student"
+                />
+              </RadioGroup>
               <div onClick={handleSubmit}>
                 {loading ? (
                   <LoadingButton
@@ -221,7 +249,7 @@ export default function singup() {
             </Box>
 
             {/* google and facebook login button */}
-            <Box
+            {/* <Box
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -264,17 +292,17 @@ export default function singup() {
                   <img src={facebook} alt="" />
                 </Box>
               </Button>
-            </Box>
+            </Box> */}
 
             {/* group logo png */}
 
-            <Box sx={{ width: "80%", my: 5, mx: "auto" }}>
+            {/* <Box sx={{ width: "80%", my: 5, mx: "auto" }}>
               <img src={logo} alt="" className="mx-auto mt-16" />
               <div className="flex flex-col md:flex-row justify-center items-center gap-5 mt-5">
                 <img src={appstore} alt="" className="w-40" />
                 <img src={googlestore} alt="" className="w-40" />
               </div>
-            </Box>
+            </Box> */}
           </Container>
         </Box>
       </ThemeProvider>

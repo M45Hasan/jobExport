@@ -24,6 +24,7 @@ import paymentReq from "./pages/paymentreq";
 
 import PdfSupport from "./pages/PdfSupport";
 import VideoSupport from "./pages/VideoSupport";
+import SocialMediya from "./pages/SocialMediya";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,6 +45,7 @@ const router = createBrowserRouter(
         <Route path="video" element={<VideoSupport />}></Route>
         <Route path="pdfSupport" element={<PdfSupport />}></Route>
         <Route path="dictionary" element={<Dictionary />}></Route>
+        <Route path="socialMediya" element={<SocialMediya />}></Route>
         <Route
           path="teacherPanel/examPaper/:id"
           element={<ExamPaper />}

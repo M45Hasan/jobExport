@@ -7,17 +7,18 @@ const Paper = require("../model/examPaperModel");
 const User = require("../model/userModel");
 
 const storyCreate = async (req, res) => {
-  const { story, email, img, name } = req.body;
+  const { story, email, url, name } = req.body;
 
   try {
     const mong = new Story({
       story,
       email,
-      img,
+      url,
       name,
     });
     mong.save();
     res.status(201).send(mong);
+    console.log(mong);
   } catch (error) {
     res.status(500).json({ error: error.code });
   }
@@ -26,21 +27,23 @@ const storyCreate = async (req, res) => {
 const storyDelete = async (req, res) => {
   const storyId = req.params.id;
   const email = req.query.email;
+  console.log("st", email);
+  console.log("st", storyId);
 
   try {
-    const story = await Story.findById(storyId);
+    const story = await Story.findById({ _id: storyId });
 
     if (!story) {
       return res.status(404).json({ error: "Story not found" });
     }
 
-    if (story.email !== req.email) {
+    if (story.email !== email) {
       return res
         .status(403)
         .json({ error: "Unauthorized to delete this story" });
     }
 
-    await Story.findByIdAndDelete(storyId);
+    await Story.findByIdAndDelete({ _id: storyId });
 
     res.status(204).send();
   } catch (error) {
@@ -60,13 +63,13 @@ const allStory = async (req, res) => {
 };
 
 const commentCreate = async (req, res) => {
-  const { story, email, img, name } = req.body;
+  const { comment, email, url, name } = req.body;
 
   try {
     const mong = new Comment({
-      story,
+      comment,
       email,
-      img,
+      url,
       name,
     });
     mong.save();
@@ -79,21 +82,23 @@ const commentCreate = async (req, res) => {
 const commentDelete = async (req, res) => {
   const storyId = req.params.id;
   const email = req.query.email;
+  console.log("com", storyId);
+  console.log("com", email);
 
   try {
-    const comment = await Comment.findById(storyId);
+    const comment = await Comment.findById({ _id: storyId });
 
     if (!comment) {
       return res.status(404).json({ error: "Story not found" });
     }
 
-    if (comment.email !== req.email) {
+    if (comment.email !== email) {
       return res
         .status(403)
         .json({ error: "Unauthorized to delete this story" });
     }
 
-    await Story.findByIdAndDelete(storyId);
+    await Comment.findByIdAndDelete({ _id: storyId });
 
     res.status(204).send();
   } catch (error) {
@@ -126,9 +131,7 @@ const ourSuccess = async (req, res) => {
         avatar: user.avatar[0],
       }));
 
-      res 
-        .status(200)
-        .json(successList);
+      res.status(200).json(successList);
     } else {
       res
         .status(404)
