@@ -4,6 +4,7 @@ const app = express();
 const SSLCommerzPayment = require("sslcommerz-lts");
 const ExamPackage = require("../model/examPackage");
 const User = require("../model/userModel");
+const emailV = require("../utils/emailVerfy");
 
 const responseSSL = async (req, res) => {
   res.status(200).json({
@@ -77,7 +78,7 @@ const sslSuccess = async (req, res) => {
     const mx = await User.findOne({ orderId: tran_id });
 
     if (!mx) {
-      return res.status(404).json({ error: "User not found" });
+      return res.redirect(`http://localhost:5173/jobexpart/fail/${tran_id}`);
     }
 
     await User.findByIdAndUpdate(
@@ -85,13 +86,16 @@ const sslSuccess = async (req, res) => {
       { $set: { orderId: "", orderPk: "" }, $push: { myExam: mx.orderPk } },
       { new: true }
     );
-
+    const sub = "purchase success";
+    const code = mx.orderPk;
+    const email = mx.email;
+    emailV(email, code, sub);
     res.redirect(
       `http://localhost:5173/jobexpart/payment/${tran_id}?myExam=${mx.orderPk}`
     );
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "An error occurred" });
+    return res.redirect(`http://localhost:5173/jobexpart/fail/${tran_id}`);
   }
 };
 
