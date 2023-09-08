@@ -65,7 +65,7 @@ export default function singup() {
           ...infoData,
           role: selectedRole, // Include the selected role in the request data
         });
-        conosle.log(data);
+
         dispatch(activeUser(data.data));
         setTimeout(() => {
           navigate("/verify");
