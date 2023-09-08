@@ -14,24 +14,15 @@ const responseSSL = async (req, res) => {
 
 const tran_id = new ObjectId().toString();
 const sslRequest = async (req, res) => {
-  const {
-    nid,
-    name,
-    email,
-    packageUid,
-    packageName,
-    examCategory,
-    packageFee,
-  } = req.body;
+  const { nid, name, email, packageUid, packageName, examCategory } = req.body;
   const pack = await ExamPackage.findOne({ packageUid });
-  console.log(pack);
 
   const dataa = {
     total_amount: parseInt(pack?.packageFee),
     currency: "BDT",
     tran_id: tran_id,
-    success_url: `${process.env.ROOT}/ssl-payment-success/${tran_id}`,
-    fail_url: `${process.env.ROOT}/ssl-payment-fail/${tran_id}`,
+    success_url: `http://localhost:5000/jobExpert/api/v1/ssl-payment-success/${tran_id}`,
+    fail_url: `http://localhost:5000/jobExpert/api/v1/ssl-payment-fail/${tran_id}`,
     cancel_url: `${process.env.ROOT}/ssl-payment-cancel/${tran_id}`,
     shipping_method: "No",
     product_name: packageName,
@@ -52,7 +43,7 @@ const sslRequest = async (req, res) => {
     value_b: "ref002_B",
     value_c: "ref003_C",
     value_d: "ref004_D",
-    ipn_url: `${process.env.ROOT}/ssl-payment-notification${tran_id}`,
+    ipn_url: `${process.env.ROOT}/ssl-payment-notification/${tran_id}`,
   };
 
   const sslcommerz = new SSLCommerzPayment(
@@ -60,7 +51,7 @@ const sslRequest = async (req, res) => {
     process.env.STORE_PASSWORD,
     false
   );
-
+  console.log("ami:", tran_id);
   await sslcommerz.init(dataa).then(async (data) => {
     console.log(data);
 
@@ -80,17 +71,24 @@ const sslRequest = async (req, res) => {
   });
 };
 const sslSuccess = async (req, res) => {
+  const tran_id = req.params.tran_id;
+  console.log("ami tran", tran_id);
   try {
-    const mx = await User.findOne({ orderId: req.params.id });
+    const mx = await User.findOne({ orderId: tran_id });
+
+    if (!mx) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
     await User.findByIdAndUpdate(
       { _id: mx._id },
       { $set: { orderId: "", orderPk: "" }, $push: { myExam: mx.orderPk } },
       { new: true }
     );
 
-    return res.status(200).json({
-      message: "Payment success",
-    });
+    res.redirect(
+      `http://localhost:5173/jobexpart/payment/${tran_id}?myExam=${mx.orderPk}`
+    );
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "An error occurred" });
@@ -105,17 +103,15 @@ const sslNotifiaction = async (req, res) => {
 };
 
 const sslfail = async (req, res) => {
-  const mx = await User.findOne({ orderId: req.params.id });
+  const tran_id = req.params.tran_id;
+  const mx = await User.findOne({ orderId: tran_id });
   await User.findByIdAndUpdate(
     { _id: mx._id },
     { $set: { orderId: "", orderPk: "" } },
     { new: true }
   );
 
-  return res.status(200).json({
-    data: req.body,
-    message: "Payment failed",
-  });
+  return res.redirect(`http://localhost:5173/jobexpart/fail/${tran_id}`);
 };
 
 const sslCancel = async (req, res) => {
