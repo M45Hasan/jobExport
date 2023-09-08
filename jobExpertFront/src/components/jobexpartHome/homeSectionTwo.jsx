@@ -74,12 +74,12 @@ const homeSectionTwo = () => {
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img
-            src="https://i.ibb.co/qmD0fxB/image-63.png"
+            src="https://i.ibb.co/xgs4M6Q/image-65.png"
             alt=""
             className="w-20 mx-auto"
           />
           <h3 className="text-center text-lg font-bold py-2">
-            job Preparation
+            English Lecture
           </h3>
           <p className="text-center px-2">
             Live Exam, Archive, Routine, Syllabus, Merit List etc.

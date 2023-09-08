@@ -26,6 +26,9 @@ import PaymentFail from "./pages/paymentFail";
 
 
 
+import PdfSupport from "./pages/PdfSupport";
+import VideoSupport from "./pages/VideoSupport";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,12 +41,15 @@ const router = createBrowserRouter(
       <Route path="/jobexpart" element={<Rootlayout />}>
 
 
+
+
         <Route index element={<Leanding />}></Route>
         <Route path="examZone" element={<ExamZone />}></Route>
         <Route path="premiumZone" element={<PremiumZone />}></Route>
         <Route path="live-expert" element={<LiveExpert />}></Route>
         <Route path="teacherPanel" element={<TeacherPanel />}></Route>
         <Route path="dailyquiz" element={<DailyQuiz />}></Route>
+        <Route path="video" element={<VideoSupport />}></Route>
         <Route path="pdfSupport" element={<PdfSupport />}></Route>
         <Route path="dictionary" element={<Dictionary />}></Route>
         <Route path="payment/:tran_id" element={<PaymentSucc />}></Route>
