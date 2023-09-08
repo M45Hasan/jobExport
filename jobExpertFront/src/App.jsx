@@ -26,7 +26,7 @@ import PaymentFail from "./pages/paymentFail";
 
 
 
-import PdfSupport from "./pages/PdfSupport";
+
 import VideoSupport from "./pages/VideoSupport";
 
 

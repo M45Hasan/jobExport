@@ -19,12 +19,12 @@ const PaymentFail = () => {
 
             <h1 className="text-xl md:text-2xl text-center mt-10 mb-10 font-semibold">Payment Failed Id: {tran_id}</h1>
 
-       
+
 
             <div onClick={() => navigate("/jobexpart/premiumZone")} className="w-[100px] absolute right-[45%] cursor-pointer text-sm md:text-2xl text-[#blue]  mt-10 mb-10  font-semibold " >
-                    Back
-                </div>
-         
+                Back
+            </div>
+
 
             <section>
                 <img src={logo} alt="" className="mx-auto mt-16" />
