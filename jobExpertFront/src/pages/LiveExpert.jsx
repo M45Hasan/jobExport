@@ -39,7 +39,21 @@ const LiveExpert = () => {
       clearTimeout(timer);
     };
   }, []);
+  // timeCOntroll
+  const [isExamTime, setIsExamTime] = useState(false);
 
+  useEffect(() => {
+
+    const examTimeDate = new Date(todayExam[0]?.examTime);
+
+
+    const currentTime = new Date();
+
+
+    if (currentTime >= examTimeDate) {
+      setIsExamTime(true);
+    }
+  }, [todayExam]);
   return (
     <>
       {/* banner section  */}
@@ -50,8 +64,7 @@ const LiveExpert = () => {
             titel={"পরিক্ষাঃ"}
             dataFromeChild={reciveDataFromChild}
             models={(selectedOption) => {
-              // Do something with the selectedOption
-              // For example, you can log it to the console
+
               console.log(selectedOption);
             }}
           />
@@ -90,7 +103,9 @@ const LiveExpert = () => {
                       Total Examinee : {item.packageBuyer.length}
                     </p>
                   </div>
+
                   {item.premium == true ? (
+               
                     <Link to={`examPaper/${item._id}`}>
                       <button className="bg-primary mx-auto mt-[10px] md:mt-0 text-[#FFFFFF] flex justify-center items-center py-3 gap-2 px-16 rounded-lg">
                         <img
@@ -108,6 +123,23 @@ const LiveExpert = () => {
                       </button>
                     </Link>
                   )}
+
+                  {/* {isExamTime ? ( 
+                    <Link to={`examPaper/${item._id}`}>
+                      <button className="bg-primary mx-auto mt-[10px] md:mt-0 text-[#FFFFFF] flex justify-center items-center py-3 gap-2 px-16 rounded-lg">
+                        <img
+                          src="https://i.ibb.co/H7wjCk9/image-56.png"
+                          alt=""
+                          className="w-5"
+                        />
+                        Start Now
+                      </button>
+                    </Link>
+                  ) : (
+                    <button disabled className="bg-gray-400 mx-auto mt-[10px] md:mt-0 text-[#FFFFFF] flex justify-center items-center py-3 gap-2 px-16 rounded-lg">
+                      Exam Not Available Yet
+                    </button>
+                  )} */}
                 </div>
               </div>
             </div>
