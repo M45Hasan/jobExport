@@ -21,8 +21,10 @@ import Dictionary from "./pages/Dictionary";
 import PremiumZone from "./pages/PremiumZone";
 import PdfSupport from "./pages/PdfSupport";
 
+
 import PaymentFail from "./pages/paymentFail";
 import PaymentSucc from "./pages/paymentSucc";
+
 import VideoSupport from "./pages/VideoSupport";
 import SocialMediya from "./pages/SocialMediya";
 
@@ -51,12 +53,10 @@ const router = createBrowserRouter(
         <Route path="pdfSupport" element={<PdfSupport />}></Route>
         <Route path="dictionary" element={<Dictionary />}></Route>
 
-
         <Route path="socialMediya" element={<SocialMediya />}></Route>
 
         <Route path="payment/:tran_id" element={<PaymentSucc />}></Route>
         <Route path="fail/:tran_id" element={<PaymentFail />}></Route>
-
 
         <Route
           path="teacherPanel/examPaper/:id"

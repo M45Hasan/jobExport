@@ -9,7 +9,7 @@ import noexam from "../assets/brandLogo/noexam1.png";
 import axios from "../components/Axios/axios";
 import { ToastContainer, toast } from "react-toastify";
 const ExamZone = () => {
-  const [datax, setData] = useState([]);
+  const [datax, setData] = useState("");
   const userData = useSelector((state) => state);
   const navigate = useNavigate();
   useEffect(() => {
@@ -28,10 +28,11 @@ const ExamZone = () => {
 
   const [numQuestions, setNumQuestions] = useState(10); // Number of questions to display
   const handleMoreQuestions = () => {
-    setNumQuestions(numQuestions + 1); // Increase the number of questions by 10
+    setNumQuestions(numQuestions + 5); // Increase the number of questions by 10
   };
   console.log(userData.userData.userInfo.email);
   const [show, setShow] = useState(false);
+
   const addExam = async (uid) => {
     try {
       let data = await axios.post("/jobExpert/api/v1/exampurchase", {
@@ -70,9 +71,36 @@ const ExamZone = () => {
       clearTimeout(timer);
     };
   }, []);
+
+  const currentDate = new Date();
+
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); //
+  const day = String(currentDate.getDate()).padStart(2, "0");
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  console.log(formattedDate);
+  let [category, setCategory] = useState();
+
+  useEffect(() => {
+    async function data() {
+      let data = await axios.get("/jobExpert/api/v1/packagelist");
+      if (data.data.length > 0) {
+        console.log(data);
+        setData(data.data);
+      } else {
+        setData(null);
+      }
+    }
+    data();
+  }, [category]);
+
+  console.log("setCategory(selectedOption)", category);
+  console.log("datax", datax);
+
   return (
     <div>
-      <Banner />
       <ToastContainer
         position="top-right"
         autoClose={2000}
@@ -85,8 +113,7 @@ const ExamZone = () => {
         pauseOnHover
         theme="light"
       />
-      {/* Same as */}
-      <ToastContainer />
+      <Banner />
       <div className="w-11/12 md:w-4/5 mx-auto pb-16">
         <div className="pl-4 md:pl-12 mt-16 mb-[64px]">
           <ExamDropdown
@@ -95,18 +122,19 @@ const ExamZone = () => {
             models={(selectedOption) => {
               // Do something with the selectedOption
               // For example, you can log it to the console
-              console.log(selectedOption);
+              setCategory(selectedOption);
             }}
           />
         </div>
 
-        {todayExam.length != 0
-          ? todayExam.slice(0, numQuestions).map((item, k) =>
-              item.premium == false ? (
+        {datax.length != 0
+          ? datax.slice(0, numQuestions).map((item, k) =>
+              item.premium == false && item.examCategory == category ? (
                 <div
                   key={k}
                   className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] items-center border border-[#000000] p-[5px] md:p-[20px]"
                 >
+                  {console.log("ASDFASDF", item.examDate)}
                   <div className="md:w-[20%] w-[60%]">
                     <img
                       className="w-full "
@@ -168,7 +196,7 @@ const ExamZone = () => {
               </>
             )}
       </div>
-      {todayExam.length > 0 ? (
+      {todayExam.length < 5 ? (
         <Button
           onClick={handleMoreQuestions}
           sx={{ textAlign: "center", display: "block", margin: "0 auto" }}

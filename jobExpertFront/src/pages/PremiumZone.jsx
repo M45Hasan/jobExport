@@ -9,7 +9,7 @@ import noexam from "../assets/brandLogo/noexam1.png";
 import axios from "../components/Axios/axios";
 import { ToastContainer, toast } from "react-toastify";
 const PremiumZone = () => {
-  const [datax, setData] = useState([]);
+  const [datax, setData] = useState("");
   const userData = useSelector((state) => state);
   const navigate = useNavigate();
   useEffect(() => {
@@ -28,7 +28,7 @@ const PremiumZone = () => {
 
   const [numQuestions, setNumQuestions] = useState(10); // Number of questions to display
   const handleMoreQuestions = () => {
-    setNumQuestions(numQuestions + 1); // Increase the number of questions by 10
+    setNumQuestions(numQuestions + 5); // Increase the number of questions by 10
   };
   console.log(userData.userData.userInfo.email);
   const [show, setShow] = useState(false);
@@ -40,13 +40,13 @@ const PremiumZone = () => {
         nid: item.nid,
         name: item.name,
         packageName: item.packageName,
-        examCategory: item.examCategory
+        examCategory: item.examCategory,
       });
 
       if (data.data.url) {
-        window.location.replace(data.data.url)
-  
-        console.log("ajaj", data.data.url)
+        window.location.replace(data.data.url);
+
+        console.log("ajaj", data.data.url);
       }
       toast(" Exam Added", {
         position: "top-right",
@@ -80,6 +80,34 @@ const PremiumZone = () => {
       clearTimeout(timer);
     };
   }, []);
+
+  const currentDate = new Date();
+
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); //
+  const day = String(currentDate.getDate()).padStart(2, "0");
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  console.log(formattedDate);
+  let [category, setCategory] = useState();
+
+  useEffect(() => {
+    async function data() {
+      let data = await axios.get("/jobExpert/api/v1/packagelist");
+      if (data.data.length > 0) {
+        console.log(data);
+        setData(data.data);
+      } else {
+        setData(null);
+      }
+    }
+    data();
+  }, [category]);
+
+  console.log("setCategory(selectedOption)", category);
+  console.log("datax", datax);
+
   return (
     <div>
       <ToastContainer
@@ -103,78 +131,81 @@ const PremiumZone = () => {
             models={(selectedOption) => {
               // Do something with the selectedOption
               // For example, you can log it to the console
-              console.log(selectedOption);
+              setCategory(selectedOption);
             }}
           />
         </div>
 
-        {todayExam.length != 0
-          ? todayExam.slice(0, numQuestions).map((item, k) =>
-            item.premium == true ? (
-              <div
-                key={k}
-                className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] items-center border border-[#000000] p-[5px] md:p-[20px]"
-              >
-                <div className="md:w-[20%] w-[60%]">
-                  <img
-                    className="w-full "
-                    src="https://i.ibb.co/vqbtXkJ/image-163.png"
-                    alt=""
-                  />
-                </div>
-                <div className=" w-[80%] p-[15px] md:p-[30px]">
-                  <h2 className="text-[20px] md:text-[40px] font-semibold">
-                    {item.packageName}
-                  </h2>
-                  <p className="md:text-[24px] text-[14px] my-[10px]">
-                    {item.packageDetail}
-                  </p>
-                  <div className="flex md:flex-row flex-col gap-x-0 md:gap-x-10  justify-evenly md:justify-start items-start md:items-center">
-                    <div>
-                      <p className="md:text-[24px] text-[14px] ">
-                        পরীক্ষা শুরুঃ {item.examDate}
-                      </p>
-                      <p className="md:text-[24px] text-[14px] ">
-                        {" "}
-                        পরীক্ষার সময়ঃ {item.examTime}
-                      </p>
-                      <p className="md:text-[24px] text-[14px] ">
-                        Total Examinee : {item.packageBuyer.length}
-                      </p>
-                    </div>
+        {datax.length != 0
+          ? datax.slice(0, numQuestions).map((item, k) =>
+              item.premium == true &&
+              item.examDate > formattedDate &&
+              item.examCategory == category ? (
+                <div
+                  key={k}
+                  className="flex md:flex-row flex-col mb-[20px] md:gap-x-[30px] items-center border border-[#000000] p-[5px] md:p-[20px]"
+                >
+                  {console.log("ASDFASDF", item.examDate)}
+                  <div className="md:w-[20%] w-[60%]">
+                    <img
+                      className="w-full "
+                      src="https://i.ibb.co/vqbtXkJ/image-163.png"
+                      alt=""
+                    />
+                  </div>
+                  <div className=" w-[80%] p-[15px] md:p-[30px]">
+                    <h2 className="text-[20px] md:text-[40px] font-semibold">
+                      {item.packageName}
+                    </h2>
+                    <p className="md:text-[24px] text-[14px] my-[10px]">
+                      {item.packageDetail}
+                    </p>
+                    <div className="flex md:flex-row flex-col gap-x-0 md:gap-x-10  justify-evenly md:justify-start items-start md:items-center">
+                      <div>
+                        <p className="md:text-[24px] text-[14px] ">
+                          পরীক্ষা শুরুঃ {item.examDate}
+                        </p>
+                        <p className="md:text-[24px] text-[14px] ">
+                          {" "}
+                          পরীক্ষার সময়ঃ {item.examTime}
+                        </p>
+                        <p className="md:text-[24px] text-[14px] ">
+                          Total Examinee : {item.packageBuyer.length}
+                        </p>
+                      </div>
 
-                    <button
-                      onClick={() => addExam(item)}
-                      className="bg-primary mx-auto mt-[10px] md:mt-0 text-[#FFFFFF] flex justify-center items-center py-3 gap-2 px-16 rounded-lg"
-                    >
-                      {item.premium == true ? (
-                        <img
-                          src="https://i.ibb.co/H7wjCk9/image-56.png"
-                          alt=""
-                          className="w-5"
-                        />
-                      ) : (
-                        ""
-                      )}
-                      Participate Exam
-                    </button>
+                      <button
+                        onClick={() => addExam(item)}
+                        className="bg-primary mx-auto mt-[10px] md:mt-0 text-[#FFFFFF] flex justify-center items-center py-3 gap-2 px-16 rounded-lg"
+                      >
+                        {item.premium == true ? (
+                          <img
+                            src="https://i.ibb.co/H7wjCk9/image-56.png"
+                            alt=""
+                            className="w-5"
+                          />
+                        ) : (
+                          ""
+                        )}
+                        Participate Exam
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : null
-          )
+              ) : null
+            )
           : show && (
-            <>
-              <h2 className="text-center text-xl font-bold mb-10">
-                NO Exams Avilable{" "}
-              </h2>
-              <img
-                className="block mx-auto text-center"
-                src={noexam}
-                alt="No Exams Available"
-              />
-            </>
-          )}
+              <>
+                <h2 className="text-center text-xl font-bold mb-10">
+                  NO Exams Avilable{" "}
+                </h2>
+                <img
+                  className="block mx-auto text-center"
+                  src={noexam}
+                  alt="No Exams Available"
+                />
+              </>
+            )}
       </div>
       {todayExam.length > 0 ? (
         <Button
