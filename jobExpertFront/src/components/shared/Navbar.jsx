@@ -17,7 +17,9 @@ import CallIcon from "@mui/icons-material/Call";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { activeUser } from "../../userSlice/userSlice";
+import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
+import axios from "../Axios/axios";
 
 const settings = ["Profile", "Logout"];
 const Loginpages = ["হোম", "সাকসেস স্টোরি", "এক্সাম", "আমার কোর্স"];
@@ -69,6 +71,24 @@ function Navbar() {
   const imgx = userData?.userData?.userInfo?.userImg?.length - 1;
   // console.log(imgx);
   //userData.userData.userInfo.userImg[imgx]
+
+  const [noti, serNoti] = useState("")
+  useEffect(() => {
+
+    const mx = async () => {
+
+
+      try {
+        const not = await axios.get("/jobExpert/api/v1/notification")
+        serNoti(not.data)
+      } catch (error) {
+        console.log(error.code)
+      }
+
+    }
+    mx()
+  }, [])
+
   return (
     <AppBar position="static" sx={{ backgroundColor: "#EAE9E9" }}>
       <Container maxWidth="xl">
@@ -128,15 +148,15 @@ function Navbar() {
 
               {show
                 ? Loginpages.map((page) => (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
-                    </MenuItem>
-                  ))
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))
                 : pages.map((pagees) => (
-                    <MenuItem key={pagees} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{pagees}</Typography>
-                    </MenuItem>
-                  ))}
+                  <MenuItem key={pagees} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{pagees}</Typography>
+                  </MenuItem>
+                ))}
 
               {show ? (
                 <>

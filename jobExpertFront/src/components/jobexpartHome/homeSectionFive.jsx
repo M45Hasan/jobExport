@@ -17,7 +17,7 @@ const homeSectionFive = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [data]);
+  }, []);
 
   return (
     <>

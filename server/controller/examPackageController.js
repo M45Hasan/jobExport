@@ -6,6 +6,7 @@ const ExamPackage = require("../model/examPackage");
 const Exam = require("../model/examModel");
 const Question = require("../model/questionModel");
 const { calculateTimeDifference } = require("../utils/timer");
+const Notification = require("../model/notiModel");
 const { ObjectId } = require("mongodb");
 
 const packageCreateController = async (req, res) => {
@@ -54,7 +55,17 @@ const packageCreateController = async (req, res) => {
         examMark,
       });
       createPackage.save();
+      const noti = new Notification({
+        packageName: createPackage.packageName,
+        category: createPackage.examCategory,
+        time: createPackage.examTime,
+        teacher: search[0].name,
+        price:
+          createPackage.packageFee !== "" ? createPackage.packageFee : "Free",
+      });
 
+      await noti.save();
+      console.log(noti);
       await User.findOneAndUpdate(
         { email: packageCreaterEmail },
         { $push: { examPackageId: createPackage._id } },
