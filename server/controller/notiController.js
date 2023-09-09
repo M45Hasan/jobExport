@@ -5,6 +5,7 @@ const Notification = require("../model/notiModel");
 
 const getNoti = async (req, res) => {
   try {
+
     const noti = await Notification.find({});
     console.log(noti);
 
@@ -12,6 +13,8 @@ const getNoti = async (req, res) => {
       res.status(200).send(noti);
     } else {
       res.status(404).josn({ error: "no Notification" });
+
+   
     }
   } catch (error) {
     res.status(500).json({ error: error.cdoe });
