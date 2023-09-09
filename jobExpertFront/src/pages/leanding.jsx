@@ -31,7 +31,7 @@ const leading = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [data]);
+  }, []);
 
   return (
     <div className="mt">

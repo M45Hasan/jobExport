@@ -1,43 +1,32 @@
+import { useParams } from "react-router-dom";
 import logo from "../assets/brandLogo/logo.png";
 
-import appstore from "../assets/brandLogo/appstore (1).png";
 import googlestore from "../assets/brandLogo/appstore (2).png";
-
-
-import Banner from "../components/Banner/Banner";
-
-import Navbar from "../components/shared/Navbar";
-import Footer from "../components/shared/Footer";
-import { useLocation, useParams } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+const PaymentSucc = () => {
+    const { tran_id } = useParams();
+    const myExam = new URLSearchParams(window.location.search).get("myExam");
+    const navigate = useNavigate()
 
 
 
-const paymentSucc = () => {
-
-  const {id}=useParams
-console.log(id)
-
-    console.log(location.pathname)
-   
     return (
         <>
-            <Navbar />
-            
-            <Banner />
+            <h1 className="text-xl md:text-2xl text-center mt-10 mb-10 font-semibold">Payment success Id: {tran_id}</h1>
+            <h1 className="text-xl md:text-2xl text-center mt-10 mb-10 font-semibold">Package Id: {myExam}</h1>
+            <div className="w-[100px] absolute right-[45%]">
+
+                <div onClick={() => navigate("/jobexpart/premiumZone")} className="text-sm md:text-2xl text-[#blue] cursor-pointer  mt-10 mb-10  font-semibold " >
+                    Back
+                </div>
+            </div>
             <section>
                 <img src={logo} alt="" className="mx-auto mt-16" />
                 <h1 className="text-xl md:text-2xl text-center mt-10 mb-10 font-semibold">
-                    ডাউনলোড করুন আমাদের মোবাইল অ্যাপ
-                </h1>
-                <div className="flex flex-col md:flex-row justify-center items-center gap-5 mt-5 mb-16">
-                    <img src={appstore} alt="" className="w-40" />
                     <img src={googlestore} alt="" className="w-40" />
-                </div>
+                </h1>
             </section>
-            < Footer/>
-    </>
-    )
-}
-
-export default paymentSucc
+        </>
+    );
+};
+export default PaymentSucc;

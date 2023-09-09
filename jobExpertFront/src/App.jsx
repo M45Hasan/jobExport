@@ -20,9 +20,9 @@ import DailyQuiz from "./pages/DailyQuiz";
 import Dictionary from "./pages/Dictionary";
 import PremiumZone from "./pages/PremiumZone";
 import PdfSupport from "./pages/PdfSupport";
-import paymentReq from "./pages/paymentreq";
-import paymentSucc from "./pages/paymentSucc";
-import paymentFail from "./pages/paymentFail";
+
+import PaymentFail from "./pages/paymentFail";
+import PaymentSucc from "./pages/paymentSucc";
 import VideoSupport from "./pages/VideoSupport";
 import SocialMediya from "./pages/SocialMediya";
 
