@@ -46,7 +46,7 @@ function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const notification = true;
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -76,21 +76,38 @@ function Navbar() {
 
   let handelSow = () => {
     setHidden(!hideen);
+     setNotification(false)
   };
 
-  const [noti, setNoti] = useState();
+  const [noti, setNoti] = useState([]);
+  const [notification, setNotification] = useState(false);
+  const [prevNotiLength, setPrevNotiLength] = useState(0);
+
   useEffect(() => {
-    const mx = async () => {
+    const fetchNotifications = async () => {
       try {
-        const not = await axios.get("/jobExpert/api/v1/notification");
-        setNoti(not.data);
-        console.log("noti", not.data);
+        const response = await axios.get("/jobExpert/api/v1/notification");
+        const newNotifications = response.data;
+
+        if (newNotifications.length > prevNotiLength) {
+          setNotification(true);
+        } else if (newNotifications.length === prevNotiLength) {
+          setNotification(false);
+        } else {
+          setNotification(false);
+        }
+
+        setNoti(newNotifications);
+        setPrevNotiLength(newNotifications.length);
       } catch (error) {
         console.log(error.code);
       }
     };
-    mx();
+
+    fetchNotifications();
   }, []);
+
+
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "#EAE9E9" }}>
@@ -150,15 +167,15 @@ function Navbar() {
             >
               {show
                 ? Loginpages.map((page) => (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
-                    </MenuItem>
-                  ))
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))
                 : pages.map((pagees) => (
-                    <MenuItem key={pagees} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{pagees}</Typography>
-                    </MenuItem>
-                  ))}
+                  <MenuItem key={pagees} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{pagees}</Typography>
+                  </MenuItem>
+                ))}
 
               {show ? (
                 <>
@@ -276,24 +293,27 @@ function Navbar() {
                           <span className="relative inline-flex rounded-full h-4 w-4 bg-[#EE8419]"></span>
                         </div>
                         {hideen && (
-                          <div className=" absolute rounded-md border top-[380%] z-50 left-[-158px] w-[200px] text-white bg-slate-400 p-2 ">
+                          <div onClick={() => setNotification(false)} className=" absolute rounded-md border  top-[380%] z-50 left-[-158px] w-[200px] text-white bg-slate-400 p-2 ">
                             <div className="flex items-center text-center text-xs justify-center gap-x-4">
-                              {noti.map((item) => (
-                                <div className="p-2 rounded-md border">
-                                  <p className="text-center">
-                                    Teacher Name: {item.teacher}
-                                  </p>
-                                  <p className="text-center">
-                                    category: {item.category}
-                                  </p>
-                                  <p className="text-center">
-                                    package Name: {item.packageName}
-                                  </p>
-                                  <p className="text-center">
-                                    Price: {item.price} Taka
-                                  </p>
-                                </div>
-                              ))}
+                              <ul>
+                                {noti.reverse().slice(0, 3).map((item, i) => (
+                                  <div key={i} className="p-2 rounded-md border border-[#ee1919] font-semibold text-[#000000] mt-1">
+                                    <p className="text-center font-bold text-[14px] text-[#000000]">New Exam </p>
+                                    <p className="text-center">
+                                      Teacher: {item.teacher}
+                                    </p>
+                                    <p className="text-center">
+                                      category: {item.category}
+                                    </p>
+                                    <p className="text-center">
+                                      Subject: {item.packageName}
+                                    </p>
+                                    <p className="text-center">
+                                      Price: {item.price} Taka
+                                    </p>
+                                  </div>
+                                ))}
+                              </ul>
                             </div>
                           </div>
                         )}
