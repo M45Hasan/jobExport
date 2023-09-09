@@ -15,7 +15,7 @@ const createExamPaper = async (req, res) => {
   try {
     const match = await Paper.find({ packageUid: packageUid, examineeId: std });
 
-    console.log(match)
+    console.log(match);
 
     if (match.length == 0) {
       const user = await User.findById({ _id: std });
@@ -162,7 +162,8 @@ const createAnswer = async (req, res) => {
   }
 };
 
-const calculateMarks = async (examTrack, examineeId, res) => {
+const resultPulish = async (req, res) => {
+  const { examTrack, examineeId } = req.body;
   try {
     const answers = await Answer.find({ exampaperid: examTrack, examineeId });
     const use = await User.findOne({ _id: examineeId });
@@ -227,11 +228,11 @@ const calculateMarks = async (examTrack, examineeId, res) => {
   }
 };
 
-const resultPulish = async (req, res) => {
-  const { examTrack, examineeId } = req.body;
-  console.log(examTrack, examineeId);
-  calculateMarks(examTrack, examineeId, res);
-};
+// const resultPulish = async (req, res) => {
+//   const { examTrack, examineeId } = req.body;
+//   console.log(examTrack, examineeId);
+//   calculateMarks(examTrack, examineeId, res);
+// };
 
 const getPaper = async (req, res) => {
   const { puid, id, optn } = req.body;
@@ -289,6 +290,23 @@ const myResult = async (req, res) => {
     res.status(500).json({ error: "Error Occurs" });
   }
 };
+
+const successStd = async (req, res) => {
+  try {
+    const mx = await Paper.find({ percentage: { $gt: 75 } });
+
+    if (mx.length !== 0) {
+      console.log(mx.length);
+      res.status(200).json({ total: `${mx.length}+` });
+    } else {
+      console.log(mx.length);
+      res.status(200).json({ total: "10+" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.code });
+  }
+};
+
 module.exports = {
   createExamPaper,
   createAnswer,
@@ -298,4 +316,5 @@ module.exports = {
   myFab,
   getFab,
   delFab,
+  successStd,
 };

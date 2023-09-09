@@ -17,7 +17,7 @@ const homeSectionThree = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [data]);
+  }, []);
 
   return (
     <div id="successfullyStory">

@@ -17,7 +17,7 @@ const homeSectionFour = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [packageList]);
+  }, []);
 
   // all user
   useEffect(() => {
@@ -29,7 +29,19 @@ const homeSectionFour = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [user]);
+  }, []);
+  const [su, setSu] = useState("")
+  useEffect(() => {
+
+    const mm = async () => {
+      const mx = await Api.get( "/jobExpert/api/v1/suu")
+      setSu(mx.data)
+      console.log("PPPP",mx.data)
+    }
+   
+
+    mm()
+  }, []);
 
   // total student and teacherCount
   let studentCount = 0;
@@ -95,7 +107,7 @@ const homeSectionFour = () => {
           />
           <h3 className="text-center text-lg font-bold py-2">সফল শিক্ষার্থী</h3>
           <span className="flex justify-center font-bold text-lg">
-            <CountUp end={user.length} duration={5} />+
+           {su.total}
           </span>
         </div>
         <div className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF] cursor-pointer">

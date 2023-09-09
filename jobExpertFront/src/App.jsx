@@ -20,8 +20,11 @@ import DailyQuiz from "./pages/DailyQuiz";
 import Dictionary from "./pages/Dictionary";
 import PremiumZone from "./pages/PremiumZone";
 import PdfSupport from "./pages/PdfSupport";
-import PaymentSucc from "./pages/PaymentSucc";
-import PaymentFail from "./pages/PaymentFail";
+
+
+import PaymentFail from "./pages/paymentFail";
+import PaymentSucc from "./pages/paymentSucc";
+
 import VideoSupport from "./pages/VideoSupport";
 import SocialMediya from "./pages/SocialMediya";
 

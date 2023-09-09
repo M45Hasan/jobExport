@@ -75,6 +75,7 @@ const {
   myFab,
   getFab,
   delFab,
+  successStd,
 } = require("../../controller/answerController");
 _.post("/exampaper", createExamPaper);
 _.post("/answer", createAnswer);
@@ -84,6 +85,7 @@ _.post("/my-result", myResult);
 _.post("/myfab", myFab);
 _.post("/get-fab", getFab);
 _.post("/del-fab", delFab);
+_.get("/suu", successStd);
 
 //regi api
 _.post("/regi", regiController);
@@ -161,4 +163,9 @@ _.get("/comment-all", allComment);
 _.get("/our-success", ourSuccess);
 _.post("/comment-create", commentCreate);
 _.delete("/comment-delete/:id", commentDelete);
+
+// notification
+
+const getNoti = require("../../controller/notiController");
+_.get("/notification", getNoti);
 module.exports = _;
