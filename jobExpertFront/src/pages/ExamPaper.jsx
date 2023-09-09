@@ -112,7 +112,7 @@ const ExamPaper = () => {
           }
           return prevTime - 1;
         });
-      }, 100);
+      }, 1000);
     }
 
     return () => {
@@ -201,7 +201,7 @@ const ExamPaper = () => {
                                       className="mr-2"
                                       style={
                                         selectedOptions[`question-${index}`] ===
-                                          "optionA"
+                                        "optionA"
                                           ? selectedRadioStyle
                                           : {}
                                       }
@@ -228,7 +228,7 @@ const ExamPaper = () => {
                                       className="mr-2"
                                       style={
                                         selectedOptions[`question-${index}`] ===
-                                          "optionB"
+                                        "optionB"
                                           ? selectedRadioStyle
                                           : {}
                                       }
@@ -258,7 +258,7 @@ const ExamPaper = () => {
                                       className="mr-2"
                                       style={
                                         selectedOptions[`question-${index}`] ===
-                                          "optionC"
+                                        "optionC"
                                           ? selectedRadioStyle
                                           : {}
                                       }
@@ -285,7 +285,7 @@ const ExamPaper = () => {
                                       className="mr-2"
                                       style={
                                         selectedOptions[`question-${index}`] ===
-                                          "optionD"
+                                        "optionD"
                                           ? selectedRadioStyle
                                           : {}
                                       }
@@ -341,7 +341,7 @@ const ExamPaper = () => {
                                       className="mr-2"
                                       style={
                                         selectedOptions[`question-${index}`] ===
-                                          "optionA"
+                                        "optionA"
                                           ? selectedRadioStyle
                                           : {}
                                       }
@@ -368,7 +368,7 @@ const ExamPaper = () => {
                                       className="mr-2"
                                       style={
                                         selectedOptions[`question-${index}`] ===
-                                          "optionB"
+                                        "optionB"
                                           ? selectedRadioStyle
                                           : {}
                                       }
@@ -398,7 +398,7 @@ const ExamPaper = () => {
                                       className="mr-2"
                                       style={
                                         selectedOptions[`question-${index}`] ===
-                                          "optionC"
+                                        "optionC"
                                           ? selectedRadioStyle
                                           : {}
                                       }
@@ -425,7 +425,7 @@ const ExamPaper = () => {
                                       className="mr-2"
                                       style={
                                         selectedOptions[`question-${index}`] ===
-                                          "optionD"
+                                        "optionD"
                                           ? selectedRadioStyle
                                           : {}
                                       }
