@@ -69,6 +69,11 @@ function Navbar() {
   const imgx = userData?.userData?.userInfo?.userImg?.length - 1;
   // console.log(imgx);
   //userData.userData.userInfo.userImg[imgx]
+  let [hideen, setHidden] = React.useState(false);
+
+  let handelSow = () => {
+    setHidden(!hideen);
+  };
   return (
     <AppBar position="static" sx={{ backgroundColor: "#EAE9E9" }}>
       <Container maxWidth="xl">
@@ -125,7 +130,6 @@ function Navbar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-
               {show
                 ? Loginpages.map((page) => (
                     <MenuItem key={page} onClick={handleCloseNavMenu}>
@@ -160,7 +164,6 @@ function Navbar() {
                   </MenuItem>
                 ))
               )}
-
             </Menu>
           </Box>
           <Typography
@@ -240,7 +243,7 @@ function Navbar() {
 
                 <Tooltip title="Notification">
                   <IconButton sx={{ p: 0 }}>
-                    <div className="mr-5">
+                    <div onClick={handelSow} className="mr-5">
                       <Icon
                         icon="ooui:message"
                         className="relative text-[#26A4DE] text-3xl"
@@ -254,6 +257,20 @@ function Navbar() {
                           )}
                           <span className="relative inline-flex rounded-full h-4 w-4 bg-[#EE8419]"></span>
                         </div>
+                        {hideen && (
+                          <div className=" absolute rounded-md border top-[380%] z-50 left-[-158px] w-[200px] text-white bg-slate-400 p-2 ">
+                            <div className="flex items-center text-center text-xs justify-center gap-x-4">
+                              <div className="p-2 rounded-md border">
+                                <p className="text-center">
+                                  Teacher Name: Akash
+                                </p>
+                                <p className="text-center">BCS Exam</p>
+                                <p className="text-center">Bangla</p>
+                                <p className="text-center">1000 Tk / Free</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </IconButton>

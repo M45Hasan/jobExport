@@ -21,8 +21,8 @@ const ExamDropdown = ({ dataFromeChild, models, titel }) => {
         let response = await axios.post("/jobExpert/api/v1/categorywise", {
           examCategory: selectedOption,
         });
-        console.log("response", response);
         if (response.data.length > 0) {
+          console.log("responsexxx", response.data);
           dataFromeChild(response.data);
         } else {
           dataFromeChild(null);
