@@ -7,7 +7,6 @@ import Api from "../Axios/axios";
 
 import job from "../../assets/brandLogo/job.png";
 
-
 const homeSectionTwo = () => {
   const [data, setData] = useState([]);
 
