@@ -31,7 +31,7 @@ const homeSectionTwo = () => {
           </p>
         </Link>
         <Link
-          to=""
+          to="video"
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img
@@ -45,7 +45,7 @@ const homeSectionTwo = () => {
           </p>
         </Link>
         <Link
-          to=""
+          to="pdfSupport"
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img
@@ -90,8 +90,9 @@ const homeSectionTwo = () => {
             Live Exam, Archive, Routine, Syllabus, Merit List etc.
           </p>
         </Link>
-        <Link
-          to=""
+        <a
+          href="https://www.bdjobs.com/"
+          target="_blank"
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img src={job} alt="" className="w-20 mx-auto" />
@@ -99,7 +100,7 @@ const homeSectionTwo = () => {
           <p className="text-center px-2">
             Live Exam, Archive, Routine, Syllabus, Merit List etc.
           </p>
-        </Link>
+        </a>
       </section>
     </>
   );

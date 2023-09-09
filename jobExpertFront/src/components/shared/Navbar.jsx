@@ -78,24 +78,19 @@ function Navbar() {
     setHidden(!hideen);
   };
 
-
-  const [noti, serNoti] = useState("")
+  const [noti, setNoti] = useState();
   useEffect(() => {
-
     const mx = async () => {
-
-
       try {
-        const not = await axios.get("/jobExpert/api/v1/notification")
-        serNoti(not.data)
+        const not = await axios.get("/jobExpert/api/v1/notification");
+        setNoti(not.data);
+        console.log("noti", not.data);
       } catch (error) {
-        console.log(error.code)
+        console.log(error.code);
       }
-
-    }
-    mx()
-  }, [])
-
+    };
+    mx();
+  }, []);
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "#EAE9E9" }}>
@@ -155,15 +150,15 @@ function Navbar() {
             >
               {show
                 ? Loginpages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))
+                    <MenuItem key={page} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  ))
                 : pages.map((pagees) => (
-                  <MenuItem key={pagees} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{pagees}</Typography>
-                  </MenuItem>
-                ))}
+                    <MenuItem key={pagees} onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{pagees}</Typography>
+                    </MenuItem>
+                  ))}
 
               {show ? (
                 <>
@@ -283,14 +278,22 @@ function Navbar() {
                         {hideen && (
                           <div className=" absolute rounded-md border top-[380%] z-50 left-[-158px] w-[200px] text-white bg-slate-400 p-2 ">
                             <div className="flex items-center text-center text-xs justify-center gap-x-4">
-                              <div className="p-2 rounded-md border">
-                                <p className="text-center">
-                                  Teacher Name: Akash
-                                </p>
-                                <p className="text-center">BCS Exam</p>
-                                <p className="text-center">Bangla</p>
-                                <p className="text-center">1000 Tk / Free</p>
-                              </div>
+                              {noti.map((item) => (
+                                <div className="p-2 rounded-md border">
+                                  <p className="text-center">
+                                    Teacher Name: {item.teacher}
+                                  </p>
+                                  <p className="text-center">
+                                    category: {item.category}
+                                  </p>
+                                  <p className="text-center">
+                                    package Name: {item.packageName}
+                                  </p>
+                                  <p className="text-center">
+                                    Price: {item.price} Taka
+                                  </p>
+                                </div>
+                              ))}
                             </div>
                           </div>
                         )}
