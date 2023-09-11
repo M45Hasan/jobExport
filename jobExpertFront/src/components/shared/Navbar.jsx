@@ -329,7 +329,7 @@ function Navbar() {
                       src={
                         userData?.userData?.userInfo?.avatar?.length == 0
                           ? ""
-                          : `http://localhost:5000/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
+                          : `https://jobexport.onrender.com/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
                       }
                     />
                   </IconButton>
