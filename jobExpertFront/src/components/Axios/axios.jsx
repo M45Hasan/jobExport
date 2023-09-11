@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const Api = axios.create({
-  baseURL: "https://jobexport.onrender.com",
+  baseURL: "https://weero-jobexpert.netlify.app/",
 });
 
 // console.log(Api.defaults.baseURL);
