@@ -22,8 +22,8 @@ const sslRequest = async (req, res) => {
     total_amount: parseInt(pack?.packageFee),
     currency: "BDT",
     tran_id: tran_id,
-    success_url: `http://localhost:5000/jobExpert/api/v1/ssl-payment-success/${tran_id}`,
-    fail_url: `http://localhost:5000/jobExpert/api/v1/ssl-payment-fail/${tran_id}`,
+    success_url: `https://jobexport.onrender.com/jobExpert/api/v1/ssl-payment-success/${tran_id}`,
+    fail_url: `https://jobexport.onrender.com/jobExpert/api/v1/ssl-payment-fail/${tran_id}`,
     cancel_url: `${process.env.ROOT}/ssl-payment-cancel/${tran_id}`,
     shipping_method: "No",
     product_name: packageName,
@@ -78,7 +78,7 @@ const sslSuccess = async (req, res) => {
     const mx = await User.findOne({ orderId: tran_id });
 
     if (!mx) {
-      return res.redirect(`http://localhost:5173/jobexpart/fail/${tran_id}`);
+      return res.redirect(`https://weero-jobexpert.netlify.app/jobexpart/fail/${tran_id}`);
     }
 
     await User.findByIdAndUpdate(
@@ -91,11 +91,11 @@ const sslSuccess = async (req, res) => {
     const email = mx.email;
     emailV(email, code, sub);
     res.redirect(
-      `http://localhost:5173/jobexpart/payment/${tran_id}?myExam=${mx.orderPk}`
+      `https://weero-jobexpert.netlify.app/jobexpart/payment/${tran_id}?myExam=${mx.orderPk}`
     );
   } catch (error) {
     console.error(error);
-    return res.redirect(`http://localhost:5173/jobexpart/fail/${tran_id}`);
+    return res.redirect(`https://weero-jobexpert.netlify.app/jobexpart/fail/${tran_id}`);
   }
 };
 
@@ -115,7 +115,7 @@ const sslfail = async (req, res) => {
     { new: true }
   );
 
-  return res.redirect(`http://localhost:5173/jobexpart/fail/${tran_id}`);
+  return res.redirect(`https://weero-jobexpert.netlify.app/jobexpart/fail/${tran_id}`);
 };
 
 const sslCancel = async (req, res) => {
