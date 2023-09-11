@@ -37,11 +37,7 @@ const router = createBrowserRouter(
       <Route path="/verify" element={<Verify />}></Route>
 
       <Route path="/jobexpart" element={<Rootlayout />}>
-        <Route path="ssl-request" element={<paymentReq />}></Route>
-        <Route path="ssl-payment-success/:id" element={<paymentSucc />}></Route>
-        <Route path="ssl-payment-fail" element={<paymentFail />}></Route>
 
-        <Route path="ssl-request" element={<paymentReq />}></Route>
 
         <Route index element={<Leanding />}></Route>
         <Route path="examZone" element={<ExamZone />}></Route>
