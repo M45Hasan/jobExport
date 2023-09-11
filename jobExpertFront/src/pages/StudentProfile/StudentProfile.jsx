@@ -99,7 +99,7 @@ const StudentProfile = () => {
         <div onClick={handleShow}>
           <img
             className=" rounded-full shadow-2xl w-[170px] h-[170px]"
-            src={`http://localhost:5000/uploads/${userDa.userData.userInfo.userImg[imgx]}`}
+            src={`https://jobexport.onrender.com/uploads/${userDa.userData.userInfo.userImg[imgx]}`}
           />
         </div>
 
