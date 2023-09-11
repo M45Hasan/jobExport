@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
 
-import { useState, useEffect } from "react";
 
-import axios from "axios";
-import Api from "../Axios/axios";
 
 import job from "../../assets/brandLogo/job.png";
 
 const homeSectionTwo = () => {
-  const [data, setData] = useState([]);
+;
 
   return (
     <>
@@ -93,6 +90,7 @@ const homeSectionTwo = () => {
         <a
           href="https://www.bdjobs.com/"
           target="_blank"
+          
           className="bg-[#EAE9E9] w-11/12 py-10 rounded-lg hover:bg-[#26A4DE] duration-500 hover:text-[#FFFFFF]"
         >
           <img src={job} alt="" className="w-20 mx-auto" />

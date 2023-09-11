@@ -57,7 +57,7 @@ const homeSectionFive = () => {
                 <div className="flex items-center gap-4 px-5 pt-5">
                   <div className="w-10 h-10">
                     <img
-                      src={`http://localhost:5000/uploads/${datas?.url}`}
+                      src={`https://jobexport.onrender.com/uploads/${datas?.url}`}
                       alt=""
                       className="w-full rounded-full"
                     />

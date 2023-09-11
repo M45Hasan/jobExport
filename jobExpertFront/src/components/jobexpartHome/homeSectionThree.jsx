@@ -31,7 +31,7 @@ const homeSectionThree = () => {
               <div className="w-full h-full py-5">
                 <img
                   className="w-[150px] h-[150px] border-4 border-white rounded-full mx-auto"
-                  src={`http://localhost:5000/uploads/${story?.url}`}
+                  src={`https://jobexport.onrender.com/uploads${story?.url}`}
                   alt="Sunset in the mountains"
                 />
               </div>
