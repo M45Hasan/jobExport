@@ -329,7 +329,7 @@ function Navbar() {
                       src={
                         userData?.userData?.userInfo?.avatar?.length == 0
                           ? ""
-                          : `https://jobexport.onrender.com/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
+                          : `https://weero-jobexpert.netlify.app/uploads/${userData?.userData?.userInfo?.userImg[imgx]} `
                       }
                     />
                   </IconButton>
