@@ -78,7 +78,7 @@ const sslSuccess = async (req, res) => {
     const mx = await User.findOne({ orderId: tran_id });
 
     if (!mx) {
-      return res.redirect(`http://localhost:5173/jobexpart/fail/${tran_id}`);
+      return res.redirect(`https://weero-jobexpert.netlify.app/jobexpart/fail/${tran_id}`);
     }
 
     await User.findByIdAndUpdate(
@@ -91,11 +91,11 @@ const sslSuccess = async (req, res) => {
     const email = mx.email;
     emailV(email, code, sub);
     res.redirect(
-      `http://localhost:5173/jobexpart/payment/${tran_id}?myExam=${mx.orderPk}`
+      `https://weero-jobexpert.netlify.app/jobexpart/payment/${tran_id}?myExam=${mx.orderPk}`
     );
   } catch (error) {
     console.error(error);
-    return res.redirect(`http://localhost:5173/jobexpart/fail/${tran_id}`);
+    return res.redirect(`https://weero-jobexpert.netlify.app/jobexpart/fail/${tran_id}`);
   }
 };
 
@@ -115,7 +115,7 @@ const sslfail = async (req, res) => {
     { new: true }
   );
 
-  return res.redirect(`http://localhost:5173/jobexpart/fail/${tran_id}`);
+  return res.redirect(`https://weero-jobexpert.netlify.app/jobexpart/fail/${tran_id}`);
 };
 
 const sslCancel = async (req, res) => {
