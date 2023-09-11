@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import job from "../../assets/brandLogo/job.png";
 
 const homeSectionTwo = () => {
-;
+
 
   return (
     <>
