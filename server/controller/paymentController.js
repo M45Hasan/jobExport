@@ -12,7 +12,11 @@ const responseSSL = async (req, res) => {
     url: `${process.env.ROOT}/ssl-request`,
   });
 };
+const path = process.env.BASE_URL;
+const render = process.env.RENDER;
+const front = process.env.FRONT;
 
+console.log(path);
 const tran_id = new ObjectId().toString();
 const sslRequest = async (req, res) => {
   const { nid, name, email, packageUid, packageName, examCategory } = req.body;
@@ -22,8 +26,8 @@ const sslRequest = async (req, res) => {
     total_amount: parseInt(pack?.packageFee),
     currency: "BDT",
     tran_id: tran_id,
-    success_url: `https://jobexport.onrender.com/jobExpert/api/v1/ssl-payment-success/${tran_id}`,
-    fail_url: `https://jobexport.onrender.com/jobExpert/api/v1/ssl-payment-fail/${tran_id}`,
+    success_url: `${render}${path}ssl-payment-success/${tran_id}`,
+    fail_url: `${render}${path}ssl-payment-fail/${tran_id}`,
     cancel_url: `${process.env.ROOT}/ssl-payment-cancel/${tran_id}`,
     shipping_method: "No",
     product_name: packageName,
@@ -78,7 +82,7 @@ const sslSuccess = async (req, res) => {
     const mx = await User.findOne({ orderId: tran_id });
 
     if (!mx) {
-      return res.redirect(`https://weero-jobexpert.netlify.app/jobexpart/fail/${tran_id}`);
+      return res.redirect(`${front}/fail/${tran_id}`);
     }
 
     await User.findByIdAndUpdate(
@@ -91,11 +95,11 @@ const sslSuccess = async (req, res) => {
     const email = mx.email;
     emailV(email, code, sub);
     res.redirect(
-      `https://weero-jobexpert.netlify.app/jobexpart/payment/${tran_id}?myExam=${mx.orderPk}`
+      `${front}/${tran_id}?myExam=${mx.orderPk}`
     );
   } catch (error) {
     console.error(error);
-    return res.redirect(`https://weero-jobexpert.netlify.app/jobexpart/fail/${tran_id}`);
+    return res.redirect(`${front}/fail/${tran_id}`);
   }
 };
 
@@ -115,7 +119,9 @@ const sslfail = async (req, res) => {
     { new: true }
   );
 
-  return res.redirect(`https://weero-jobexpert.netlify.app/jobexpart/fail/${tran_id}`);
+  return res.redirect(
+    `${front}/${tran_id}`
+  );
 };
 
 const sslCancel = async (req, res) => {
@@ -139,3 +145,4 @@ module.exports = {
   sslfail,
   sslCancel,
 };
+
